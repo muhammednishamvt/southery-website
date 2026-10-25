@@ -342,3 +342,4 @@ section[id] { scroll-margin-top: 24px; }
 .sheet__photo img.mark { position: absolute; inset: 0; margin: auto; }
 .sheet__panel { background: linear-gradient(160deg, #1d3b31 0%, #132721 55%); }
 @media (hover: hover) and (pointer: fine) { .pay__app { display: none; } }
+.stepper button:disabled { opacity: .3; cursor: not-allowed; }

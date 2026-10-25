@@ -42,31 +42,31 @@ var MENU = [
   { id: 'ghee-rice-chicken-combo', cat: 'boxes', name: 'Ghee Rice Chicken Combo', price: 249,
     desc: 'Fragrant ghee rice with your choice of chicken curry. A full meal in one box.' },
   { id: 'ghee-rice-beef-combo', cat: 'boxes', name: 'Ghee Rice Beef Combo', price: 279,
-    desc: 'Fragrant ghee rice with your choice of beef curry. A full meal in one box.' },
+    desc: 'Fragrant ghee rice with our beef curry. A full meal in one box.' },
   { id: 'biriyani-rice-chicken-combo', cat: 'boxes', name: 'Biriyani Rice Chicken Combo', price: 259,
-    desc: 'Spiced biriyani rice paired with your choice of chicken curry, for when you want both in one box.' },
+    desc: 'Spiced biriyani rice paired with our chicken curry, for when you want both in one box.' },
   { id: 'biriyani-rice-beef-combo', cat: 'boxes', name: 'Biriyani Rice Beef Combo', price: 289,
-    desc: 'Spiced biriyani rice paired with your choice of beef curry, for when you want both in one box.' },
+    desc: 'Spiced biriyani rice paired with our beef curry, for when you want both in one box.' },
   { id: 'pathal-chicken-combo', cat: 'boxes', name: 'Neypathal Chicken Combo', price: 219,
-    desc: 'Soft, thin neypathal with your choice of chicken curry.' },
+    desc: 'Soft, thin neypathal with Chicken Varutharachathu.' },
   { id: 'pathal-beef-combo', cat: 'boxes', name: 'Neypathal Beef Combo', price: 249,
-    desc: 'Soft, thin neypathal with your choice of beef curry.' },
+    desc: 'Soft, thin neypathal with our beef curry.' },
   { id: 'appam-chicken-combo', cat: 'boxes', name: 'Appam Chicken Combo', price: 209,
     desc: 'Lacy appam, crisp at the edges and soft in the middle, with your choice of chicken curry.' },
   { id: 'appam-beef-combo', cat: 'boxes', name: 'Appam Beef Combo', price: 239,
-    desc: 'Lacy appam, crisp at the edges and soft in the middle, with your choice of beef curry.' },
+    desc: 'Lacy appam, crisp at the edges and soft in the middle, with our beef curry.' },
   { id: 'puttu-chicken-combo', cat: 'boxes', name: 'Puttu Chicken Combo', price: 189,
     desc: 'Steamed rice and coconut puttu with your choice of chicken curry to pour over.' },
   { id: 'puttu-beef-combo', cat: 'boxes', name: 'Puttu Beef Combo', price: 219,
-    desc: 'Steamed rice and coconut puttu with your choice of beef curry to pour over.' },
+    desc: 'Steamed rice and coconut puttu with our beef curry to pour over.' },
   { id: 'porotta-chicken-combo', cat: 'boxes', name: 'Porotta Chicken Combo', price: 229,
     desc: 'Layered, flaky Malabar porotta with your choice of chicken curry. Best pulled apart by hand.' },
   { id: 'porotta-beef-combo', cat: 'boxes', name: 'Porotta Beef Combo', price: 259,
-    desc: 'Layered, flaky Malabar porotta with your choice of beef curry. The Kerala favourite.' },
+    desc: 'Layered, flaky Malabar porotta with our beef curry. The Kerala favourite.' },
   { id: 'chapathi-chicken-combo', cat: 'boxes', name: 'Chapathi Chicken Combo', price: 189,
     desc: 'Soft chapathi with your choice of chicken curry. Lighter, and just as satisfying.' },
   { id: 'chapathi-beef-combo', cat: 'boxes', name: 'Chapathi Beef Combo', price: 219,
-    desc: 'Soft chapathi with your choice of beef curry. Lighter, and just as satisfying.' },
+    desc: 'Soft chapathi with our beef curry. Lighter, and just as satisfying.' },
 
   { id: 'ghee-rice', cat: 'rice', name: 'Ghee Rice', price: 169, desc: 'Kaima rice cooked in ghee with whole spices and fried onions.' },
   { id: 'biriyani-rice', cat: 'rice', name: 'Biriyani Rice', price: 179, desc: 'Our dum biriyani rice on its own, to pair with any roast or curry.' },
@@ -83,43 +83,45 @@ var MENU = [
 
 var UPI = { id: 'southerykitch26ms@fbl', name: 'Southery Kitchen LLP' };
 
-// Kitchen location, used to check the free-delivery radius.
-// TODO: replace with the exact Google Maps pin of the kitchen.
-var KITCHEN = { lat: 10.0352, lng: 76.3045 };
+// Kitchen location (Southery Kitchen pin on Google Maps), for the free-delivery radius.
+var KITCHEN = { lat: 10.0235231, lng: 76.3064128 };
 var FREE_KM = 3;
 
 /* Customisation, matching Swiggy / Zomato.
    one: pick exactly one (first choice is selected by default).
-   many: optional extras, each with its own quantity.
-   DRAFT: options and prices below are placeholders taken from Zomato orders.
-   Replace with the exact lists from the partner apps before going live. */
+   many: optional extras; max = how many of each a customer can add. */
 var OPTION_SETS = {
   'chicken-curry': { title: 'Choose your curry', type: 'one', choices: [
     { id: 'chicken-varutharachathu', name: 'Chicken Varutharachathu', price: 0 },
     { id: 'chicken-stew', name: 'Chicken Stew', price: 10 }
   ] },
-  'beef-curry': { title: 'Choose your curry', type: 'one', choices: [
-    { id: 'beef-naadan-curry', name: 'Beef Naadan Curry', price: 0 },
-    { id: 'beef-stew', name: 'Beef Stew', price: 10 }
+  'extra-puttu': { title: 'Extra puttu', type: 'many', max: 1, choices: [
+    { id: 'extra-chiratta-puttu', name: 'Extra Chiratta Puttu', price: 30 }
   ] },
-  'pathal-extra': { title: 'Add more', type: 'many', choices: [
+  'extra-pathal': { title: 'Extra pathal', type: 'many', max: 1, choices: [
     { id: 'extra-neypathal', name: 'Extra Neypathal', price: 21 }
   ] },
-  'sides': { title: 'Extra sides', type: 'many', choices: [
+  'sides': { title: 'Extra sides', type: 'many', max: 9, choices: [
     { id: 'salad', name: 'Salad', price: 10 },
     { id: 'chammanthi', name: 'Chammanthi', price: 20 }
   ] }
 };
 
-// which dishes get which option sets
-MENU.forEach(function (d) {
-  if (d.cat === 'boxes') {
-    d.options = [d.id.indexOf('chicken') > -1 ? 'chicken-curry' : 'beef-curry'];
-    if (d.id.indexOf('pathal') === 0) d.options.push('pathal-extra');
-    d.options.push('sides');
-  }
-  if (d.cat === 'biriyani') d.options = ['sides'];
-});
+// Which dishes get which options. Beef combos come with one fixed curry;
+// the Neypathal Chicken Combo is served only with Chicken Varutharachathu.
+var DISH_OPTIONS = {
+  'puttu-chicken-combo': ['chicken-curry', 'extra-puttu'],
+  'puttu-beef-combo': ['extra-puttu'],
+  'ghee-rice-chicken-combo': ['chicken-curry'],
+  'appam-chicken-combo': ['chicken-curry'],
+  'porotta-chicken-combo': ['chicken-curry'],
+  'chapathi-chicken-combo': ['chicken-curry'],
+  'pathal-chicken-combo': ['extra-pathal'],
+  'pathal-beef-combo': ['extra-pathal'],
+  'chicken-dum-biriyani': ['sides'],
+  'beef-dum-biriyani': ['sides']
+};
+MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.id]; });
 
 (function () {
   var byId = {}; MENU.forEach(function (d) { byId[d.id] = d; });
@@ -299,7 +301,7 @@ MENU.forEach(function (d) {
     $('[data-sheet-desc]').textContent = sheetDish.desc;
     sheetBody.innerHTML = sheetDish.options.map(function (sid) {
       var set = OPTION_SETS[sid];
-      var head = '<legend>' + set.title + '<span>' + (set.type === 'one' ? 'Pick one' : 'Optional') + '</span></legend>';
+      var head = '<legend>' + set.title + '<span>' + (set.type === 'one' ? 'Pick one' : set.max === 1 ? 'Optional, up to 1' : 'Optional') + '</span></legend>';
       return '<fieldset class="opt">' + head + set.choices.map(function (c, i) {
         var extra = c.price ? '+' + rupee(c.price) : 'Included';
         if (set.type === 'one') {
@@ -324,7 +326,7 @@ MENU.forEach(function (d) {
     $$('[data-extra]', sheetBody).forEach(function (row) {
       var p = row.dataset.extra.split(':'), n = (sheetSel[p[0]] || {})[p[1]] || 0, c = choice(p[0], p[1]);
       row.querySelector('.opt__ctl').innerHTML = n
-        ? '<span class="stepper stepper--sm"><button type="button" data-x-dec="' + row.dataset.extra + '" aria-label="Remove one ' + c.name + '">−</button><b>' + n + '</b><button type="button" data-x-inc="' + row.dataset.extra + '" aria-label="Add one more ' + c.name + '">+</button></span>'
+        ? '<span class="stepper stepper--sm"><button type="button" data-x-dec="' + row.dataset.extra + '" aria-label="Remove one ' + c.name + '">−</button><b>' + n + '</b><button type="button" data-x-inc="' + row.dataset.extra + '" aria-label="Add one more ' + c.name + '"' + (n >= (OPTION_SETS[p[0]].max || 9) ? ' disabled' : '') + '>+</button></span>'
         : '<button type="button" class="btn btn--ghost btn--xs" data-x-inc="' + row.dataset.extra + '" aria-label="Add ' + c.name + '">Add</button>';
     });
     $('[data-sheet-qty]').textContent = sheetQty;
@@ -338,7 +340,7 @@ MENU.forEach(function (d) {
     var b = e.target.closest('[data-x-inc], [data-x-dec]'); if (!b) return;
     var inc = b.hasAttribute('data-x-inc'), p = (inc ? b.dataset.xInc : b.dataset.xDec).split(':');
     var g = sheetSel[p[0]] = sheetSel[p[0]] || {};
-    g[p[1]] = Math.max(0, Math.min(9, (g[p[1]] || 0) + (inc ? 1 : -1))); if (!g[p[1]]) delete g[p[1]];
+    g[p[1]] = Math.max(0, Math.min(OPTION_SETS[p[0]].max || 9, (g[p[1]] || 0) + (inc ? 1 : -1))); if (!g[p[1]]) delete g[p[1]];
     renderSheet();
     var row = sheetBody.querySelector('[data-extra="' + p.join(':') + '"]');
     var f = row.querySelector(inc ? '[data-x-inc]' : '[data-x-dec]') || row.querySelector('button'); if (f) f.focus();
