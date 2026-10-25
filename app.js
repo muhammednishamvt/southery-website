@@ -406,6 +406,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     $$('[data-cart-total]').forEach(function (el) { el.textContent = rupee(s.t); });
     $$('[data-cart-word]').forEach(function (el) { el.textContent = s.n === 1 ? 'item' : 'items'; });
     $('.cart-float').hidden = s.n === 0;
+    var fab = $('[data-menu-fab]'); if (fab) fab.classList.toggle('has-cart', s.n > 0);
     $('[data-empty]').hidden = s.n > 0 || sent;
     form.hidden = s.n === 0 || sent;
     $('.drawer__foot').hidden = sent;
@@ -519,6 +520,31 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     renderControls(); closeCart();
     document.getElementById('menu').scrollIntoView({ behavior: 'smooth' });
   });
+
+  /* ---------- Floating Menu button ---------- */
+  var fab = $('[data-menu-fab]'), pop = $('[data-menu-pop]'), tog = $('[data-menu-toggle]');
+  $('[data-menu-list]').innerHTML = CATEGORIES.map(function (c) {
+    var n = MENU.filter(function (d) { return d.cat === c.id; }).length;
+    return '<li><button type="button" data-jump="' + c.id + '">' + c.name + '<small>' + n + '</small></button></li>';
+  }).join('');
+  function setPop(open) {
+    pop.hidden = !open; tog.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) pop.querySelector('button').focus();
+  }
+  tog.addEventListener('click', function () { setPop(pop.hidden); });
+  pop.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-jump]'); if (!b) return;
+    active = b.dataset.jump; renderDishes(); setPop(false);
+    document.getElementById('menu').scrollIntoView({ behavior: 'smooth' });
+    $('#tab-' + active).focus({ preventScroll: true });
+  });
+  document.addEventListener('click', function (e) { if (!pop.hidden && !fab.contains(e.target)) setPop(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !pop.hidden) { setPop(false); tog.focus(); } });
+  // show the button once the visitor has scrolled past the hero
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) { fab.hidden = es[0].isIntersecting; if (!fab.hidden) return; setPop(false); })
+      .observe(document.querySelector('.hero'));
+  } else fab.hidden = false;
 
   renderWhere();
   renderDishes();
