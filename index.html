@@ -100,7 +100,7 @@
       <ol class="steps" aria-label="How ordering works">
         <li><b>1</b><h3>Choose your dishes</h3><p>Add what you’d like from the menu. Your order stays saved on this device while you decide.</p></li>
         <li><b>2</b><h3>Send it on WhatsApp</h3><p>Your order, total and address arrive to us as one ready-written message. Nothing to retype.</p></li>
-        <li><b>3</b><h3>We confirm and cook</h3><p>We reply to confirm the delivery charge and timing, and then we start cooking.</p></li>
+        <li><b>3</b><h3>Pay and we cook</h3><p>Pay by UPI and we start cooking. Free delivery within 3 km of Edappally, Porter beyond that.</p></li>
       </ol>
 
       <p class="store__alt">Prefer an app? We’re on <a href="https://www.swiggy.com/menu/1359864?source=sharing" target="_blank" rel="noopener">Swiggy</a> and <a href="https://zomato.onelink.me/xqzv/5k1rxt5m" target="_blank" rel="noopener">Zomato</a> too.</p>
@@ -175,25 +175,59 @@
       <p class="drawer__empty" data-empty>Nothing here yet. Add a dish from the menu to start your order.</p>
       <div class="sent" data-sent hidden>
         <div class="sent__mark" aria-hidden="true">✓</div>
-        <h3>Your order is on its way to us.</h3>
-        <p>Press send in WhatsApp if you haven’t yet. We’ll reply there to confirm the delivery charge and time.</p>
+        <h3 data-sent-title tabindex="-1">Your order is on its way to us.</h3>
+        <p data-sent-text></p>
+        <div class="pay" data-pay></div>
         <button class="btn btn--ivory" type="button" data-restart>Start a new order</button>
       </div>
       <form class="checkout" data-checkout novalidate>
         <label>Your name<input name="name" autocomplete="name" required></label>
         <label>Delivery address<textarea name="address" rows="3" autocomplete="street-address" required></textarea></label>
+        <fieldset class="where">
+          <legend>Delivery</legend>
+          <p class="where__hint">Free within 3 km of our Edappally kitchen. Further away, we send it with Porter and you pay the fare.</p>
+          <button class="btn btn--ghost btn--sm" type="button" data-locate>Use my location</button>
+          <p class="where__status" data-where-status hidden></p>
+          <div class="where__pick">
+            <label><input type="radio" name="zone" value="free"> Within 3 km</label>
+            <label><input type="radio" name="zone" value="porter"> Further away</label>
+            <label><input type="radio" name="zone" value="unsure"> Not sure</label>
+          </div>
+        </fieldset>
         <label>Anything we should know <span>(optional)</span><input name="note" placeholder="Less spicy, no onions, gate code"></label>
         <p class="checkout__error" data-error hidden></p>
       </form>
     </div>
     <footer class="drawer__foot">
-      <p class="drawer__total"><span>Total</span><b data-cart-total></b></p>
-      <p class="drawer__fine">Delivery charges, if any, are confirmed on WhatsApp.</p>
+      <p class="drawer__row"><span>Delivery</span><span data-delivery-line>Choose below</span></p>
+      <p class="drawer__total"><span data-total-label>Total</span><b data-cart-total></b></p>
+      <p class="drawer__fine">Pay by UPI once your order is sent.</p>
       <button class="btn btn--gold btn--block" type="button" data-send>Send order on WhatsApp</button>
     </footer>
   </aside>
 </div>
 
+<!-- Customisation sheet -->
+<div class="sheet" data-sheet hidden>
+  <div class="sheet__scrim" data-sheet-close></div>
+  <section class="pane sheet__panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <button class="icon-btn sheet__x" type="button" data-sheet-close aria-label="Close">×</button>
+    <div class="sheet__scroll">
+      <div class="sheet__photo" data-sheet-photo></div>
+      <div class="sheet__head">
+        <h2 id="sheet-title" data-sheet-title></h2>
+        <p data-sheet-desc></p>
+      </div>
+      <div data-sheet-body></div>
+    </div>
+    <footer class="sheet__foot">
+      <span class="stepper"><button type="button" data-sheet-less aria-label="One less">−</button><b data-sheet-qty aria-live="polite">1</b><button type="button" data-sheet-more aria-label="One more">+</button></span>
+      <button class="btn btn--gold sheet__add" type="button" data-sheet-add>Add to order</button>
+    </footer>
+  </section>
+</div>
+
+<script src="/vendor/qrcode.js" defer></script>
 <script src="/app.js" defer></script>
 </body>
 </html>
