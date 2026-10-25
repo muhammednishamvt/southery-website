@@ -391,3 +391,4 @@ section[id] { scroll-margin-top: 24px; }
 .footer { padding-bottom: 140px; }
 .app-icon--zomato svg { width: 40px; height: 40px; }
 @media (max-width: 820px) { .app-icon--zomato svg { width: 34px; height: 34px; } }
+.dish__price--ask { font-size: 16px; font-weight: 700; }

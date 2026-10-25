@@ -7,7 +7,7 @@ var WHATSAPP = '918610071212';
 
 var CATEGORIES = [
   { id: 'biriyani', name: 'Biriyani',
-    note: 'Mutton, fish and prawns biriyani are not on the menu right now.' },
+    note: 'Mutton, fish and prawns biriyani are available only when you order directly from us. Message us on WhatsApp for sizes and prices.' },
   { id: 'malabar', name: 'Malabar dishes', note: 'Mutton stew is not on the menu right now.' },
   { id: 'boxes', name: 'Boxes' },
   { id: 'rice', name: 'Extras', list: true },
@@ -19,6 +19,12 @@ var MENU = [
     desc: 'Chicken and Kaima rice, sealed and dum cooked in their own steam. Fried onions and cashew on top, raita and pickle on the side.' },
   { id: 'beef-dum-biriyani', cat: 'biriyani', name: 'Beef Dum Biriyani', price: 309,
     desc: 'Slow-cooked beef layered with Kaima rice and left on dum until every grain carries the masala.' },
+  { id: 'mutton-dum-biriyani', cat: 'biriyani', name: 'Mutton Dum Biriyani', price: null,
+    desc: 'Tender mutton and Kaima rice, cooked low under a sealed lid. Deep, rich and worth the wait.' },
+  { id: 'fish-biriyani', cat: 'biriyani', name: 'Fish Biriyani', price: null,
+    desc: 'A masala-fried fish fillet laid over fragrant Kaima rice.' },
+  { id: 'prawns-biriyani', cat: 'biriyani', name: 'Prawns Biriyani', price: null,
+    desc: 'Prawns cooked in a spiced masala and folded through Kaima rice.' },
 
   { id: 'chicken-fry', cat: 'malabar', name: 'Chicken Fry', price: 199,
     desc: 'Chicken marinated in red chilli and spice, fried until crisp at the edges and juicy inside.' },
@@ -146,7 +152,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     Object.keys(raw).forEach(function (k) {
       var v = raw[k];
       if (typeof v === 'number') v = { id: k, q: v, sel: defaults(byId[k]) }; // older saved carts
-      if (v && byId[v.id] && v.q > 0) cart[keyOf(v.id, v.sel)] = { id: v.id, q: v.q, sel: v.sel || {} };
+      if (v && byId[v.id] && byId[v.id].price != null && v.q > 0) cart[keyOf(v.id, v.sel)] = { id: v.id, q: v.q, sel: v.sel || {} };
     });
   })();
   function save() { write('southery-cart', cart); }
@@ -226,7 +232,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     dishesEl.setAttribute('aria-labelledby', 'tab-' + active);
     dishesEl.className = cat.list ? 'menu-list' : 'dishes';
     dishesEl.innerHTML = MENU.filter(function (d) { return d.cat === active; }).map(function (d) {
-      var price = '<span class="dish__price">' + rupee(d.price) + (d.options ? '<small>Customisable</small>' : '') + '</span>';
+      var price = d.price == null ? '<span class="dish__price dish__price--ask">Price on request<small>Direct orders only</small></span>' : '<span class="dish__price">' + rupee(d.price) + (d.options ? '<small>Customisable</small>' : '') + '</span>';
       if (cat.list) {
         return '<div class="row"><div><h3>' + d.name + '</h3><p>' + d.desc + '</p></div>' +
           '<div class="row__buy">' + price + '<span class="dish__ctl" data-ctl="' + d.id + '"></span></div></div>';
@@ -255,6 +261,10 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
   function renderControls() {
     $$('[data-ctl]').forEach(function (slot) {
       var d = byId[slot.dataset.ctl], n = countOf(d.id);
+      if (d.price == null) {
+        slot.innerHTML = '<a class="btn btn--ghost btn--sm" href="https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent('Hi Southery, I’d like to order ' + d.name + '. What sizes and prices do you have today?') + '" target="_blank" rel="noopener" aria-label="Ask about ' + esc(d.name) + ' on WhatsApp">Ask on WhatsApp</a>';
+        return;
+      }
       if (d.options) {
         slot.innerHTML = (n ? '<span class="dish__count">' + n + ' in order</span>' : '') +
           '<button type="button" class="btn btn--ivory btn--sm" data-custom="' + d.id + '" aria-label="Add ' + esc(d.name) + ', choose options">Add</button>';
