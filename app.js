@@ -556,6 +556,13 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
       .observe(document.querySelector('.hero'));
   } else fab.hidden = false;
 
+  // fill the Google rating stars the first time the card is seen
+  var rating = document.querySelector('[data-rating]');
+  if (rating && 'IntersectionObserver' in window) {
+    var ro = new IntersectionObserver(function (es) { if (!es[0].isIntersecting) return; rating.classList.add('is-in'); ro.disconnect(); }, { threshold: 0.6 });
+    ro.observe(rating);
+  } else if (rating) rating.classList.add('is-in');
+
   renderWhere();
   renderDishes();
 })();
