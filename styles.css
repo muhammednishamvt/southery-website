@@ -372,7 +372,7 @@ section[id] { scroll-margin-top: 24px; }
 .app-icon--zomato svg { width: 32px; }
 .app-icon--google { background: #fff; }
 .footer__ig { display: inline-flex; align-items: center; gap: 10px; }
-.footer__ig svg { width: 22px; height: 22px; }
+.footer__ig svg { width: 26px; height: 26px; border-radius: 7px; }
 @media (max-width: 820px) {
   .visit__grid { grid-template-columns: 1fr; gap: 32px; }
   .visit__intro { order: 1; } .visit__where { order: 2; } .visit__ways { order: 3; } .visit__reviews { order: 4; }
