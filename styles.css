@@ -412,3 +412,4 @@ section[id] { scroll-margin-top: 24px; }
 .rating__count { font-size: 14px; color: var(--ivory-soft); }
 @media (prefers-reduced-motion: reduce) { .rating__stars::after { transition: none; } .rating:not(.is-in) .rating__stars::after { transform: none; } }
 .story__promise { font-weight: 700; color: var(--ivory); }
+.hero__strong { font-weight: 700; color: var(--ivory); }
