@@ -1,6 +1,27 @@
 {
   "cleanUrls": true,
   "headers": [
-    { "source": "/assets/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] }
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "southery.vercel.app"
+        }
+      ],
+      "destination": "https://southery.cloud/:path*",
+      "permanent": true
+    }
   ]
 }
