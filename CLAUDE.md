@@ -79,6 +79,8 @@ The page is dark-only: green ground, ivory type. There is no light theme.
 
 **Type**: one family throughout, Cabinet Grotesk, self-hosted in `assets/fonts/`. Headlines are weight 800 with
 tight negative letter-spacing (see `.h2`); body is 400 at 17px. Don't add other font families or Google Fonts.
+**No Lowan Old Style anywhere.** Older brand guidelines name it for headlines; that is superseded. Headlines use
+Cabinet Grotesk too.
 
 **Glass**: content sits on `.pane` panels using the `--glass`, `--glass-rim` and `--glass-blur` tokens over
 paired foliage photos. Reuse `.pane` rather than inventing new card styles.
