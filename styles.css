@@ -422,5 +422,5 @@ section[id] { scroll-margin-top: 24px; }
   .hero__leaves::before, .story__leaves::before, .promise__leaves::before { display: none; }
   .hero__leaves .leaves__m { background-image: url(/assets/nature/hero-m.jpg); background-image: image-set(url(/assets/nature/hero-m.avif) type("image/avif"), url(/assets/nature/hero-m.webp) type("image/webp"), url(/assets/nature/hero-m.jpg) type("image/jpeg")); }
   .story__leaves .leaves__m { background-image: url(/assets/nature/story-m.jpg); background-image: image-set(url(/assets/nature/story-m.avif) type("image/avif"), url(/assets/nature/story-m.webp) type("image/webp"), url(/assets/nature/story-m.jpg) type("image/jpeg")); }
-  .promise__leaves .leaves__m { background-image: url(/assets/nature/promise-m.jpg); background-image: image-set(url(/assets/nature/promise-m.avif) type("image/avif"), url(/assets/nature/promise-m.webp) type("image/webp"), url(/assets/nature/promise-m.jpg) type("image/jpeg")); }
+  .promise__leaves .leaves__m { background-image: url(/assets/nature/promise-m2.jpg); background-image: image-set(url(/assets/nature/promise-m2.avif) type("image/avif"), url(/assets/nature/promise-m2.webp) type("image/webp"), url(/assets/nature/promise-m2.jpg) type("image/jpeg")); }
 }
