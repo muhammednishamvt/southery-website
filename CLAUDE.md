@@ -75,6 +75,7 @@ light coming through frosted glass.
 | `--ivory-soft` / `--ivory-faint` | ivory at 72% / 14% | secondary text / hairlines |
 | `--gold` | `#f7e39c` | the action colour: **one gold action per view** |
 | `--wa-green` | `#25D366` | WhatsApp green, positive feedback: hover/tap on Add and "+" (green text) |
+| `--wa-send` | `#189C0D` | WhatsApp logo green: hover/tap on "Send order on WhatsApp" once the cart has items (green text) |
 | `--chilli` | `#C4340C` | red chilli, caution: hover/tap on "−", error messages (ivory text) |
 | `--turmeric` | `#F49A17` | reserved for pop-ups and ad campaigns; not used on the site yet |
 
