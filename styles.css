@@ -13,6 +13,10 @@
   --ivory-soft: rgba(253,247,227,0.72);
   --ivory-faint: rgba(253,247,227,0.14);
   --gold: #f7e39c;           /* one action per view */
+  /* spice accents: hover and feedback only, never resting colours */
+  --wa-green: #25D366;       /* WhatsApp green: positive feedback (add, more) */
+  --chilli: #C4340C;         /* red chilli: caution (remove, less, errors) */
+  --turmeric: #F49A17;       /* reserved for pop-ups and campaigns; not used on the site yet */
 
   /* the glass: green light through frosted leaves */
   --glass: linear-gradient(150deg, rgba(150,190,140,0.20) 0%, rgba(40,78,56,0.30) 45%, rgba(19,39,33,0.55) 100%);
@@ -429,3 +433,14 @@ section[id] { scroll-margin-top: 24px; }
   .story__leaves .leaves__m { background-image: url(/assets/nature/story-m.jpg); background-image: image-set(url(/assets/nature/story-m.avif) type("image/avif"), url(/assets/nature/story-m.webp) type("image/webp"), url(/assets/nature/story-m.jpg) type("image/jpeg")); }
   .promise__leaves .leaves__m { background-image: url(/assets/nature/promise-m2.jpg); background-image: image-set(url(/assets/nature/promise-m2.avif) type("image/avif"), url(/assets/nature/promise-m2.webp) type("image/webp"), url(/assets/nature/promise-m2.jpg) type("image/jpeg")); }
 }
+
+/* ---------- Spice accents (hover and feedback) ---------- */
+.btn--ivory:active { background: var(--wa-green); color: var(--green); }
+.stepper button:first-child:active:not(:disabled) { background: var(--chilli); color: var(--ivory); }
+.stepper button:last-child:active:not(:disabled) { background: var(--wa-green); color: var(--green); }
+@media (hover: hover) {
+  .btn--ivory:hover { background: var(--wa-green); color: var(--green); }
+  .stepper button:first-child:hover:not(:disabled) { background: var(--chilli); color: var(--ivory); }
+  .stepper button:last-child:hover:not(:disabled) { background: var(--wa-green); color: var(--green); }
+}
+.checkout__error { color: var(--ivory); background: rgba(196,52,12,0.18); border-left: 3px solid var(--chilli); border-radius: 8px; padding: 10px 14px; }

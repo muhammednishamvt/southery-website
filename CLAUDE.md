@@ -74,6 +74,14 @@ light coming through frosted glass.
 | `--ivory` | `#fdf7e3` | text |
 | `--ivory-soft` / `--ivory-faint` | ivory at 72% / 14% | secondary text / hairlines |
 | `--gold` | `#f7e39c` | the action colour: **one gold action per view** |
+| `--wa-green` | `#25D366` | WhatsApp green, positive feedback: hover/tap on Add and "+" (green text) |
+| `--chilli` | `#C4340C` | red chilli, caution: hover/tap on "−", error messages (ivory text) |
+| `--turmeric` | `#F49A17` | reserved for pop-ups and ad campaigns; not used on the site yet |
+
+The accents are for hover and brief feedback only, never resting colours. On touch screens they show on
+tap (`:active`); hover styles sit inside `@media (hover: hover)` so they don't stick after a tap.
+Red chilli is too dark for text on the green ground; use it as a fill with ivory text. WhatsApp green takes
+green text, never ivory.
 
 The page is dark-only: green ground, ivory type. There is no light theme.
 
