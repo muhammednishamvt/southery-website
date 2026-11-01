@@ -461,5 +461,8 @@ section[id] { scroll-margin-top: 24px; }
 .visit__ways .rating-chip__count { font-size: 14px; font-weight: 400; color: var(--ivory-soft); letter-spacing: 0; }
 @media (max-width: 560px) {
   .visit__ways a:has(.rating-chip) small { display: none; }
-  .visit__ways .rating-chip { gap: 8px; }
+  .visit__ways a:has(.rating-chip) .visit__name { flex: 1; }
+  .visit__ways .rating-chip { gap: 8px; margin-right: 0; margin-left: auto; }
+  .visit__ways .rating-chip__count { min-width: 4.9em; text-align: right; font-variant-numeric: tabular-nums; }
+  .visit__ways .rating-chip__score { font-variant-numeric: tabular-nums; min-width: 66px; justify-content: center; }
 }
