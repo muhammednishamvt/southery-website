@@ -444,3 +444,8 @@ section[id] { scroll-margin-top: 24px; }
   .stepper button:last-child:hover:not(:disabled) { background: var(--wa-green); color: var(--green); }
 }
 .checkout__error { color: var(--ivory); background: rgba(196,52,12,0.18); border-left: 3px solid var(--chilli); border-radius: 8px; padding: 10px 14px; }
+
+/* WhatsApp send button: WhatsApp icon, and WhatsApp green on hover/tap once the cart has items */
+.btn__wa-icon { width: 1.15em; height: 1.15em; margin: 0 0.35em 0 0.3em; flex-shrink: 0; }
+.btn--wa:active:not(:disabled) { background: var(--wa-green); color: var(--green); }
+@media (hover: hover) { .btn--wa:hover:not(:disabled) { background: var(--wa-green); color: var(--green); } }
