@@ -122,6 +122,7 @@ section[id] { scroll-margin-top: 24px; }
 .store { padding: clamp(80px, 10vw, 140px) 0 clamp(64px, 8vw, 112px); background: linear-gradient(180deg, var(--green-deep) 0%, var(--green) 260px); }
 .store__head { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 48px; align-items: end; margin-bottom: 40px; }
 .store__intro { max-width: 46ch; color: var(--ivory-soft); justify-self: end; }
+.store__pay-less { color: var(--ivory); font-weight: 700; }
 .tabs { position: sticky; top: 12px; z-index: 10; display: flex; gap: 6px; width: max-content; max-width: 100%; overflow-x: auto; padding: 6px; margin-bottom: 32px; border-radius: 999px; background: rgba(19,39,33,0.78); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); border: 1px solid var(--ivory-faint); scrollbar-width: none; }
 .tabs::-webkit-scrollbar { display: none; }
 .tab { flex: none; height: 42px; padding: 0 20px; border-radius: 999px; border: 0; background: transparent; color: var(--ivory-soft); font-weight: 500; font-size: 15px; cursor: pointer; transition: background-color .2s, color .2s; }
