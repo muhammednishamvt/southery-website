@@ -58,6 +58,9 @@ Treat these values as business details: change them only when Nisham asks.
 **Business details elsewhere** — address, phone, founder and links also appear in the JSON-LD block and the meta /
 Open Graph tags in `index.html`, and in the visit and footer sections. Keep them in step with `app.js`.
 
+**Ratings** — the Swiggy and Zomato rating chips (score and number of ratings) and the Google review count in
+`index.html` are typed in by hand. Update them from the apps when they change.
+
 Browser storage keys: `southery-cart` and `southery-customer` (name and address, remembered for next time).
 
 ## Brand rules
@@ -78,7 +81,8 @@ light coming through frosted glass.
 | `--chilli` | `#C4340C` | red chilli, caution: hover/tap on "−", error messages (ivory text) |
 | `--turmeric` | `#F49A17` | reserved for pop-ups and ad campaigns; not used on the site yet |
 
-The accents are for hover and brief feedback only, never resting colours. On touch screens they show on
+The accents are for hover and brief feedback only, never resting colours. One exception: the Swiggy and
+Zomato rating chips in the visit section use the accent green as their fill, like the apps' own rating badges. On touch screens they show on
 tap (`:active`); hover styles sit inside `@media (hover: hover)` so they don't stick after a tap.
 Red chilli is too dark for text on the green ground; use it as a fill with ivory text. The accent green
 takes ivory text. Use only this one green for accents; don't add other greens.

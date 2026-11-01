@@ -452,3 +452,14 @@ section[id] { scroll-margin-top: 24px; }
 @media (hover: hover) { .btn--wa:hover:not(:disabled) { background: var(--wa-green); color: var(--ivory); border-color: rgba(253,247,227,0.35); } }
 /* Phones and tablets have no hover: once the cart has items, the send button is simply green */
 @media (hover: none) { .btn--wa:not(:disabled) { background: var(--wa-green); color: var(--ivory); border-color: rgba(253,247,227,0.35); } }
+
+/* Swiggy / Zomato rating chips beside the app names (update the numbers by hand from the apps) */
+.visit__ways a:has(.rating-chip) .visit__name { flex: 0 0 auto; }
+.visit__ways .rating-chip { display: inline-flex; align-items: center; gap: 10px; margin-right: auto; font-size: 15px; font-weight: 400; letter-spacing: 0; }
+.visit__ways .rating-chip__score { display: inline-flex; align-items: center; gap: 4px; height: 30px; padding: 0 10px 0 12px; border-radius: 999px; background: var(--wa-green); color: var(--ivory); font-size: 16px; font-weight: 700; letter-spacing: 0; }
+.visit__ways .rating-chip__score svg { width: 14px; height: 14px; }
+.visit__ways .rating-chip__count { font-size: 14px; font-weight: 400; color: var(--ivory-soft); letter-spacing: 0; }
+@media (max-width: 560px) {
+  .visit__ways a:has(.rating-chip) small { display: none; }
+  .visit__ways .rating-chip { gap: 8px; }
+}
