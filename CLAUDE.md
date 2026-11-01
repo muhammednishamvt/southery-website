@@ -74,6 +74,13 @@ light coming through frosted glass.
 | `--ivory` | `#fdf7e3` | text |
 | `--ivory-soft` / `--ivory-faint` | ivory at 72% / 14% | secondary text / hairlines |
 | `--gold` | `#f7e39c` | the action colour: **one gold action per view** |
+| `--turmeric` | `#F49A17` | hover on gold actions (green text) |
+| `--green-chilli` | `#476A30` | positive feedback: hover on Add and "+" (ivory text) |
+| `--chilli` | `#C4340C` | caution: hover on "−", error messages (ivory text) |
+
+The three spice accents are for hover and brief feedback only, never resting colours. On touch screens
+they show on tap (`:active`); hover styles sit inside `@media (hover: hover)` so they don't stick after a tap.
+Red and green chilli are too dark for text on the green ground; use them as fills with ivory text.
 
 The page is dark-only: green ground, ivory type. There is no light theme.
 
