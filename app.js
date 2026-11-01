@@ -442,12 +442,20 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     requestAnimationFrame(function () { drawer.classList.add('is-open'); });
     document.body.style.overflow = 'hidden'; $('.drawer__head .icon-btn').focus();
   }
-  function closeCart() {
+  function closeCart(keepPlace) {
     drawer.classList.remove('is-open'); document.body.style.overflow = '';
-    setTimeout(function () { drawer.hidden = true; }, 250); if (lastFocus) lastFocus.focus();
+    setTimeout(function () { drawer.hidden = true; }, 250);
+    if (keepPlace !== true && lastFocus) lastFocus.focus();
   }
+  // Empty cart: "Add a dish from the menu" closes the cart and takes you to the menu
+  $('[data-go-menu]').addEventListener('click', function (e) {
+    e.preventDefault(); closeCart(true);
+    var menu = $('#menu'), title = $('#menu-title');
+    menu.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    title.setAttribute('tabindex', '-1'); title.focus({ preventScroll: true });
+  });
   $$('[data-open-cart]').forEach(function (b) { b.addEventListener('click', openCart); });
-  $$('[data-close-cart]').forEach(function (b) { b.addEventListener('click', closeCart); });
+  $$('[data-close-cart]').forEach(function (b) { b.addEventListener('click', function () { closeCart(); }); });
 
   function trap(e, panel) {
     var f = $$('button:not([disabled]), input, textarea, a[href]', panel).filter(function (el) { return el.offsetParent; });
