@@ -8,7 +8,7 @@ var WHATSAPP = '918610071212';
 var CATEGORIES = [
   { id: 'biriyani', name: 'Biriyani',
     note: 'Mutton, fish and prawns biriyani are available only when you order directly from us. Message us on WhatsApp for sizes and prices.' },
-  { id: 'malabar', name: 'Malabar dishes', note: 'Mutton stew is not on the menu right now.' },
+  { id: 'malabar', name: 'Malabar dishes', note: 'Mutton stew is made to order. Message us on WhatsApp for the price.' },
   { id: 'boxes', name: 'Boxes' },
   { id: 'rice', name: 'Extras', list: true },
   { id: 'drinks', name: 'Drinks', list: true }
@@ -42,12 +42,14 @@ var MENU = [
     desc: 'Chicken simmered gently in coconut milk with whole spices. Mild, fragrant, and made for appam.' },
   { id: 'beef-stew', cat: 'malabar', name: 'Beef Stew', price: 279,
     desc: 'Tender beef and vegetables in a light coconut milk stew, peppery and gentle.' },
+  { id: 'mutton-stew', cat: 'malabar', name: 'Mutton Stew', price: null, ask: 'Ask for price', photo: false,
+    desc: 'Mutton simmered slowly in coconut milk with pepper, ginger and curry leaves.' },
   { id: 'vegetable-stew', cat: 'malabar', name: 'Vegetable Stew', price: 149, tag: 'Vegetarian',
     desc: 'Potato, carrot and beans in coconut milk, scented with green chilli and ginger.' },
 
   { id: 'ghee-rice-chicken-combo', cat: 'boxes', name: 'Ghee Rice Chicken Combo', price: 269,
     desc: 'Fragrant ghee rice with your choice of chicken curry. A full meal in one box.' },
-  { id: 'ghee-rice-beef-combo', cat: 'boxes', name: 'Ghee Rice Beef Combo', price: 286,
+  { id: 'ghee-rice-beef-combo', cat: 'boxes', name: 'Ghee Rice Beef Combo', price: 289,
     desc: 'Fragrant ghee rice with our beef curry. A full meal in one box.' },
   { id: 'biriyani-rice-chicken-combo', cat: 'boxes', name: 'Biriyani Rice Chicken Combo', price: 279,
     desc: 'Spiced biriyani rice paired with our chicken curry, for when you want both in one box.' },
@@ -77,8 +79,8 @@ var MENU = [
   { id: 'ghee-rice', cat: 'rice', name: 'Ghee Rice', price: 189, desc: 'Kaima rice cooked in ghee with whole spices and fried onions.' },
   { id: 'biriyani-rice', cat: 'rice', name: 'Biriyani Rice', price: 199, desc: 'Our dum biriyani rice on its own, to pair with any roast or curry.' },
 
-  { id: 'mint-lemon', cat: 'drinks', name: 'Mint Lemon', price: 50, desc: 'Fresh lime and mint.' },
-  { id: 'pineapple-lemon', cat: 'drinks', name: 'Pineapple Lemon', price: 50, desc: 'Pineapple with fresh lime.' },
+  { id: 'mint-lemon', cat: 'drinks', name: 'Mint Lemon', price: 60, desc: 'Fresh lime and mint.' },
+  { id: 'pineapple-lemon', cat: 'drinks', name: 'Pineapple Lemon', price: 70, desc: 'Pineapple with fresh lime.' },
   { id: 'pineapple-juice', cat: 'drinks', name: 'Pineapple', price: 179, desc: 'Cold pressed. No sugar, no water.' },
   { id: 'watermelon-juice', cat: 'drinks', name: 'Water Melon', price: 159, desc: 'Cold pressed. No sugar, no water.' },
   { id: 'melon-magic', cat: 'drinks', name: 'Melon Magic', price: 229, desc: 'A detox smoothie.' }
@@ -232,7 +234,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     dishesEl.setAttribute('aria-labelledby', 'tab-' + active);
     dishesEl.className = cat.list ? 'menu-list' : 'dishes';
     dishesEl.innerHTML = MENU.filter(function (d) { return d.cat === active; }).map(function (d) {
-      var price = d.price == null ? '<span class="dish__price dish__price--ask">Price on request<small>Direct orders only</small></span>' : '<span class="dish__price">' + rupee(d.price) + (d.options ? '<small>Customisable</small>' : '') + '</span>';
+      var price = d.price == null ? (d.ask ? '<span class="dish__price dish__price--ask">' + d.ask + '</span>' : '<span class="dish__price dish__price--ask">Price on request<small>Direct orders only</small></span>') : '<span class="dish__price">' + rupee(d.price) + (d.options ? '<small>Customisable</small>' : '') + '</span>';
       if (cat.list) {
         return '<div class="row"><div><h3>' + d.name + '</h3><p>' + d.desc + '</p></div>' +
           '<div class="row__buy">' + price + '<span class="dish__ctl" data-ctl="' + d.id + '"></span></div></div>';
