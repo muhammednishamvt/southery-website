@@ -46,6 +46,7 @@ assets/
 - `CATEGORIES`: tabs. `list: true` renders a category as simple rows without photos. `note` shows under the tab.
 - `MENU`: one object per dish: `id`, `cat`, `name`, `price` (rupees, or `null` for "ask on WhatsApp"),
   `desc`, optional `tag` (e.g. "Signature"), optional `photo: false`.
+  With `price: null`, optional `ask` replaces the default "Price on request / Direct orders only" label (e.g. `ask: 'Ask for price'`).
 - A dish's photo is found by its id: `/assets/photos/<id>.jpg` (720×720 shown). Adding a dish with a photo
   means adding that file with the matching name. With no photo, set `photo: false`.
 - `OPTION_SETS` and `DISH_OPTIONS`: customisation (curry choice, extras, sides), mirroring Swiggy/Zomato.

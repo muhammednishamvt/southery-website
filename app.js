@@ -8,16 +8,16 @@ var WHATSAPP = '918610071212';
 var CATEGORIES = [
   { id: 'biriyani', name: 'Biriyani',
     note: 'Mutton, fish and prawns biriyani are available only when you order directly from us. Message us on WhatsApp for sizes and prices.' },
-  { id: 'malabar', name: 'Malabar dishes', note: 'Mutton stew is not on the menu right now.' },
+  { id: 'malabar', name: 'Malabar dishes', note: 'Mutton stew is made to order. Message us on WhatsApp for the price.' },
   { id: 'boxes', name: 'Boxes' },
   { id: 'rice', name: 'Extras', list: true },
   { id: 'drinks', name: 'Drinks', list: true }
 ];
 
 var MENU = [
-  { id: 'chicken-dum-biriyani', cat: 'biriyani', name: 'Chicken Dum Biriyani', price: 279, tag: 'Signature',
+  { id: 'chicken-dum-biriyani', cat: 'biriyani', name: 'Chicken Dum Biriyani', price: 299, tag: 'Signature',
     desc: 'Chicken and Kaima rice, sealed and dum cooked in their own steam. Fried onions and cashew on top, raita and pickle on the side.' },
-  { id: 'beef-dum-biriyani', cat: 'biriyani', name: 'Beef Dum Biriyani', price: 309,
+  { id: 'beef-dum-biriyani', cat: 'biriyani', name: 'Beef Dum Biriyani', price: 329,
     desc: 'Slow-cooked beef layered with Kaima rice and left on dum until every grain carries the masala.' },
   { id: 'mutton-dum-biriyani', cat: 'biriyani', name: 'Mutton Dum Biriyani', price: null,
     desc: 'Tender mutton and Kaima rice, cooked low under a sealed lid. Deep, rich and worth the wait.' },
@@ -26,62 +26,64 @@ var MENU = [
   { id: 'prawns-biriyani', cat: 'biriyani', name: 'Prawns Biriyani', price: null,
     desc: 'Prawns cooked in a spiced masala and folded through Kaima rice.' },
 
-  { id: 'chicken-fry', cat: 'malabar', name: 'Chicken Fry', price: 199,
+  { id: 'chicken-fry', cat: 'malabar', name: 'Chicken Fry', price: 219,
     desc: 'Chicken marinated in red chilli and spice, fried until crisp at the edges and juicy inside.' },
-  { id: 'beef-fry', cat: 'malabar', name: 'Beef Fry', price: 229, photo: false,
+  { id: 'beef-fry', cat: 'malabar', name: 'Beef Fry', price: 249, photo: false,
     desc: 'Beef cooked tender, then fried dry with coconut slivers, shallots and curry leaves.' },
-  { id: 'chicken-naadan-roast', cat: 'malabar', name: 'Chicken Naadan Roast', price: 219,
+  { id: 'chicken-naadan-roast', cat: 'malabar', name: 'Chicken Naadan Roast', price: 239,
     desc: 'Chicken cooked down in a thick onion and tomato masala until it clings to every piece.' },
-  { id: 'beef-roast', cat: 'malabar', name: 'Beef Roast', price: 249, tag: 'Most loved',
+  { id: 'beef-roast', cat: 'malabar', name: 'Beef Roast', price: 259, tag: 'Most loved',
     desc: 'Beef roasted down slowly until dark at the edges, with coconut slivers and curry leaves.' },
-  { id: 'chicken-varutharachathu', cat: 'malabar', name: 'Chicken Varutharachathu', price: 239,
+  { id: 'chicken-varutharachathu', cat: 'malabar', name: 'Chicken Varutharachathu', price: 259,
     desc: 'Coconut and spices roasted slowly, ground fine, and simmered with chicken into a deep, nutty gravy.' },
-  { id: 'beef-naadan-curry', cat: 'malabar', name: 'Beef Naadan Curry', price: 269,
+  { id: 'beef-naadan-curry', cat: 'malabar', name: 'Beef Naadan Curry', price: 289,
     desc: 'Beef in a homestyle Kerala gravy. The one you order porotta for.' },
-  { id: 'chicken-stew', cat: 'malabar', name: 'Chicken Stew', price: 249,
+  { id: 'chicken-stew', cat: 'malabar', name: 'Chicken Stew', price: 269,
     desc: 'Chicken simmered gently in coconut milk with whole spices. Mild, fragrant, and made for appam.' },
   { id: 'beef-stew', cat: 'malabar', name: 'Beef Stew', price: 279,
     desc: 'Tender beef and vegetables in a light coconut milk stew, peppery and gentle.' },
-  { id: 'vegetable-stew', cat: 'malabar', name: 'Vegetable Stew', price: 129, tag: 'Vegetarian',
+  { id: 'mutton-stew', cat: 'malabar', name: 'Mutton Stew', price: null, ask: 'Ask for price', photo: false,
+    desc: 'Mutton simmered slowly in coconut milk with pepper, ginger and curry leaves.' },
+  { id: 'vegetable-stew', cat: 'malabar', name: 'Vegetable Stew', price: 149, tag: 'Vegetarian',
     desc: 'Potato, carrot and beans in coconut milk, scented with green chilli and ginger.' },
 
-  { id: 'ghee-rice-chicken-combo', cat: 'boxes', name: 'Ghee Rice Chicken Combo', price: 249,
+  { id: 'ghee-rice-chicken-combo', cat: 'boxes', name: 'Ghee Rice Chicken Combo', price: 269,
     desc: 'Fragrant ghee rice with your choice of chicken curry. A full meal in one box.' },
-  { id: 'ghee-rice-beef-combo', cat: 'boxes', name: 'Ghee Rice Beef Combo', price: 279,
+  { id: 'ghee-rice-beef-combo', cat: 'boxes', name: 'Ghee Rice Beef Combo', price: 289,
     desc: 'Fragrant ghee rice with our beef curry. A full meal in one box.' },
-  { id: 'biriyani-rice-chicken-combo', cat: 'boxes', name: 'Biriyani Rice Chicken Combo', price: 259,
+  { id: 'biriyani-rice-chicken-combo', cat: 'boxes', name: 'Biriyani Rice Chicken Combo', price: 279,
     desc: 'Spiced biriyani rice paired with our chicken curry, for when you want both in one box.' },
-  { id: 'biriyani-rice-beef-combo', cat: 'boxes', name: 'Biriyani Rice Beef Combo', price: 289,
+  { id: 'biriyani-rice-beef-combo', cat: 'boxes', name: 'Biriyani Rice Beef Combo', price: 299,
     desc: 'Spiced biriyani rice paired with our beef curry, for when you want both in one box.' },
-  { id: 'pathal-chicken-combo', cat: 'boxes', name: 'Neypathal Chicken Combo', price: 219,
+  { id: 'pathal-chicken-combo', cat: 'boxes', name: 'Neypathal Chicken Combo', price: 239,
     desc: 'Soft, thin neypathal with Chicken Varutharachathu.' },
-  { id: 'pathal-beef-combo', cat: 'boxes', name: 'Neypathal Beef Combo', price: 249,
+  { id: 'pathal-beef-combo', cat: 'boxes', name: 'Neypathal Beef Combo', price: 269,
     desc: 'Soft, thin neypathal with our beef curry.' },
-  { id: 'appam-chicken-combo', cat: 'boxes', name: 'Appam Chicken Combo', price: 209,
+  { id: 'appam-chicken-combo', cat: 'boxes', name: 'Appam Chicken Combo', price: 229,
     desc: 'Lacy appam, crisp at the edges and soft in the middle, with your choice of chicken curry.' },
-  { id: 'appam-beef-combo', cat: 'boxes', name: 'Appam Beef Combo', price: 239,
+  { id: 'appam-beef-combo', cat: 'boxes', name: 'Appam Beef Combo', price: 259,
     desc: 'Lacy appam, crisp at the edges and soft in the middle, with our beef curry.' },
-  { id: 'puttu-chicken-combo', cat: 'boxes', name: 'Puttu Chicken Combo', price: 189,
+  { id: 'puttu-chicken-combo', cat: 'boxes', name: 'Puttu Chicken Combo', price: 209,
     desc: 'Steamed rice and coconut puttu with your choice of chicken curry to pour over.' },
-  { id: 'puttu-beef-combo', cat: 'boxes', name: 'Puttu Beef Combo', price: 219,
+  { id: 'puttu-beef-combo', cat: 'boxes', name: 'Puttu Beef Combo', price: 239,
     desc: 'Steamed rice and coconut puttu with our beef curry to pour over.' },
-  { id: 'porotta-chicken-combo', cat: 'boxes', name: 'Porotta Chicken Combo', price: 229,
+  { id: 'porotta-chicken-combo', cat: 'boxes', name: 'Porotta Chicken Combo', price: 249,
     desc: 'Layered, flaky Malabar porotta with your choice of chicken curry. Best pulled apart by hand.' },
-  { id: 'porotta-beef-combo', cat: 'boxes', name: 'Porotta Beef Combo', price: 259,
+  { id: 'porotta-beef-combo', cat: 'boxes', name: 'Porotta Beef Combo', price: 279,
     desc: 'Layered, flaky Malabar porotta with our beef curry. The Kerala favourite.' },
-  { id: 'chapathi-chicken-combo', cat: 'boxes', name: 'Chapathi Chicken Combo', price: 189,
+  { id: 'chapathi-chicken-combo', cat: 'boxes', name: 'Chapathi Chicken Combo', price: 209,
     desc: 'Soft chapathi with your choice of chicken curry. Lighter, and just as satisfying.' },
-  { id: 'chapathi-beef-combo', cat: 'boxes', name: 'Chapathi Beef Combo', price: 219,
+  { id: 'chapathi-beef-combo', cat: 'boxes', name: 'Chapathi Beef Combo', price: 239,
     desc: 'Soft chapathi with our beef curry. Lighter, and just as satisfying.' },
 
-  { id: 'ghee-rice', cat: 'rice', name: 'Ghee Rice', price: 169, desc: 'Kaima rice cooked in ghee with whole spices and fried onions.' },
-  { id: 'biriyani-rice', cat: 'rice', name: 'Biriyani Rice', price: 179, desc: 'Our dum biriyani rice on its own, to pair with any roast or curry.' },
+  { id: 'ghee-rice', cat: 'rice', name: 'Ghee Rice', price: 189, desc: 'Kaima rice cooked in ghee with whole spices and fried onions.' },
+  { id: 'biriyani-rice', cat: 'rice', name: 'Biriyani Rice', price: 199, desc: 'Our dum biriyani rice on its own, to pair with any roast or curry.' },
 
-  { id: 'mint-lemon', cat: 'drinks', name: 'Mint Lemon', price: 50, desc: 'Fresh lime and mint.' },
-  { id: 'pineapple-lemon', cat: 'drinks', name: 'Pineapple Lemon', price: 50, desc: 'Pineapple with fresh lime.' },
-  { id: 'pineapple-juice', cat: 'drinks', name: 'Pineapple', price: 169, desc: 'Cold pressed. No sugar, no water.' },
-  { id: 'watermelon-juice', cat: 'drinks', name: 'Water Melon', price: 139, desc: 'Cold pressed. No sugar, no water.' },
-  { id: 'melon-magic', cat: 'drinks', name: 'Melon Magic', price: 199, desc: 'A detox smoothie.' }
+  { id: 'mint-lemon', cat: 'drinks', name: 'Mint Lemon', price: 60, desc: 'Fresh lime and mint.' },
+  { id: 'pineapple-lemon', cat: 'drinks', name: 'Pineapple Lemon', price: 70, desc: 'Pineapple with fresh lime.' },
+  { id: 'pineapple-juice', cat: 'drinks', name: 'Pineapple', price: 179, desc: 'Cold pressed. No sugar, no water.' },
+  { id: 'watermelon-juice', cat: 'drinks', name: 'Water Melon', price: 159, desc: 'Cold pressed. No sugar, no water.' },
+  { id: 'melon-magic', cat: 'drinks', name: 'Melon Magic', price: 229, desc: 'A detox smoothie.' }
 ];
 
 
@@ -232,7 +234,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     dishesEl.setAttribute('aria-labelledby', 'tab-' + active);
     dishesEl.className = cat.list ? 'menu-list' : 'dishes';
     dishesEl.innerHTML = MENU.filter(function (d) { return d.cat === active; }).map(function (d) {
-      var price = d.price == null ? '<span class="dish__price dish__price--ask">Price on request<small>Direct orders only</small></span>' : '<span class="dish__price">' + rupee(d.price) + (d.options ? '<small>Customisable</small>' : '') + '</span>';
+      var price = d.price == null ? (d.ask ? '<span class="dish__price dish__price--ask">' + d.ask + '</span>' : '<span class="dish__price dish__price--ask">Price on request<small>Direct orders only</small></span>') : '<span class="dish__price">' + rupee(d.price) + (d.options ? '<small>Customisable</small>' : '') + '</span>';
       if (cat.list) {
         return '<div class="row"><div><h3>' + d.name + '</h3><p>' + d.desc + '</p></div>' +
           '<div class="row__buy">' + price + '<span class="dish__ctl" data-ctl="' + d.id + '"></span></div></div>';
