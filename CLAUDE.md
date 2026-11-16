@@ -38,7 +38,7 @@ assets/
   photos/         dish photos, named <dish-id>.jpg; og-southery.jpg for link previews
   photos/bg/      large background photography (AVIF + JPG)
   nature/         foliage photos behind the glass panels, in pairs (-a / -b), AVIF + JPG
-  audio/          background music loop (original composition; one 90 s cycle between 3 s and 93 s)
+  audio/          background music loop (original meditation-style composition; one 96 s cycle between 3 s and 99 s)
 ```
 
 ## Common edits
