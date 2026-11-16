@@ -529,7 +529,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
       pay.innerHTML = '<div class="pay__qr"><div class="pay__code">' + qrSvg(upiLink()) + '</div><p>Keep this for later. Scan it once we confirm your total.</p></div>';
     }
     pay.insertAdjacentHTML('beforeend', '<p class="pay__id">UPI ID <b>' + UPI.id + '</b> <button type="button" class="btn btn--ghost btn--xs" data-copy-upi>Copy</button></p><p class="pay__ref">Order reference ' + code + '</p>');
-    sentEl.hidden = false; renderCart(); $('[data-sent-title]').focus();
+    sentEl.hidden = false; renderCart(); $('.drawer__body').scrollTop = 0; $('[data-sent-title]').focus({ preventScroll: true });
   });
 
   sentEl.addEventListener('click', function (e) {
@@ -578,6 +578,16 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
 
   renderWhere();
   renderDishes();
+
+  /* Phones and tablets: load the story and promise backgrounds only as they come near */
+  (function () {
+    var secs = document.querySelectorAll('.story, .promise');
+    if (!('IntersectionObserver' in window)) { for (var k = 0; k < secs.length; k++) secs[k].classList.add('is-near'); return; }
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-near'); io.unobserve(e.target); } });
+    }, { rootMargin: '800px 0px' });
+    for (var k = 0; k < secs.length; k++) io.observe(secs[k]);
+  })();
 
   /* First-visit greeting curtain: logo, then three words, then lift. Tap to skip.
      html.greet is set in <head>; the CSS has a failsafe lift if this never runs. */
