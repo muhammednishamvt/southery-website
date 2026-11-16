@@ -472,7 +472,7 @@ section[id] { scroll-margin-top: 24px; }
    html.greet is set by the inline script in <head> on a first visit (no reduced motion).
    app.js steps through the words, then adds .greet-done to lift the curtain. */
 .curtain { display: none; }
-html.greet .curtain { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; background: var(--green-deep); color: var(--ivory); touch-action: none; cursor: pointer; transform: translateY(0); transition: transform .7s cubic-bezier(.76,0,.24,1); animation: curtain-failsafe .7s cubic-bezier(.76,0,.24,1) 6s forwards; }
+html.greet .curtain { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; background: var(--green-deep); color: var(--ivory); touch-action: none; cursor: pointer; transform: translateY(0); transition: transform .65s cubic-bezier(.76,0,.24,1); animation: curtain-failsafe .65s cubic-bezier(.76,0,.24,1) 5s forwards; }
 html.greet .curtain::after { content: ""; position: absolute; left: -10%; top: calc(100% - 9vh); width: 120%; height: 18vh; background: inherit; border-radius: 50%; }
 html.greet.greet-done .curtain { transform: translateY(calc(-100% - 12vh)); }
 @keyframes curtain-failsafe { to { transform: translateY(calc(-100% - 12vh)); } }
@@ -483,7 +483,7 @@ html.greet.greet-done .curtain { transform: translateY(calc(-100% - 12vh)); }
 .curtain__text { height: clamp(44px, 11vw, 64px); width: auto; }
 .curtain__text--ml { height: clamp(40px, 10vw, 58px); }
 /* leaf photos behind the logo (step 1) and WebApp (step 3) slides */
-.curtain__bg { position: absolute; inset: 0; z-index: 1; background: center / cover no-repeat; opacity: 0; transition: opacity .45s ease; }
+.curtain__bg { position: absolute; inset: 0; z-index: 1; background: center / cover no-repeat; opacity: 0; transition: opacity .3s ease; }
 .curtain__bg::after { content: ""; position: absolute; inset: 0; background: rgba(12, 26, 21, 0.45); }
 html.greet .curtain__bg--logo { background-image: url(/assets/nature/curtain-logo.jpg); background-image: image-set(url(/assets/nature/curtain-logo.avif) type("image/avif"), url(/assets/nature/curtain-logo.webp) type("image/webp"), url(/assets/nature/curtain-logo.jpg) type("image/jpeg")); }
 html.greet .curtain__bg--webapp { background-image: url(/assets/nature/curtain-webapp.jpg); background-image: image-set(url(/assets/nature/curtain-webapp.avif) type("image/avif"), url(/assets/nature/curtain-webapp.webp) type("image/webp"), url(/assets/nature/curtain-webapp.jpg) type("image/jpeg")); }

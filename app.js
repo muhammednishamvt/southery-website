@@ -594,7 +594,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
   (function () {
     var h = document.documentElement, c = $('[data-curtain]');
     if (!c || !/(^| )greet( |$)/.test(h.className)) return;
-    var items = c.querySelectorAll('.curtain__word > *'), HOLD = [650, 750, 600, 700], i = 0, t, started = false, lifted = false;
+    var items = c.querySelectorAll('.curtain__word > *'), HOLD = [500, 600, 450, 600], i = 0, t, started = false, lifted = false;
     function lift() {
       if (lifted) return; lifted = true; clearTimeout(t);
       h.classList.add('greet-done');
@@ -608,7 +608,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     }
     function start() { if (started) return; started = true; t = setTimeout(next, HOLD[0]); }
     var logo = c.querySelector('.curtain__logo');
-    if (logo.complete) start(); else { logo.addEventListener('load', start); logo.addEventListener('error', start); setTimeout(start, 1200); }
+    if (logo.complete) start(); else { logo.addEventListener('load', start); logo.addEventListener('error', start); setTimeout(start, 500); }
     c.addEventListener('click', lift);
   })();
 })();
