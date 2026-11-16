@@ -15,9 +15,9 @@ var CATEGORIES = [
 ];
 
 var MENU = [
-  { id: 'chicken-dum-biriyani', cat: 'biriyani', name: 'Chicken Dum Biriyani', price: 299, tag: 'Signature',
+  { id: 'chicken-dum-biriyani', cat: 'biriyani', name: 'Chicken Dum Biriyani', price: 299, best: true,
     desc: 'Chicken and Kaima rice, sealed and dum cooked in their own steam. Fried onions and cashew on top, raita and pickle on the side.' },
-  { id: 'beef-dum-biriyani', cat: 'biriyani', name: 'Beef Dum Biriyani', price: 329,
+  { id: 'beef-dum-biriyani', cat: 'biriyani', name: 'Beef Dum Biriyani', price: 329, best: true,
     desc: 'Slow-cooked beef layered with Kaima rice and left on dum until every grain carries the masala.' },
   { id: 'mutton-dum-biriyani', cat: 'biriyani', name: 'Mutton Dum Biriyani', price: null,
     desc: 'Tender mutton and Kaima rice, cooked low under a sealed lid. Deep, rich and worth the wait.' },
@@ -26,13 +26,13 @@ var MENU = [
   { id: 'prawns-biriyani', cat: 'biriyani', name: 'Prawns Biriyani', price: null,
     desc: 'Prawns cooked in a spiced masala and folded through Kaima rice.' },
 
-  { id: 'chicken-fry', cat: 'malabar', name: 'Chicken Fry', price: 219,
+  { id: 'chicken-fry', cat: 'malabar', name: 'Chicken Fry', price: 219, best: true,
     desc: 'Chicken marinated in red chilli and spice, fried until crisp at the edges and juicy inside.' },
   { id: 'beef-fry', cat: 'malabar', name: 'Beef Fry', price: 249, photo: false,
     desc: 'Beef cooked tender, then fried dry with coconut slivers, shallots and curry leaves.' },
   { id: 'chicken-naadan-roast', cat: 'malabar', name: 'Chicken Naadan Roast', price: 239,
     desc: 'Chicken cooked down in a thick onion and tomato masala until it clings to every piece.' },
-  { id: 'beef-roast', cat: 'malabar', name: 'Beef Roast', price: 259, tag: 'Most loved',
+  { id: 'beef-roast', cat: 'malabar', name: 'Beef Roast', price: 259, best: true,
     desc: 'Beef roasted down slowly until dark at the edges, with coconut slivers and curry leaves.' },
   { id: 'chicken-varutharachathu', cat: 'malabar', name: 'Chicken Varutharachathu', price: 259,
     desc: 'Coconut and spices roasted slowly, ground fine, and simmered with chicken into a deep, nutty gravy.' },
@@ -55,7 +55,7 @@ var MENU = [
     desc: 'Spiced biriyani rice paired with our chicken curry, for when you want both in one box.' },
   { id: 'biriyani-rice-beef-combo', cat: 'boxes', name: 'Biriyani Rice Beef Combo', price: 299,
     desc: 'Spiced biriyani rice paired with our beef curry, for when you want both in one box.' },
-  { id: 'pathal-chicken-combo', cat: 'boxes', name: 'Neypathal Chicken Combo', price: 239,
+  { id: 'pathal-chicken-combo', cat: 'boxes', name: 'Neypathal Chicken Combo', price: 239, best: true,
     desc: 'Soft, thin neypathal with Chicken Varutharachathu.' },
   { id: 'pathal-beef-combo', cat: 'boxes', name: 'Neypathal Beef Combo', price: 269,
     desc: 'Soft, thin neypathal with our beef curry.' },
@@ -223,7 +223,10 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     if (!photoSrc(d)) return '<div class="dish__photo dish__photo--mark"><img src="/favicon.svg" alt="" width="120" height="120">' + tag(d) + '</div>';
     return '<div class="dish__photo"><img src="' + photoSrc(d) + '" alt="' + esc(d.name) + '" loading="lazy" width="720" height="720">' + tag(d) + '</div>';
   }
-  function tag(d) { return d.tag ? '<span class="dish__tag">' + d.tag + '</span>' : ''; }
+  function tag(d) {
+    if (d.best) return '<span class="dish__tag dish__tag--best">Best seller</span>';
+    return d.tag ? '<span class="dish__tag">' + d.tag + '</span>' : '';
+  }
 
   function renderDishes() {
     var cat = catById[active];
