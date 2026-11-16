@@ -579,14 +579,14 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
   renderWhere();
   renderDishes();
 
-  /* Background music: an original 91 s bossa-style loop (soft piano, nylon guitar, light percussion) at low volume. Off by default; the header button turns it on.
+  /* Background music: "Spice Garden Morning", an original 80 s loop (breeze, celesta, soft pads, a few bird calls) at low volume. Off by default; the header button turns it on.
      Browsers only allow sound after the visitor's first tap or key press, so it starts then.
      The header button turns it off or on; the choice is remembered ('southery-music').
      Web Audio loops the 3 s to 93 s region of the file, which is exactly one seamless cycle. */
   (function () {
     var btn = $('[data-music]'), AC = window.AudioContext || window.webkitAudioContext;
     if (!btn || !AC) { if (btn) btn.hidden = true; return; }
-    var SRC = '/assets/audio/southery-loop-v3.mp3', LOOP_START = 3, LOOP_END = 94.428571, VOL = 0.11;   /* fixed volume, set here only (half the launch level) */
+    var SRC = '/assets/audio/southery-spice-garden-v1.mp3', LOOP_START = 3, LOOP_END = 83, VOL = 0.11;   /* fixed volume, set here only (half the launch level) */
     var ctx, gain, buffer, source, loading = false, playing = false, armed = true;
     var on = false; try { on = localStorage.getItem('southery-music') === 'on'; } catch (e) {}
     function show() { btn.setAttribute('aria-pressed', on ? 'true' : 'false'); btn.classList.toggle('is-playing', playing); btn.title = on ? 'Turn music off' : 'Play music'; }
