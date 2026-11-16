@@ -38,7 +38,7 @@ assets/
   photos/         dish photos, named <dish-id>.jpg; og-southery.jpg for link previews
   photos/bg/      large background photography (AVIF + JPG)
   nature/         foliage photos behind the glass panels, in pairs (-a / -b), AVIF + JPG
-  audio/          background music loop (original bossa-style composition, 84 BPM; one 91.43 s cycle between 3 s and 94.43 s)
+  audio/          background music loop "Spice Garden Morning" (original composition; one 80 s cycle between 3 s and 83 s)
 ```
 
 ## Common edits
