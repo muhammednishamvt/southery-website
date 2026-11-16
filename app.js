@@ -589,25 +589,25 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     for (var k = 0; k < secs.length; k++) io.observe(secs[k]);
   })();
 
-  /* First-visit greeting curtain: logo, then three words, then lift. Tap to skip.
+  /* Greeting curtain on every page load: Introducing, logo (mango leaf), ക്ലൗഡ് കിച്ചൺ, WebApp (green leaf), then lift. Tap to skip.
      html.greet is set in <head>; the CSS has a failsafe lift if this never runs. */
   (function () {
     var h = document.documentElement, c = $('[data-curtain]');
     if (!c || !/(^| )greet( |$)/.test(h.className)) return;
-    var items = c.querySelectorAll('.curtain__word > *'), HOLD = [1000, 750, 650, 850], i = 0, t, started = false, lifted = false;
+    var items = c.querySelectorAll('.curtain__word > *'), HOLD = [650, 750, 600, 700], i = 0, t, started = false, lifted = false;
     function lift() {
       if (lifted) return; lifted = true; clearTimeout(t);
-      try { localStorage.setItem('southery-greeted', '1'); } catch (e) {}
       h.classList.add('greet-done');
       setTimeout(function () { h.classList.remove('greet'); h.classList.remove('greet-done'); if (c.parentNode) c.parentNode.removeChild(c); }, 1000);
     }
     function next() {
       if (i >= items.length - 1) { lift(); return; }
       items[i].classList.remove('is-on'); i++; items[i].classList.add('is-on');
+      c.setAttribute('data-step', i);
       t = setTimeout(next, HOLD[i]);
     }
     function start() { if (started) return; started = true; t = setTimeout(next, HOLD[0]); }
-    var logo = items[0];
+    var logo = c.querySelector('.curtain__logo');
     if (logo.complete) start(); else { logo.addEventListener('load', start); logo.addEventListener('error', start); setTimeout(start, 1200); }
     c.addEventListener('click', lift);
   })();

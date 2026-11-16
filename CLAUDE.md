@@ -63,6 +63,10 @@ Open Graph tags in `index.html`, and in the visit and footer sections. Keep them
 **Ratings** — the Swiggy and Zomato rating chips (score and number of ratings) and the Google review count in
 `index.html` are typed in by hand. Update them from the apps when they change.
 
+**Greeting curtain** — shown on every page load (skipped for reduced motion; tap to skip): Introducing, logo over
+`curtain-logo` leaf photo, ക്ലൗഡ് കിച്ചൺ, WebApp over `curtain-webapp` leaf photo. The words are vector outlines in
+`index.html`; timings are `HOLD` in `app.js`.
+
 Browser storage keys: `southery-cart` and `southery-customer` (name and address, remembered for next time).
 
 ## Brand rules
