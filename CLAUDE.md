@@ -69,7 +69,7 @@ Open Graph tags in `index.html`, and in the visit and footer sections. Keep them
 `index.html`; timings are `HOLD` in `app.js`.
 
 **Background music** — off by default. The header button (red with a muted speaker when off, green with moving
-bars when on) plays it at low volume (`VOL` in `app.js`); the choice is stored, and for visitors who turned it on it
+bars when on) plays it at a fixed low volume set only in code (`VOL` in `app.js`, 0.11; visitors can't change it on the site); the choice is stored, and for visitors who turned it on it
 resumes on their first tap or key press of the next visit (browsers block sound before that). To swap the track,
 add a new file with a new name (cache) and update `SRC`, `LOOP_START` and `LOOP_END`; use only licensed or original music.
 
