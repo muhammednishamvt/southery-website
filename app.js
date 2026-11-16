@@ -579,6 +579,61 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
   renderWhere();
   renderDishes();
 
+  /* Background music: an original 90 s instrumental loop, on by default at low volume.
+     Browsers only allow sound after the visitor's first tap or key press, so it starts then.
+     The header button turns it off or on; the choice is remembered ('southery-music').
+     Web Audio loops the 3 s to 93 s region of the file, which is exactly one seamless cycle. */
+  (function () {
+    var btn = $('[data-music]'), AC = window.AudioContext || window.webkitAudioContext;
+    if (!btn || !AC) { if (btn) btn.hidden = true; return; }
+    var SRC = '/assets/audio/southery-loop-v1.mp3', LOOP_START = 3, LOOP_END = 93, VOL = 0.22;
+    var ctx, gain, buffer, source, loading = false, playing = false, armed = true;
+    var on = true; try { on = localStorage.getItem('southery-music') !== 'off'; } catch (e) {}
+    function show() { btn.setAttribute('aria-pressed', on ? 'true' : 'false'); btn.classList.toggle('is-playing', playing); btn.title = on ? 'Music on' : 'Music off'; }
+    function fade(to, secs) { var t = ctx.currentTime; gain.gain.cancelScheduledValues(t); gain.gain.setValueAtTime(gain.gain.value, t); gain.gain.linearRampToValueAtTime(to, t + secs); }
+    function begin() {
+      if (!buffer || !on || document.hidden) return;
+      if (!source) {
+        source = ctx.createBufferSource(); source.buffer = buffer; source.loop = true;
+        source.loopStart = LOOP_START; source.loopEnd = LOOP_END; source.connect(gain); source.start(0, LOOP_START);
+      }
+      if (ctx.state !== 'running') ctx.resume();
+      playing = true; fade(VOL, 2.5); show();
+    }
+    function start() {
+      if (!ctx) { ctx = new AC(); gain = ctx.createGain(); gain.gain.value = 0; gain.connect(ctx.destination); }
+      if (ctx.state !== 'running') ctx.resume();
+      if (buffer) { begin(); return; }
+      if (loading) return; loading = true;
+      fetch(SRC).then(function (r) { return r.arrayBuffer(); }).then(function (data) {
+        return new Promise(function (ok, bad) { ctx.decodeAudioData(data, ok, bad); });
+      }).then(function (b) { buffer = b; begin(); }).catch(function () { btn.hidden = true; });
+    }
+    function stop() {
+      playing = false; show();
+      if (!ctx) return;
+      fade(0, 0.6); setTimeout(function () { if (!playing && ctx.state === 'running') ctx.suspend(); }, 700);
+    }
+    function firstTouch(e) {
+      if (!armed) return; armed = false;
+      document.removeEventListener('pointerdown', firstTouch, true); document.removeEventListener('keydown', firstTouch, true);
+      if (on && !btn.contains(e.target)) start();
+    }
+    document.addEventListener('pointerdown', firstTouch, true); document.addEventListener('keydown', firstTouch, true);
+    btn.addEventListener('click', function () {
+      armed = false; on = !playing;
+      try { localStorage.setItem('southery-music', on ? 'on' : 'off'); } catch (e) {}
+      if (on) start(); else stop();
+      show();
+    });
+    document.addEventListener('visibilitychange', function () {
+      if (!ctx || !on || !buffer) return;
+      if (document.hidden) { fade(0, 0.3); setTimeout(function () { if (document.hidden) ctx.suspend(); }, 350); }
+      else begin();
+    });
+    show();
+  })();
+
   /* Phones and tablets: load the story and promise backgrounds only as they come near */
   (function () {
     var secs = document.querySelectorAll('.story, .promise');

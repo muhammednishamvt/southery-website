@@ -38,6 +38,7 @@ assets/
   photos/         dish photos, named <dish-id>.jpg; og-southery.jpg for link previews
   photos/bg/      large background photography (AVIF + JPG)
   nature/         foliage photos behind the glass panels, in pairs (-a / -b), AVIF + JPG
+  audio/          background music loop (original composition; one 90 s cycle between 3 s and 93 s)
 ```
 
 ## Common edits
@@ -67,7 +68,11 @@ Open Graph tags in `index.html`, and in the visit and footer sections. Keep them
 `curtain-logo` leaf photo, ക്ലൗഡ് കിച്ചൺ, WebApp over `curtain-webapp` leaf photo. The words are vector outlines in
 `index.html`; timings are `HOLD` in `app.js`.
 
-Browser storage keys: `southery-cart` and `southery-customer` (name and address, remembered for next time).
+**Background music** — on by default at low volume (`VOL` in `app.js`), starting on the visitor's first tap or key
+press (browsers block sound before that). The header button toggles it and the choice is stored. To swap the track,
+add a new file with a new name (cache) and update `SRC`, `LOOP_START` and `LOOP_END`; use only licensed or original music.
+
+Browser storage keys: `southery-cart`, `southery-customer` (name and address, remembered for next time) and `southery-music`.
 
 ## Brand rules
 
