@@ -594,11 +594,11 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
   (function () {
     var h = document.documentElement, c = $('[data-curtain]');
     if (!c || !/(^| )greet( |$)/.test(h.className)) return;
-    var items = c.querySelectorAll('.curtain__word > *'), HOLD = [500, 600, 450, 600], i = 0, t, started = false, lifted = false;
+    var items = c.querySelectorAll('.curtain__word > *'), HOLD = [400, 500, 400, 500], i = 0, t, started = false, lifted = false;
     function lift() {
       if (lifted) return; lifted = true; clearTimeout(t);
       h.classList.add('greet-done');
-      setTimeout(function () { h.classList.remove('greet'); h.classList.remove('greet-done'); if (c.parentNode) c.parentNode.removeChild(c); }, 1000);
+      setTimeout(function () { h.classList.remove('greet'); h.classList.remove('greet-done'); if (c.parentNode) c.parentNode.removeChild(c); }, 800);
     }
     function next() {
       if (i >= items.length - 1) { lift(); return; }
