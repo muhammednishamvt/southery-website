@@ -6,7 +6,7 @@
 <title>Southery — Malabar kitchen, Kochi</title>
 <meta name="description" content="Malabar dum biriyanis, roasts, stews and combo boxes, cooked in our Edappally kitchen and delivered across Kochi. Order directly on WhatsApp.">
 <meta name="theme-color" content="#132721">
-<script>try{if(!localStorage.getItem('southery-greeted')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.className+=' greet'}catch(e){}</script>
+<script>try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.className+=' greet'}catch(e){}</script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/assets/icons/app-icon-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
@@ -40,8 +40,10 @@
 <body>
 <a class="skip" href="#menu">Skip to the menu</a>
 
-<!-- ============ First-visit greeting curtain (shown once; see app.js) ============ -->
+<!-- ============ Greeting curtain (every page load; see app.js) ============ -->
 <div class="curtain" aria-hidden="true" data-curtain>
+  <i class="curtain__bg curtain__bg--logo"></i>
+  <i class="curtain__bg curtain__bg--webapp"></i>
   <div class="curtain__word">
     <svg class="curtain__text is-on" viewBox="0 -800 4729 1050" focusable="false"><path fill="currentColor" d="M119 0V-670H87V0Z M321 0V-282C321 -371 373 -458 486 -458C571 -458 625 -404 625 -303V0H657V-307C657 -430 587 -486 493 -486C395 -486 335 -418 321 -334V-476H288V0Z M939 10C992 10 1041 -15 1063 -52L1048 -82C1029 -44 985 -20 943 -20C893 -20 847 -45 847 -123V-449H1013V-476H847V-579L815 -555V-476H736V-449H815V-119C815 -26 874 10 939 10Z M1164 0V-282C1164 -367 1224 -459 1310 -459C1367 -459 1391 -423 1391 -386C1391 -355 1381 -324 1370 -307H1405C1416 -330 1422 -360 1422 -388C1422 -449 1381 -486 1319 -486C1236 -486 1178 -416 1164 -335V-476H1131V0Z M1696 10C1825 10 1915 -87 1915 -238C1915 -388 1825 -486 1696 -486C1566 -486 1477 -388 1477 -238C1477 -87 1566 10 1696 10ZM1696 -18C1584 -18 1509 -103 1509 -238C1509 -373 1584 -458 1696 -458C1807 -458 1883 -373 1883 -238C1883 -103 1807 -18 1696 -18Z M2223 10C2314 10 2377 -56 2389 -134V0H2421V-670H2389V-341C2377 -420 2314 -486 2223 -486C2092 -486 2020 -387 2020 -238C2020 -88 2092 10 2223 10ZM2052 -238C2052 -389 2124 -458 2228 -458C2331 -458 2389 -379 2389 -299V-177C2389 -97 2331 -18 2228 -18C2124 -18 2052 -86 2052 -238Z M2732 10C2837 10 2896 -61 2907 -147V0H2939V-476H2907V-193C2907 -105 2859 -18 2739 -18C2656 -18 2603 -72 2603 -172V-476H2571V-169C2571 -45 2641 10 2732 10Z M3280 10C3390 10 3466 -56 3480 -153L3451 -169C3441 -79 3380 -18 3280 -18C3174 -18 3095 -89 3095 -238C3095 -386 3174 -458 3281 -458C3381 -458 3440 -395 3451 -307L3480 -322C3466 -419 3391 -486 3281 -486C3152 -486 3063 -397 3063 -238C3063 -78 3151 10 3280 10Z M3638 -570V-670H3605V-570ZM3638 0V-476H3605V0Z M3825 0V-282C3825 -371 3877 -458 3990 -458C4075 -458 4129 -404 4129 -303V0H4161V-307C4161 -430 4091 -486 3997 -486C3899 -486 3839 -418 3825 -334V-476H3792V0Z M4488 -148C4597 -148 4666 -218 4666 -317C4666 -374 4643 -422 4601 -452L4680 -560L4645 -576L4589 -460C4562 -477 4527 -486 4488 -486C4379 -486 4310 -415 4310 -317C4310 -258 4335 -208 4378 -179C4352 -157 4319 -119 4319 -80C4319 -54 4335 -30 4372 -24C4333 -10 4274 28 4274 87C4274 154 4347 196 4464 196C4605 196 4701 133 4701 48C4701 -17 4654 -49 4575 -49H4422C4367 -49 4348 -68 4348 -98C4348 -124 4365 -152 4387 -174C4414 -157 4448 -148 4488 -148ZM4488 -175C4400 -175 4342 -233 4342 -317C4342 -401 4400 -459 4488 -459C4577 -459 4635 -401 4635 -317C4635 -233 4577 -175 4488 -175ZM4464 169C4370 169 4303 139 4303 80C4303 36 4341 -1 4380 -21H4568C4637 -21 4670 2 4670 50C4670 118 4591 169 4464 169Z"/></svg>
     <img class="curtain__logo" src="/assets/logo/southery-script-ivory.svg" alt="" width="340" height="68">
