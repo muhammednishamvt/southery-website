@@ -88,17 +88,17 @@ section[id] { scroll-margin-top: 24px; }
 .nav__links a:hover { color: var(--ivory); }
 .cart-btn { display: inline-flex; align-items: center; gap: 10px; height: 42px; padding: 0 8px 0 18px; border-radius: 999px; border: 1px solid rgba(253,247,227,0.4); background: rgba(253,247,227,0.06); cursor: pointer; font-size: 15px; font-weight: 500; }
 .cart-btn:hover { border-color: var(--ivory); }
-/* Background music toggle: four small bars that move while music plays */
-.music-btn { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(253,247,227,0.4); background: rgba(253,247,227,0.06); color: var(--ivory); cursor: pointer; }
+/* Background music toggle: red with a muted speaker when off, green with moving bars when on */
+.music-btn { position: relative; flex: none; display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(253,247,227,0.35); background: var(--chilli); color: var(--ivory); cursor: pointer; transition: background-color .25s; }
+.music-btn[aria-pressed="true"] { background: var(--wa-green); }
 .music-btn:hover { border-color: var(--ivory); }
 .music-btn + .cart-btn { margin-left: -26px; }
-.music-btn__bars { display: flex; align-items: flex-end; gap: 2px; height: 14px; }
-.music-btn__bars i { width: 2px; height: 6px; border-radius: 1px; background: currentColor; transition: height .3s; }
+.music-btn__mute { width: 20px; height: 20px; }
+.music-btn__bars { display: none; align-items: flex-end; gap: 2px; height: 14px; }
+.music-btn[aria-pressed="true"] .music-btn__mute { display: none; }
+.music-btn[aria-pressed="true"] .music-btn__bars { display: flex; }
+.music-btn__bars i { width: 2px; height: 6px; border-radius: 1px; background: currentColor; }
 .music-btn__bars i:nth-child(2) { height: 11px; } .music-btn__bars i:nth-child(3) { height: 8px; } .music-btn__bars i:nth-child(4) { height: 13px; }
-.music-btn[aria-pressed="false"] { color: var(--ivory-soft); opacity: .6; }
-.music-btn[aria-pressed="false"] .music-btn__bars i:nth-child(1) { height: 5px; } .music-btn[aria-pressed="false"] .music-btn__bars i:nth-child(2) { height: 9px; } .music-btn[aria-pressed="false"] .music-btn__bars i:nth-child(3) { height: 7px; } .music-btn[aria-pressed="false"] .music-btn__bars i:nth-child(4) { height: 11px; }
-.music-btn { position: relative; }
-.music-btn[aria-pressed="false"]::after { content: ""; position: absolute; left: 50%; top: 50%; width: 22px; height: 1.5px; border-radius: 1px; background: currentColor; transform: translate(-50%, -50%) rotate(-45deg); }
 .music-btn.is-playing .music-btn__bars i { animation: eq 1.1s ease-in-out infinite alternate; }
 .music-btn.is-playing .music-btn__bars i:nth-child(2) { animation-delay: -.35s; animation-duration: .9s; }
 .music-btn.is-playing .music-btn__bars i:nth-child(3) { animation-delay: -.7s; animation-duration: 1.3s; }

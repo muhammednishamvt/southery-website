@@ -68,8 +68,9 @@ Open Graph tags in `index.html`, and in the visit and footer sections. Keep them
 `curtain-logo` leaf photo, ക്ലൗഡ് കിച്ചൺ, WebApp over `curtain-webapp` leaf photo. The words are vector outlines in
 `index.html`; timings are `HOLD` in `app.js`.
 
-**Background music** — on by default at low volume (`VOL` in `app.js`), starting on the visitor's first tap or key
-press (browsers block sound before that). The header button toggles it and the choice is stored. To swap the track,
+**Background music** — off by default. The header button (red with a muted speaker when off, green with moving
+bars when on) plays it at low volume (`VOL` in `app.js`); the choice is stored, and for visitors who turned it on it
+resumes on their first tap or key press of the next visit (browsers block sound before that). To swap the track,
 add a new file with a new name (cache) and update `SRC`, `LOOP_START` and `LOOP_END`; use only licensed or original music.
 
 Browser storage keys: `southery-cart`, `southery-customer` (name and address, remembered for next time) and `southery-music`.
@@ -93,7 +94,8 @@ light coming through frosted glass.
 | `--turmeric` | `#F49A17` | reserved for pop-ups and ad campaigns; not used on the site yet |
 
 The accents are for hover and brief feedback only, never resting colours. One exception: the Swiggy and
-Zomato rating chips in the visit section and the "Best seller" tags on dish photos use the accent green as their fill. On touch screens they show on
+Zomato rating chips in the visit section, the "Best seller" tags on dish photos, and the music button (red when off,
+green when on, ivory icon) use the accents as resting fills. On touch screens they show on
 tap (`:active`); hover styles sit inside `@media (hover: hover)` so they don't stick after a tap.
 Red chilli is too dark for text on the green ground; use it as a fill with ivory text. The accent green
 takes ivory text. Use only this one green for accents; don't add other greens.

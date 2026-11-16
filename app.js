@@ -579,7 +579,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
   renderWhere();
   renderDishes();
 
-  /* Background music: an original 90 s instrumental loop, on by default at low volume.
+  /* Background music: an original 90 s instrumental loop at low volume. Off by default; the header button turns it on.
      Browsers only allow sound after the visitor's first tap or key press, so it starts then.
      The header button turns it off or on; the choice is remembered ('southery-music').
      Web Audio loops the 3 s to 93 s region of the file, which is exactly one seamless cycle. */
@@ -588,8 +588,8 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     if (!btn || !AC) { if (btn) btn.hidden = true; return; }
     var SRC = '/assets/audio/southery-loop-v1.mp3', LOOP_START = 3, LOOP_END = 93, VOL = 0.22;
     var ctx, gain, buffer, source, loading = false, playing = false, armed = true;
-    var on = true; try { on = localStorage.getItem('southery-music') !== 'off'; } catch (e) {}
-    function show() { btn.setAttribute('aria-pressed', on ? 'true' : 'false'); btn.classList.toggle('is-playing', playing); btn.title = on ? 'Music on' : 'Music off'; }
+    var on = false; try { on = localStorage.getItem('southery-music') === 'on'; } catch (e) {}
+    function show() { btn.setAttribute('aria-pressed', on ? 'true' : 'false'); btn.classList.toggle('is-playing', playing); btn.title = on ? 'Turn music off' : 'Play music'; }
     function fade(to, secs) { var t = ctx.currentTime; gain.gain.cancelScheduledValues(t); gain.gain.setValueAtTime(gain.gain.value, t); gain.gain.linearRampToValueAtTime(to, t + secs); }
     function begin() {
       if (!buffer || !on || document.hidden) return;
