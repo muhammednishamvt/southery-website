@@ -453,13 +453,14 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     setTimeout(function () { drawer.hidden = true; }, 250);
     if (keepPlace !== true && lastFocus) lastFocus.focus();
   }
-  // Empty cart: "Add a dish from the menu" closes the cart and takes you to the menu
-  $('[data-go-menu]').addEventListener('click', function (e) {
+  // "Add a dish from the menu" (empty cart) and "Add more from the menu" (not-sent notice)
+  // close the cart and take you to the menu
+  $$('[data-go-menu]').forEach(function (a) { a.addEventListener('click', function (e) {
     e.preventDefault(); closeCart(true);
     var menu = $('#menu'), title = $('#menu-title');
     menu.scrollIntoView({ behavior: 'smooth', block: 'start' });
     title.setAttribute('tabindex', '-1'); title.focus({ preventScroll: true });
-  });
+  }); });
   $$('[data-open-cart]').forEach(function (b) { b.addEventListener('click', openCart); });
   $$('[data-close-cart]').forEach(function (b) { b.addEventListener('click', function () { closeCart(); }); });
 
