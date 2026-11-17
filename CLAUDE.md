@@ -73,7 +73,13 @@ bars when on) plays it at a fixed low volume set only in code (`VOL` in `app.js`
 resumes on their first tap or key press of the next visit (browsers block sound before that). To swap the track,
 add a new file with a new name (cache) and update `SRC`, `LOOP_START` and `LOOP_END`; use only licensed or original music.
 
-Browser storage keys: `southery-cart`, `southery-customer` (name and address, remembered for next time) and `southery-music`.
+**After "Send order on WhatsApp"** — the site can't see whether the customer pressed send inside WhatsApp, so the cart
+asks "Did you send your order on WhatsApp?". Yes shows the payment step; No returns to the full cart with a red-chilli
+notice. The cart is cleared only after Yes, then "Start a new order". An unanswered order is remembered (`southery-pending`)
+and asked again when the cart is opened on a later visit.
+
+Browser storage keys: `southery-cart`, `southery-customer` (name and address, remembered for next time), `southery-music`
+and `southery-pending`.
 
 ## Brand rules
 

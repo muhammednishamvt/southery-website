@@ -414,9 +414,10 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     return { ls: ls, n: n, t: t };
   }
 
-  var sentEl = $('[data-sent]');
+  var sentEl = $('[data-sent]'), pendEl = $('[data-pending]'), notice = $('[data-notice]');
   function renderCart() {
-    var s = totals(), sent = !sentEl.hidden;
+    var s = totals(), sent = !sentEl.hidden || !pendEl.hidden;
+    if (s.n === 0) notice.hidden = true;
     $$('[data-cart-count]').forEach(function (el) { el.textContent = s.n; });
     $$('[data-cart-total]').forEach(function (el) { el.textContent = rupee(s.t); });
     $$('[data-cart-word]').forEach(function (el) { el.textContent = s.n === 1 ? 'item' : 'items'; });
@@ -515,7 +516,14 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     if (note) msg.push('Note: ' + note);
     window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(msg.join('\n')), '_blank', 'noopener');
 
-    // payment step
+    // We can't see whether they pressed send inside WhatsApp, so ask before showing the payment step.
+    write('southery-pending', { code: code, free: free });
+    notice.hidden = true; pendEl.hidden = false; renderCart();
+    $('.drawer__body').scrollTop = 0; $('[data-pending-title]').focus({ preventScroll: true });
+  });
+
+  function showPaid(code, free) {
+    var s = totals();
     var pay = $('[data-pay]');
     if (free) {
       var link = upiLink(s.t, code);
@@ -529,8 +537,26 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
       pay.innerHTML = '<div class="pay__qr"><div class="pay__code">' + qrSvg(upiLink()) + '</div><p>Keep this for later. Scan it once we confirm your total.</p></div>';
     }
     pay.insertAdjacentHTML('beforeend', '<p class="pay__id">UPI ID <b>' + UPI.id + '</b> <button type="button" class="btn btn--ghost btn--xs" data-copy-upi>Copy</button></p><p class="pay__ref">Order reference ' + code + '</p>');
-    sentEl.hidden = false; renderCart(); $('.drawer__body').scrollTop = 0; $('[data-sent-title]').focus({ preventScroll: true });
+    pendEl.hidden = true; sentEl.hidden = false; renderCart(); $('.drawer__body').scrollTop = 0; $('[data-sent-title]').focus({ preventScroll: true });
+  }
+
+  $('[data-pending-yes]').addEventListener('click', function () {
+    var p = read('southery-pending', null) || { code: orderCode(), free: where.zone === 'free' };
+    p.sent = true; write('southery-pending', p);
+    showPaid(p.code, p.free);
   });
+  $('[data-pending-no]').addEventListener('click', function () {
+    try { localStorage.removeItem('southery-pending'); } catch (e) {}
+    pendEl.hidden = true; notice.hidden = false; renderCart();
+    $('.drawer__body').scrollTop = 0; notice.setAttribute('tabindex', '-1'); notice.focus({ preventScroll: true });
+  });
+  // Came back later (reload or a new visit) with an unanswered order: ask again when the cart opens
+  // (or, if they already said Yes, show the payment step again)
+  (function () {
+    var p = read('southery-pending', null);
+    if (!p || totals().n === 0) return;
+    if (p.sent) showPaid(p.code, p.free); else { pendEl.hidden = false; renderCart(); }
+  })();
 
   sentEl.addEventListener('click', function (e) {
     var b = e.target.closest('[data-copy-upi]'); if (!b) return;
@@ -540,6 +566,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
 
   $('[data-restart]').addEventListener('click', function () {
     cart = {}; save(); form.note.value = ''; sentEl.hidden = true; $('[data-pay]').innerHTML = '';
+    try { localStorage.removeItem('southery-pending'); } catch (e) {}
     renderControls(); closeCart();
     document.getElementById('menu').scrollIntoView({ behavior: 'smooth' });
   });
