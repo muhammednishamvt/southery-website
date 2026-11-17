@@ -47,7 +47,7 @@ assets/
 - `CATEGORIES`: tabs. `list: true` renders a category as simple rows without photos. `note` shows under the tab.
 - `MENU`: one object per dish: `id`, `cat`, `name`, `price` (rupees, or `null` for "ask on WhatsApp"),
   `desc`, optional `tag` (e.g. "Signature"), optional `photo: false`.
-  `best: true` shows a green "Best seller" tag (accent green, ivory text) in place of `tag`.
+  `best: true` shows a green "Best Seller" tag (accent green, ivory text) in place of `tag`; `veg: true` shows a green "Veg" tag the same way.
   With `price: null`, optional `ask` replaces the default "Price on request / Direct orders only" label (e.g. `ask: 'Ask for price'`).
 - A dish's photo is found by its id: `/assets/photos/<id>.jpg` (720×720 shown). Adding a dish with a photo
   means adding that file with the matching name. With no photo, set `photo: false`.
@@ -100,7 +100,7 @@ light coming through frosted glass.
 | `--turmeric` | `#F49A17` | reserved for pop-ups and ad campaigns; not used on the site yet |
 
 The accents are for hover and brief feedback only, never resting colours. One exception: the Swiggy and
-Zomato rating chips in the visit section, the "Best seller" tags on dish photos, and the music button (red when off,
+Zomato rating chips in the visit section, the "Best Seller" and "Veg" tags on dish photos, and the music button (red when off,
 green when on, ivory icon) use the accents as resting fills. On touch screens they show on
 tap (`:active`); hover styles sit inside `@media (hover: hover)` so they don't stick after a tap.
 Red chilli is too dark for text on the green ground; use it as a fill with ivory text. The accent green

@@ -44,7 +44,7 @@ var MENU = [
     desc: 'Tender beef and vegetables in a light coconut milk stew, peppery and gentle.' },
   { id: 'mutton-stew', cat: 'malabar', name: 'Mutton Stew', price: null, ask: 'Ask for price', photo: false,
     desc: 'Mutton simmered slowly in coconut milk with pepper, ginger and curry leaves.' },
-  { id: 'vegetable-stew', cat: 'malabar', name: 'Vegetable Stew', price: 149, tag: 'Vegetarian',
+  { id: 'vegetable-stew', cat: 'malabar', name: 'Vegetable Stew', price: 149, veg: true,
     desc: 'Potato, carrot and beans in coconut milk, scented with green chilli and ginger.' },
 
   { id: 'ghee-rice-chicken-combo', cat: 'boxes', name: 'Ghee Rice Chicken Combo', price: 269,
@@ -224,7 +224,8 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     return '<div class="dish__photo"><img src="' + photoSrc(d) + '" alt="' + esc(d.name) + '" loading="lazy" width="720" height="720">' + tag(d) + '</div>';
   }
   function tag(d) {
-    if (d.best) return '<span class="dish__tag dish__tag--best">Best seller</span>';
+    if (d.best) return '<span class="dish__tag dish__tag--best">Best Seller</span>';
+    if (d.veg) return '<span class="dish__tag dish__tag--best">Veg</span>';
     return d.tag ? '<span class="dish__tag">' + d.tag + '</span>' : '';
   }
 
