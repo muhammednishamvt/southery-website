@@ -45,6 +45,9 @@
   .k-pill--delivered { background: var(--wa-green); }
   .k-pill--cancelled { background: var(--chilli); }
   .k-flag { font-size: 14px; padding: 8px 12px; border-radius: 10px; background: rgba(253,247,227,0.06); color: var(--ivory-soft); }
+  .k-flag--pay { background: rgba(247,227,156,0.12); border-left: 3px solid var(--gold); color: var(--ivory); }
+  .k-sent { font-size: 14px; color: var(--ivory-soft); }
+  .k-sent a { color: var(--ivory); }
   .k-flag--no { background: rgba(196,52,12,0.18); border-left: 3px solid var(--chilli); color: var(--ivory); }
   .k-who { display: grid; gap: 4px; font-size: 16px; }
   .k-who b { font-weight: 700; }
@@ -129,11 +132,12 @@
     ['preparing', 'Preparing', function (o) { return o.status === 'preparing'; }],
     ['out', 'Out for delivery', function (o) { return o.status === 'out'; }],
     ['delivered', 'Delivered', function (o) { return o.status === 'delivered'; }],
+    ['check', 'Check payment', function (o) { return !o.paid && !!o.payClaim && o.status !== 'cancelled'; }],
     ['unpaid', 'Not paid', function (o) { return o.sent !== false && !o.paid && o.status !== 'cancelled'; }],
     ['cancelled', 'Cancelled', function (o) { return o.status === 'cancelled'; }],
     ['notsent', 'Not sent', function (o) { return o.sent === false && o.status === 'new'; }]
   ];
-  var pin = null, orders = [], filter = 'active', picked = {}, seen = null, fresh = {}, timer = null, sound = true, rev = null;
+  var pin = null, orders = [], filter = 'active', picked = {}, seen = null, fresh = {}, timer = null, sound = true, rev = null, claimed = {};
   try { pin = localStorage.getItem('southery-kitchen-pin'); sound = localStorage.getItem('southery-kitchen-sound') !== 'off'; } catch (e) {}
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -226,8 +230,15 @@
         $('[data-alert-text]').textContent = n === 1 ? 'New order ' + added[0].code + ' from ' + (added[0].name || 'a customer') : n + ' new orders';
         $('[data-alert]').hidden = false; document.title = '(' + n + ') Order desk — Southery'; chime();
       }
+      // a customer tapped "I've paid. Send the screenshot"
+      var claims = orders.filter(function (o) { return o.payClaim && !o.paid && !claimed[o.code]; });
+      if (claims.length && !added.length) {
+        claims.forEach(function (o) { fresh[o.code] = 1; });
+        $('[data-alert-text]').textContent = claims.length === 1 ? 'Payment screenshot coming for ' + claims[0].code + '. Check the UPI app.' : claims.length + ' customers say they’ve paid. Check the UPI app.';
+        $('[data-alert]').hidden = false; chime();
+      }
     }
-    seen = {}; orders.forEach(function (o) { seen[o.code] = 1; });
+    seen = {}; orders.forEach(function (o) { seen[o.code] = 1; if (o.payClaim) claimed[o.code] = 1; });
     // don't redraw under someone's finger while they're choosing a status
     var a = document.activeElement;
     if (a && a.matches && a.matches('[data-set]')) return;
@@ -247,6 +258,23 @@
     $('[data-list]').innerHTML = list.length ? list.map(card).join('') : '<p class="k-empty">No orders here right now.</p>';
     paintBulk();
   }
+  // Payment: the customer's "I've paid" note, and once marked Paid, the confirmation to send them
+  function confirmText(o) {
+    var first = String(o.name || '').split(' ')[0];
+    var next = o.status === 'out' ? 'It’s on its way to you.' : o.status === 'delivered' ? 'Thank you for ordering with us.' : 'Your food is being prepared.';
+    return 'Hi' + (first ? ' ' + first : '') + ', we’ve received your payment of ' + rupee(o.total) + ' for order ' + o.code + '. Thank you. ' + next +
+      (o.token ? '\nFollow your order: ' + location.origin + '/track?o=' + o.code + '&t=' + o.token : '') + '\n\nSouthery';
+  }
+  function payBlock(o) {
+    if (o.status === 'cancelled') return '';
+    if (!o.paid) return o.payClaim ? '<p class="k-flag k-flag--pay">Customer says they paid at ' + clock(o.payClaim) + '. Check the screenshot on WhatsApp and the amount in the UPI app, then mark Paid.</p>' : '';
+    if (!o.phone) return '';
+    var href = 'https://wa.me/' + digits(o.phone) + '?text=' + encodeURIComponent(confirmText(o));
+    return o.confirmedAt
+      ? '<p class="k-sent">Payment confirmation sent at ' + clock(o.confirmedAt) + '. <a href="' + href + '" target="_blank" rel="noopener" data-confirm>Send again</a></p>'
+      : '<a class="btn btn--gold btn--block" href="' + href + '" target="_blank" rel="noopener" data-confirm>Send payment confirmation on WhatsApp</a>';
+  }
+
   function card(o) {
     var flag = o.sent === false ? '<p class="k-flag k-flag--no">The customer said they didn’t send this on WhatsApp.</p>'
       : o.sent === null && o.status === 'new' ? '<p class="k-flag">Not confirmed yet. Check WhatsApp for the message.</p>' : '';
@@ -269,6 +297,7 @@
       (o.note ? '<p class="k-note">' + esc(o.note) + '</p>' : '') +
       '<div class="k-sum"><div><strong>' + rupee(o.total) + '</strong> <span>' + (o.zone === 'free' ? '' : '+ Porter fare') + '</span></div>' +
         '<button type="button" class="k-paid" data-paid aria-pressed="' + !!o.paid + '">' + (o.paid ? 'Paid' : 'Not paid') + '</button></div>' +
+      payBlock(o) +
       '<div class="k-act">' +
         (next ? '<button type="button" class="btn btn--ivory" data-next="' + next + '">' + NEXT_LABEL[o.status] + '</button>' : '<span></span>') +
         '<select data-set aria-label="Change status of ' + esc(o.code) + '">' + Object.keys(STEPS).map(function (s) {
@@ -278,7 +307,7 @@
   }
 
   function update(codes, change) {
-    call('POST', { codes: codes, status: change.status, paid: change.paid }).then(function (j) {
+    call('POST', { codes: codes, status: change.status, paid: change.paid, confirmed: change.confirmed }).then(function (j) {
       rev = null; // our own change bumped the counter; take the full list on the next check
       j.orders.forEach(function (u) { orders = orders.map(function (o) { return o.code === u.code ? u : o; }); delete fresh[u.code]; });
       render();
@@ -291,7 +320,8 @@
   $('[data-list]').addEventListener('click', function (e) {
     var c = e.target.closest('[data-code]'); if (!c) return; var code = c.dataset.code;
     var o = orders.filter(function (x) { return x.code === code; })[0];
-    if (e.target.closest('[data-next]')) update([code], { status: e.target.closest('[data-next]').dataset.next });
+    if (e.target.closest('[data-confirm]')) update([code], { confirmed: true }); // the link itself opens WhatsApp
+    else if (e.target.closest('[data-next]')) update([code], { status: e.target.closest('[data-next]').dataset.next });
     else if (e.target.closest('[data-paid]')) update([code], { paid: !o.paid });
   });
   $('[data-list]').addEventListener('change', function (e) {

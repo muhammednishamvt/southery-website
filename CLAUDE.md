@@ -94,6 +94,11 @@ chimes and shows a gold banner for new orders, and moves orders New → Preparin
 Cancelled), one at a time or several selected together, with a Paid toggle. Orders the customer said they didn't send
 sit under "Not sent". `/track` shows the customer the steps and checks every 30 s while on screen (paused in the background). Order codes are `SO-DDMM-XXXXX`.
 Checkout asks for a phone number (for the rider).
+Payment proof: the payment step has "I’ve paid. Send the screenshot", which opens our WhatsApp chat with a ready message
+(the customer attaches the screenshot there) and marks the order `payClaim` on the desk, which chimes and lists it under
+"Check payment". A screenshot is not proof on its own: the team checks the amount in the UPI app before marking Paid.
+Once Paid, the card offers "Send payment confirmation on WhatsApp" (prefilled message with the tracking link to the
+customer's number); the time it was sent is shown, and `/track` says "Payment received".
 
 Browser storage keys: `southery-cart`, `southery-customer` (name, phone and address, remembered for next time), `southery-music`
 and `southery-pending`; on the kitchen page `southery-kitchen-pin` and `southery-kitchen-sound`.

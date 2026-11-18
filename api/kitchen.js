@@ -4,7 +4,8 @@
 //                                                      or { same: true } when nothing changed since rev N
 // A routine check costs one storage read (MGET of the lock counter and the change counter),
 // which keeps a desk left open all day well inside Upstash's free plan.
-//   POST /api/kitchen { codes: [...], status?, paid? } -> update one or several orders
+//   POST /api/kitchen { codes: [...], status?, paid?, confirmed? } -> update one or several orders
+//                                                      (confirmed: the payment confirmation was sent on WhatsApp)
 var L = require('./_lib');
 
 async function allowed(req) {
@@ -32,7 +33,7 @@ module.exports = async function (req, res) {
       var codes = await L.redis(['ZRANGEBYSCORE', 'orders', Date.now() - days * 86400000, '+inf']);
       if (!codes.length) return L.send(res, 200, { orders: [], rev: a.rev });
       var raws = await L.redis(['MGET'].concat(codes.map(L.key)));
-      var orders = raws.filter(Boolean).map(function (r) { var o = JSON.parse(r); delete o.token; return o; });
+      var orders = raws.filter(Boolean).map(function (r) { return JSON.parse(r); });
       orders.sort(function (x, y) { return y.at - x.at; });
       return L.send(res, 200, { orders: orders, rev: a.rev });
     }
@@ -41,7 +42,7 @@ module.exports = async function (req, res) {
     var b = await L.body(req);
     var list = (Array.isArray(b.codes) ? b.codes : [b.code]).filter(function (c) { return typeof c === 'string'; }).slice(0, 50);
     var status = L.STATUSES.indexOf(b.status) >= 0 ? b.status : null;
-    if (!list.length || (!status && typeof b.paid !== 'boolean')) return L.send(res, 400, { error: 'nothing to do' });
+    if (!list.length || (!status && typeof b.paid !== 'boolean' && b.confirmed !== true)) return L.send(res, 400, { error: 'nothing to do' });
     var raws2 = await L.redis(['MGET'].concat(list.map(L.key)));
     var now = Date.now(), cmds = [], out = [];
     raws2.forEach(function (r, i) {
@@ -50,7 +51,8 @@ module.exports = async function (req, res) {
       if (status && o.status !== status) { o.status = status; o.log.push({ s: status, at: now }); }
       if (typeof b.paid === 'boolean') o.paid = b.paid;
       cmds.push(['SET', L.key(list[i]), JSON.stringify(o), 'KEEPTTL']);
-      delete o.token; out.push(o);
+      if (b.confirmed === true) o.confirmedAt = now;
+      out.push(o);
     });
     if (cmds.length) await L.redis(cmds.concat([['INCR', L.REV]]));
     return L.send(res, 200, { orders: out });

@@ -98,7 +98,7 @@
     $('[data-items]').hidden = false;
     $('[data-items]').innerHTML = o.items.map(function (i) {
       return '<li><span>' + i.q + ' × ' + esc(i.name) + (i.opts ? '<small>' + esc(i.opts) + '</small>' : '') + '</span><span>' + rupee(i.amount) + '</span></li>';
-    }).join('') + '<li class="t-total"><span>' + (o.zone === 'free' ? 'Total' : 'Food total') + '<small class="t-paid">' + (o.paid ? 'Paid. Thank you.' : o.zone === 'free' ? 'Pay by UPI' : 'Porter fare confirmed on WhatsApp') + '</small></span><strong>' + rupee(o.total) + '</strong></li>';
+    }).join('') + '<li class="t-total"><span>' + (o.zone === 'free' ? 'Total' : 'Food total') + '<small class="t-paid">' + (o.paid ? 'Payment received. Thank you.' : o.payClaim ? 'We’re checking your payment.' : o.zone === 'free' ? 'Pay by UPI' : 'Porter fare confirmed on WhatsApp') + '</small></span><strong>' + rupee(o.total) + '</strong></li>';
     $('[data-upd]').textContent = o.status === 'delivered' || cancelled ? '' : 'This page updates by itself. Last checked ' + clock(Date.now()) + '.';
     if (o.status === 'delivered' || cancelled) { clearInterval(timer); timer = null; }
   }

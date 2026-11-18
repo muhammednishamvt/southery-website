@@ -3,12 +3,13 @@
 //   GET  /api/orders?o=CODE&t=TOKEN  -> the order's status, for the tracking page
 //   POST /api/orders  { order }      -> save a new order (when "Send order on WhatsApp" is tapped)
 //   POST /api/orders  { answer: true|false, code, token } -> the customer's "Did you send it?" answer
+//   POST /api/orders  { claim: 'paid', code, token }      -> customer tapped "I've paid. Send the screenshot"
 var L = require('./_lib');
 
 var CODE = /^SO-\d{4}-[A-Z0-9]{4,6}$/, TOK = /^[a-z0-9]{16,40}$/;
 
 function publicView(o) {
-  return { code: o.code, at: o.at, status: o.status, paid: o.paid, sent: o.sent, zone: o.zone,
+  return { code: o.code, at: o.at, status: o.status, paid: o.paid, payClaim: o.payClaim || null, sent: o.sent, zone: o.zone,
     items: o.items, total: o.total, log: o.log };
 }
 
@@ -37,6 +38,16 @@ module.exports = async function (req, res) {
       if (!o2 || !L.same(o2.token, b.token)) return L.send(res, 404, { error: 'not found' });
       o2.sent = b.answer;
       await L.redis([['SET', L.key(b.code), JSON.stringify(o2), 'KEEPTTL'], ['INCR', L.REV]]);
+      return L.send(res, 200, { ok: true });
+    }
+
+    // "I've paid. Send the screenshot" (the kitchen still checks the UPI app before marking it paid)
+    if (b.claim === 'paid') {
+      if (!CODE.test(b.code || '') || !TOK.test(b.token || '')) return L.send(res, 404, { error: 'not found' });
+      var raw3 = await L.redis(['GET', L.key(b.code)]);
+      var o3 = raw3 && JSON.parse(raw3);
+      if (!o3 || !L.same(o3.token, b.token)) return L.send(res, 404, { error: 'not found' });
+      if (!o3.payClaim) { o3.payClaim = Date.now(); await L.redis([['SET', L.key(b.code), JSON.stringify(o3), 'KEEPTTL'], ['INCR', L.REV]]); }
       return L.send(res, 200, { ok: true });
     }
 
