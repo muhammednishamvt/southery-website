@@ -514,3 +514,7 @@ html.greet .curtain__bg--webapp { background-image: url(/assets/nature/curtain-w
 .curtain[data-step="1"] .curtain__bg--logo, .curtain[data-step="3"] .curtain__bg--webapp { opacity: 1; }
 /* the hero entrance waits for the curtain to lift */
 html.greet:not(.greet-done) .hero__leaves, html.greet:not(.greet-done) .hero__pane { animation-play-state: paused; }
+
+/* "I've paid. Send the screenshot" on the payment step */
+.pay__proof { width: 100%; display: grid; gap: 8px; }
+.sent .pay__proof p { color: var(--ivory-soft); text-align: center; }
