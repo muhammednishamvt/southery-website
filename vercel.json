@@ -1,5 +1,8 @@
 {
   "cleanUrls": true,
+  "regions": [
+    "bom1"
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",

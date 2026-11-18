@@ -60,6 +60,8 @@ function same(a, b) {
 var STATUSES = ['new', 'preparing', 'out', 'delivered', 'cancelled'];
 var KEEP_DAYS = 60;
 function key(code) { return 'order:' + code; }
+// Bumped on every change, so the order desk can ask "anything new?" with one cheap read.
+var REV = 'orders:rev';
 
 module.exports = { configured: configured, redis: redis, send: send, body: body, query: query, ip: ip,
-  str: str, num: num, same: same, STATUSES: STATUSES, KEEP: KEEP_DAYS * 86400, key: key };
+  str: str, num: num, same: same, REV: REV, STATUSES: STATUSES, KEEP: KEEP_DAYS * 86400, key: key };

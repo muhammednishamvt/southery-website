@@ -36,7 +36,7 @@ module.exports = async function (req, res) {
       var o2 = raw2 && JSON.parse(raw2);
       if (!o2 || !L.same(o2.token, b.token)) return L.send(res, 404, { error: 'not found' });
       o2.sent = b.answer;
-      await L.redis(['SET', L.key(b.code), JSON.stringify(o2), 'KEEPTTL']);
+      await L.redis([['SET', L.key(b.code), JSON.stringify(o2), 'KEEPTTL'], ['INCR', L.REV]]);
       return L.send(res, 200, { ok: true });
     }
 
@@ -63,7 +63,7 @@ module.exports = async function (req, res) {
     };
     var ok = await L.redis(['SET', L.key(code), JSON.stringify(order), 'NX', 'EX', L.KEEP]);
     if (ok !== 'OK') return L.send(res, 409, { error: 'exists' });
-    await L.redis(['ZADD', 'orders', now, code]);
+    await L.redis([['ZADD', 'orders', now, code], ['INCR', L.REV]]);
     return L.send(res, 200, { ok: true });
   } catch (e) {
     return L.send(res, 500, { error: 'server' });

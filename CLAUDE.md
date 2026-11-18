@@ -21,6 +21,7 @@ Customers browse the menu, build a cart, and send the order to the kitchen on Wh
 - Past changes have gone in as branches merged by pull request; prefer that for anything that touches the page.
 - `vercel.json`:
   - `cleanUrls: true`
+  - `regions: ["bom1"]`: the `api/` functions run in Mumbai, next to the Upstash database (create it in Mumbai too)
   - everything under `/assets/` is cached for a year as `immutable`. **If you replace an asset, give it a new
     file name** (or the old version stays cached in browsers).
   - `southery.vercel.app` permanently redirects to `https://southery.cloud`.
@@ -87,10 +88,11 @@ and asked again when the cart is opened on a later visit.
 
 **Order desk** — when "Send order on WhatsApp" is tapped, the order is also saved (`POST /api/orders`) with a random
 token, and the WhatsApp message ends with a "Track this order" link. The Yes/No answer is saved too. Orders keep 60 days.
-`/kitchen` (shared PIN; 10 wrong tries locks that device for 15 minutes) lists the last two days, checks every 10 s,
+`/kitchen` (shared PIN; 10 wrong tries locks that device for 15 minutes) lists the last two days, checks every 10 s on screen and 30 s in the
+background (one storage read per check, via the `orders:rev` change counter; the full list loads only when it changes),
 chimes and shows a gold banner for new orders, and moves orders New → Preparing → Out for delivery → Delivered (or
 Cancelled), one at a time or several selected together, with a Paid toggle. Orders the customer said they didn't send
-sit under "Not sent". `/track` shows the customer the steps and refreshes every 20 s. Order codes are `SO-DDMM-XXXXX`.
+sit under "Not sent". `/track` shows the customer the steps and checks every 30 s while on screen (paused in the background). Order codes are `SO-DDMM-XXXXX`.
 Checkout asks for a phone number (for the rider).
 
 Browser storage keys: `southery-cart`, `southery-customer` (name, phone and address, remembered for next time), `southery-music`
