@@ -555,14 +555,14 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     var link = upiLink(s.t, code);
     $('[data-sent-title]').textContent = 'Your order is in. Now pay ' + rupee(s.t) + '.';
     $('[data-sent-text]').textContent = free
-      ? 'Press send in WhatsApp if you haven’t yet, then pay by UPI. We start cooking once the payment comes through.'
-      : 'Press send in WhatsApp if you haven’t yet, then pay for your food by UPI. We start cooking and book Porter once the payment comes through. You pay the delivery fare to the rider by UPI.';
+      ? 'Press send in WhatsApp, then pay by UPI. We start cooking once it comes through.'
+      : 'Press send in WhatsApp, then pay for your food by UPI. We start cooking and book Porter once it comes through. Pay the delivery fare to the rider.';
     pay.innerHTML = '<a class="btn btn--gold btn--block pay__app" href="' + link + '">Pay ' + rupee(s.t) + ' with a UPI app</a>' +
       '<div class="pay__qr"><div class="pay__code">' + qrSvg(link) + '</div><p>Or scan with GPay, PhonePe, Paytm or any UPI app.</p></div>';
     pay.insertAdjacentHTML('beforeend', '<p class="pay__id">UPI ID <b>' + UPI.id + '</b> <button type="button" class="btn btn--ghost btn--xs" data-copy-upi>Copy</button></p><p class="pay__ref">Order reference ' + code + '</p>');
     var claimed = (read('southery-pending', null) || {}).claimed;
     pay.insertAdjacentHTML('beforeend', '<div class="pay__proof"><button type="button" class="btn btn--ghost btn--block" data-paid-proof data-code="' + code + '" data-amount="' + s.t + '"' + (claimed ? ' hidden' : '') + '>I’ve paid. Send the screenshot</button>' +
-      '<p data-proof-note' + (claimed ? '' : ' hidden') + '>Thank you. In WhatsApp, attach your payment screenshot and send it. We’ll confirm once the payment shows in our account.</p></div>');
+      '<p data-proof-note' + (claimed ? '' : ' hidden') + '>Thank you. Attach your payment screenshot in WhatsApp and send it. We’ll confirm once the payment reaches us.</p></div>');
     if (token) pay.insertAdjacentHTML('beforeend', '<a class="btn btn--ghost btn--block pay__track" href="' + trackUrl({ code: code, token: token }) + '" target="_blank" rel="noopener">Follow your order</a>');
     pendEl.hidden = true; sentEl.hidden = false; renderCart(); $('.drawer__body').scrollTop = 0; $('[data-sent-title]').focus({ preventScroll: true });
   }
