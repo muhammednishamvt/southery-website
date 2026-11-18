@@ -5,6 +5,7 @@
 - Website and ordering: https://southery.cloud
 - Order directly: build the order on the website and send it on WhatsApp (+91 86100 71212), then pay by UPI.
 - Delivery: free within 3 km of the Edappally kitchen. Further away, Southery books Porter once the food payment comes through, and the customer pays the delivery fare to the rider.
+- Opening hours: Tuesday to Sunday, 11 am to 11 pm (India time). Closed on Mondays.
 - Mutton, fish and prawns biriyani are available only on direct orders.
 - Also on Swiggy and Zomato.
 - Address: SNRA 27, Ground Floor, Sahrdaya Nagar Road, Edappally, Kochi, Kerala 682024 (landmark: Girls Hostel).

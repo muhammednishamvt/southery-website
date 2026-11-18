@@ -73,17 +73,25 @@ assets/
 and `FREE_KM` (free-delivery radius, 3 km). Beyond that radius delivery is by Porter: every customer pays for the food by UPI
 first, the kitchen books Porter only after that payment is confirmed, and the customer pays the delivery fare to the
 Porter rider (UPI on delivery). The site never adds a delivery fare to the bill.
+Opening hours: `HOURS` in `app.js` (Tuesday to Sunday, 11 am to 11 pm IST, closed Mondays). The site shows "Open now" /
+"Closed now. We open …" under the address, and a note in the cart when closed (orders can still be sent). The same
+hours are written in the visit section, the FAQ, the JSON-LD (`openingHoursSpecification`) and `scripts/llms-head.md`.
 Treat these values as business details: change them only when Nisham asks.
 
 **Business details elsewhere** — address, phone, founder and links also appear in the JSON-LD block and the meta /
 Open Graph tags in `index.html`, and in the visit and footer sections. Keep them in step with `app.js`.
+
+**Questions (FAQ)** — a short section between Our promise and Find the kitchen: four `<details>` questions (hours,
+delivery, payment, direct-only biriyanis), mirrored in a `FAQPage` JSON-LD block in the head. Change both together.
+Address stays as written: "Edappally, Cochin, Keralam" (Nisham's choice).
 
 **Ratings** — the Swiggy and Zomato rating chips (score and number of ratings) and the Google review count in
 `index.html` are typed in by hand. Update them from the apps when they change.
 
 **Greeting curtain** — shown on every page load (skipped for reduced motion; tap to skip): Introducing, logo over
 `curtain-logo` leaf photo, ക്ലൗഡ് കിച്ചൺ, WebApp over `curtain-webapp` leaf photo. The words are vector outlines in
-`index.html`; timings are `HOLD` in `app.js`.
+`index.html`; timings are `HOLD` in `app.js`. Plan: about a week after the WebApp launch, switch it to once per visit
+(Nisham's decision); until then it stays on every load.
 
 **Background music** — off by default. The header button (red with a muted speaker when off, green with moving
 bars when on) plays it at a fixed low volume set only in code (`VOL` in `app.js`, 0.11; visitors can't change it on the site); the choice is stored, and for visitors who turned it on it

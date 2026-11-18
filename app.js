@@ -95,6 +95,10 @@ var UPI = { id: 'southerykitch26ms@fbl', name: 'Southery Kitchen LLP' };
 var KITCHEN = { lat: 10.0235231, lng: 76.3064128 };
 var FREE_KM = 3;
 
+// Opening hours, Kochi time (IST): 11 am to 11 pm, closed on Mondays (day 1). Also in index.html (visit section,
+// FAQ and JSON-LD) and scripts/llms-head.md: keep them in step.
+var HOURS = { open: 11 * 60, close: 23 * 60, closedDay: 1 };
+
 /* Customisation, matching Swiggy / Zomato.
    one: pick exactly one (first choice is selected by default).
    many: optional extras; max = how many of each a customer can add. */
@@ -728,6 +732,26 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
       es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-near'); io.unobserve(e.target); } });
     }, { rootMargin: '800px 0px' });
     for (var k = 0; k < secs.length; k++) io.observe(secs[k]);
+  })();
+
+  /* Open now / closed: shown in Find the kitchen, and in the cart when the kitchen is closed */
+  (function () {
+    var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    function status() {
+      var ist = new Date(Date.now() + 330 * 60000), day = ist.getUTCDay(), m = ist.getUTCHours() * 60 + ist.getUTCMinutes();
+      if (day !== HOURS.closedDay && m >= HOURS.open && m < HOURS.close) return { open: true };
+      var next;
+      if (day !== HOURS.closedDay && m < HOURS.open) next = 'today';
+      else { var d = (day + 1) % 7; if (d === HOURS.closedDay) d = (d + 1) % 7; next = d === (day + 1) % 7 ? 'tomorrow' : DAYS[d]; }
+      return { open: false, next: next };
+    }
+    var now = $('[data-open-now]'), note = $('[data-closed-note]');
+    function paint() {
+      var s = status(), when = s.next === 'today' ? 'at 11 am' : s.next === 'tomorrow' ? 'tomorrow at 11 am' : s.next + ' at 11 am';
+      if (now) { now.hidden = false; now.textContent = s.open ? ' Open now, until 11 pm.' : ' Closed now. We open ' + when + '.'; now.classList.toggle('is-open', s.open); }
+      if (note) { note.hidden = s.open; note.textContent = s.open ? '' : 'We’re closed now and open ' + when + '. You can still send your order, and we’ll reply when we open.'; }
+    }
+    paint(); setInterval(paint, 60000);
   })();
 
   /* Google Map (about 180 KB and many requests): load it only when the visitor nears the Find us section */
