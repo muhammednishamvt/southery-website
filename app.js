@@ -385,9 +385,9 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
       st.hidden = false;
       st.textContent = where.zone === 'free'
         ? 'You’re about ' + where.km.toFixed(1) + ' km from our kitchen. Delivery is free.'
-        : 'You’re about ' + where.km.toFixed(1) + ' km away. We’ll send it with Porter and confirm the fare on WhatsApp.';
+        : 'You’re about ' + where.km.toFixed(1) + ' km away. We’ll send it with Porter once your payment comes through, and you pay the delivery fare to the rider by UPI.';
     } else st.hidden = true;
-    $('[data-delivery-line]').textContent = where.zone === 'free' ? 'Free' : where.zone ? 'Porter fare, confirmed on WhatsApp' : 'Choose below';
+    $('[data-delivery-line]').textContent = where.zone === 'free' ? 'Free' : where.zone === 'porter' ? 'Paid to the Porter rider' : where.zone ? 'Free within 3 km, or paid to the rider' : 'Choose below';
   }
   $('[data-locate]').addEventListener('click', function () {
     var b = this, st = $('[data-where-status]');
@@ -530,7 +530,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
       var o = describe(l); if (o) msg.push('    ' + o);
     });
     msg.push('', (free ? 'Total: ' : 'Food total: ') + rupee(s.t));
-    msg.push('Delivery: ' + (free ? 'Free (within 3 km)' : where.zone === 'porter' ? 'Porter, please confirm the fare' : 'Not sure of distance, please confirm'));
+    msg.push('Delivery: ' + (free ? 'Free (within 3 km)' : where.zone === 'porter' ? 'Porter. I’ll pay the fare to the rider' : 'Not sure of the distance (Porter beyond 3 km, fare paid to the rider)'));
     msg.push('Payment: UPI' + (free ? ', paying now' : ', after you confirm the total'), '');
     msg.push('Name: ' + name, 'Phone: ' + phone, 'Address: ' + addr);
     if (where.lat != null) msg.push('Location: https://maps.google.com/?q=' + where.lat.toFixed(6) + ',' + where.lng.toFixed(6));
@@ -550,22 +550,19 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
   function showPaid(code, free, token) {
     var s = totals();
     var pay = $('[data-pay]');
-    if (free) {
-      var link = upiLink(s.t, code);
-      $('[data-sent-title]').textContent = 'Your order is in. Now pay ' + rupee(s.t) + '.';
-      $('[data-sent-text]').textContent = 'Press send in WhatsApp if you haven’t yet, then pay by UPI. We start cooking once the payment comes through.';
-      pay.innerHTML = '<a class="btn btn--gold btn--block pay__app" href="' + link + '">Pay ' + rupee(s.t) + ' with a UPI app</a>' +
-        '<div class="pay__qr"><div class="pay__code">' + qrSvg(link) + '</div><p>Or scan with GPay, PhonePe, Paytm or any UPI app.</p></div>';
-    } else {
-      $('[data-sent-title]').textContent = 'Your order is on its way to us.';
-      $('[data-sent-text]').textContent = 'Press send in WhatsApp if you haven’t yet. We’ll reply with the Porter fare and your final total, then you can pay by UPI.';
-      pay.innerHTML = '<div class="pay__qr"><div class="pay__code">' + qrSvg(upiLink()) + '</div><p>Keep this for later. Scan it once we confirm your total.</p></div>';
-    }
+    // Everyone pays for the food now. Beyond 3 km we book Porter once that payment comes through,
+    // and the customer pays the delivery fare to the rider (UPI on delivery).
+    var link = upiLink(s.t, code);
+    $('[data-sent-title]').textContent = 'Your order is in. Now pay ' + rupee(s.t) + '.';
+    $('[data-sent-text]').textContent = free
+      ? 'Press send in WhatsApp if you haven’t yet, then pay by UPI. We start cooking once the payment comes through.'
+      : 'Press send in WhatsApp if you haven’t yet, then pay for your food by UPI. We start cooking and book Porter once the payment comes through. You pay the delivery fare to the rider by UPI.';
+    pay.innerHTML = '<a class="btn btn--gold btn--block pay__app" href="' + link + '">Pay ' + rupee(s.t) + ' with a UPI app</a>' +
+      '<div class="pay__qr"><div class="pay__code">' + qrSvg(link) + '</div><p>Or scan with GPay, PhonePe, Paytm or any UPI app.</p></div>';
     pay.insertAdjacentHTML('beforeend', '<p class="pay__id">UPI ID <b>' + UPI.id + '</b> <button type="button" class="btn btn--ghost btn--xs" data-copy-upi>Copy</button></p><p class="pay__ref">Order reference ' + code + '</p>');
     var claimed = (read('southery-pending', null) || {}).claimed;
-    pay.insertAdjacentHTML('beforeend', '<div class="pay__proof"><button type="button" class="btn btn--ghost btn--block" data-paid-proof data-code="' + code + '" data-amount="' + (free ? s.t : '') + '">' +
-      (claimed ? 'Send the screenshot again' : 'I’ve paid. Send the screenshot') + '</button>' +
-      '<p data-proof-note' + (claimed ? '' : ' hidden') + '>In WhatsApp, attach your payment screenshot and send it. We’ll confirm once the payment shows in our account.</p></div>');
+    pay.insertAdjacentHTML('beforeend', '<div class="pay__proof"><button type="button" class="btn btn--ghost btn--block" data-paid-proof data-code="' + code + '" data-amount="' + s.t + '"' + (claimed ? ' hidden' : '') + '>I’ve paid. Send the screenshot</button>' +
+      '<p data-proof-note' + (claimed ? '' : ' hidden') + '>Thank you. In WhatsApp, attach your payment screenshot and send it. We’ll confirm once the payment shows in our account.</p></div>');
     if (token) pay.insertAdjacentHTML('beforeend', '<a class="btn btn--ghost btn--block pay__track" href="' + trackUrl({ code: code, token: token }) + '" target="_blank" rel="noopener">Follow your order</a>');
     pendEl.hidden = true; sentEl.hidden = false; renderCart(); $('.drawer__body').scrollTop = 0; $('[data-sent-title]').focus({ preventScroll: true });
   }
@@ -601,7 +598,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
       window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
       var p = read('southery-pending', null);
       if (p) { p.claimed = true; write('southery-pending', p); if (p.token) api({ claim: 'paid', code: p.code, token: p.token }); }
-      pp.textContent = 'Send the screenshot again'; $('[data-proof-note]').hidden = false;
+      pp.hidden = true; var note = $('[data-proof-note]'); note.hidden = false; note.setAttribute('tabindex', '-1'); note.focus({ preventScroll: true });
       return;
     }
     var b = e.target.closest('[data-copy-upi]'); if (!b) return;

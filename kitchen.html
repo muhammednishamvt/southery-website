@@ -262,11 +262,17 @@
   function confirmText(o) {
     var first = String(o.name || '').split(' ')[0];
     var next = o.status === 'out' ? 'It’s on its way to you.' : o.status === 'delivered' ? 'Thank you for ordering with us.' : 'Your food is being prepared.';
+    if (o.zone === 'porter' && o.status !== 'delivered') next += ' We’re booking Porter for the delivery. Please pay the delivery fare to the rider by UPI.';
     return 'Hi' + (first ? ' ' + first : '') + ', we’ve received your payment of ' + rupee(o.total) + ' for order ' + o.code + '. Thank you. ' + next +
       (o.token ? '\nFollow your order: ' + location.origin + '/track?o=' + o.code + '&t=' + o.token : '') + '\n\nSouthery';
   }
   function payBlock(o) {
     if (o.status === 'cancelled') return '';
+    var porter = o.zone !== 'free' && ['new', 'preparing'].indexOf(o.status) >= 0
+      ? '<p class="k-flag">' + (o.paid ? (o.zone === 'porter' ? 'Paid. Book Porter now. The customer pays the fare to the rider.' : 'Paid. Check the distance; beyond 3 km, book Porter. The customer pays the fare to the rider.') : 'Book Porter only after the payment is confirmed.') + '</p>' : '';
+    return porter + payOnly(o);
+  }
+  function payOnly(o) {
     if (!o.paid) return o.payClaim ? '<p class="k-flag k-flag--pay">Customer says they paid at ' + clock(o.payClaim) + '. Check the screenshot on WhatsApp and the amount in the UPI app, then mark Paid.</p>' : '';
     if (!o.phone) return '';
     var href = 'https://wa.me/' + digits(o.phone) + '?text=' + encodeURIComponent(confirmText(o));
@@ -295,7 +301,7 @@
         return '<li><span class="q">' + i.q + '×</span><span>' + esc(i.name) + (i.opts ? '<small>' + esc(i.opts) + '</small>' : '') + '</span><span>' + rupee(i.amount) + '</span></li>';
       }).join('') + '</ul>' +
       (o.note ? '<p class="k-note">' + esc(o.note) + '</p>' : '') +
-      '<div class="k-sum"><div><strong>' + rupee(o.total) + '</strong> <span>' + (o.zone === 'free' ? '' : '+ Porter fare') + '</span></div>' +
+      '<div class="k-sum"><div><strong>' + rupee(o.total) + '</strong> <span>' + (o.zone === 'free' ? '' : 'food only; delivery paid to the rider') + '</span></div>' +
         '<button type="button" class="k-paid" data-paid aria-pressed="' + !!o.paid + '">' + (o.paid ? 'Paid' : 'Not paid') + '</button></div>' +
       payBlock(o) +
       '<div class="k-act">' +

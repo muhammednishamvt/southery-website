@@ -98,7 +98,8 @@
     $('[data-items]').hidden = false;
     $('[data-items]').innerHTML = o.items.map(function (i) {
       return '<li><span>' + i.q + ' × ' + esc(i.name) + (i.opts ? '<small>' + esc(i.opts) + '</small>' : '') + '</span><span>' + rupee(i.amount) + '</span></li>';
-    }).join('') + '<li class="t-total"><span>' + (o.zone === 'free' ? 'Total' : 'Food total') + '<small class="t-paid">' + (o.paid ? 'Payment received. Thank you.' : o.payClaim ? 'We’re checking your payment.' : o.zone === 'free' ? 'Pay by UPI' : 'Porter fare confirmed on WhatsApp') + '</small></span><strong>' + rupee(o.total) + '</strong></li>';
+    }).join('') + '<li class="t-total"><span>' + (o.zone === 'free' ? 'Total' : 'Food total') + '<small class="t-paid">' + (o.paid ? 'Payment received. Thank you.' : o.payClaim ? 'We’re checking your payment.' : 'Pay by UPI') + '</small></span><strong>' + rupee(o.total) + '</strong></li>' +
+      (o.zone === 'free' ? '' : '<li class="t-del"><span>Delivery<small class="t-paid">' + (o.zone === 'porter' ? 'By Porter, booked once your payment comes through. Pay the fare to the rider by UPI.' : 'Free within 3 km. Further away, by Porter: pay the fare to the rider by UPI.') + '</small></span><span></span></li>');
     $('[data-upd]').textContent = o.status === 'delivered' || cancelled ? '' : 'This page updates by itself. Last checked ' + clock(Date.now()) + '.';
     if (o.status === 'delivered' || cancelled) { clearInterval(timer); timer = null; }
   }

@@ -63,7 +63,9 @@ assets/
   `type: 'one'` picks exactly one (first is the default); `type: 'many'` are optional extras up to `max`.
 
 **Ordering settings** — also in `app.js`: `WHATSAPP` number, `UPI` id and payee name, `KITCHEN` lat/lng,
-and `FREE_KM` (free-delivery radius, 3 km). Beyond that radius delivery is by Porter and the kitchen confirms the fare.
+and `FREE_KM` (free-delivery radius, 3 km). Beyond that radius delivery is by Porter: every customer pays for the food by UPI
+first, the kitchen books Porter only after that payment is confirmed, and the customer pays the delivery fare to the
+Porter rider (UPI on delivery). The site never adds a delivery fare to the bill.
 Treat these values as business details: change them only when Nisham asks.
 
 **Business details elsewhere** — address, phone, founder and links also appear in the JSON-LD block and the meta /
@@ -97,7 +99,7 @@ Checkout asks for a phone number (for the rider).
 Payment proof: the payment step has "I’ve paid. Send the screenshot", which opens our WhatsApp chat with a ready message
 (the customer attaches the screenshot there) and marks the order `payClaim` on the desk, which chimes and lists it under
 "Check payment". A screenshot is not proof on its own: the team checks the amount in the UPI app before marking Paid.
-Once Paid, the card offers "Send payment confirmation on WhatsApp" (prefilled message with the tracking link to the
+The button is pressed once: afterwards it gives way to a thank-you note (no "send again"). Once Paid, the card offers "Send payment confirmation on WhatsApp" (prefilled message with the tracking link to the
 customer's number); the time it was sent is shown, and `/track` says "Payment received".
 
 Browser storage keys: `southery-cart`, `southery-customer` (name, phone and address, remembered for next time), `southery-music`
