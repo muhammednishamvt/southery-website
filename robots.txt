@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /kitchen
+Disallow: /track
+Disallow: /api/
 
 Sitemap: https://southery.cloud/sitemap.xml

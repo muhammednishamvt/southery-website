@@ -8,6 +8,10 @@ Customers browse the menu, build a cart, and send the order to the kitchen on Wh
 - Plain static site: `index.html`, `styles.css`, `app.js`. No framework, no build step, no package.json.
 - `app.js` is vanilla ES5-style JavaScript (`var`, `function`, one IIFE). Keep it that way. No modules, no transpiling.
 - One vendored library: `vendor/qrcode.js`, used to draw the UPI QR code. No CDN scripts.
+- Order desk backend: two Vercel Node functions in `api/` (`orders.js`, `kitchen.js`, shared `_lib.js`), no dependencies,
+  talking to Upstash Redis over its REST API. Env vars (set in Vercel, never in the repo): `KV_REST_API_URL` and
+  `KV_REST_API_TOKEN` (added by connecting Upstash Redis under Storage), and `KITCHEN_PIN`. Without them the site
+  still works exactly as before (WhatsApp only) and the desk says it isn't switched on.
 - To preview locally, serve the folder with any static server (e.g. `python3 -m http.server`) and open it.
   Use a server rather than opening the file directly, because asset paths are root-absolute (`/assets/...`).
 
@@ -27,6 +31,9 @@ Customers browse the menu, build a cart, and send the order to the kitchen on Wh
 ```
 index.html        the single page: hero, story, menu (store), promise, visit, footer,
                   plus the cart drawer and the dish-options sheet
+kitchen.html      /kitchen: the order desk for the team (PIN-locked, not indexed)
+track.html        /track?o=CODE&t=TOKEN: the customer's order tracking page (not indexed)
+api/              order API (see Stack)
 styles.css        all styles; design tokens on :root
 app.js            menu data, tabs, cart, options sheet, delivery check, WhatsApp checkout, UPI payment
 vendor/qrcode.js  QR generator
@@ -78,8 +85,16 @@ asks "Did you send your order on WhatsApp?". Yes shows the payment step; No retu
 notice. The cart is cleared only after Yes, then "Start a new order". An unanswered order is remembered (`southery-pending`)
 and asked again when the cart is opened on a later visit.
 
-Browser storage keys: `southery-cart`, `southery-customer` (name and address, remembered for next time), `southery-music`
-and `southery-pending`.
+**Order desk** — when "Send order on WhatsApp" is tapped, the order is also saved (`POST /api/orders`) with a random
+token, and the WhatsApp message ends with a "Track this order" link. The Yes/No answer is saved too. Orders keep 60 days.
+`/kitchen` (shared PIN; 10 wrong tries locks that device for 15 minutes) lists the last two days, checks every 10 s,
+chimes and shows a gold banner for new orders, and moves orders New → Preparing → Out for delivery → Delivered (or
+Cancelled), one at a time or several selected together, with a Paid toggle. Orders the customer said they didn't send
+sit under "Not sent". `/track` shows the customer the steps and refreshes every 20 s. Order codes are `SO-DDMM-XXXXX`.
+Checkout asks for a phone number (for the rider).
+
+Browser storage keys: `southery-cart`, `southery-customer` (name, phone and address, remembered for next time), `southery-music`
+and `southery-pending`; on the kitchen page `southery-kitchen-pin` and `southery-kitchen-sound`.
 
 ## Brand rules
 
