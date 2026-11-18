@@ -240,7 +240,7 @@
       <button class="icon-btn" type="button" data-close-cart aria-label="Close">×</button>
     </header>
     <div class="drawer__body">
-      <p class="drawer__notice" data-notice role="status" hidden><b>Your order wasn’t sent yet.</b> Everything is still in your cart. Check your details and tap “Send order on WhatsApp” to confirm it.</p>
+      <p class="drawer__notice" data-notice role="status" hidden><b>Your order wasn’t sent yet.</b> Everything is still in your cart. Check your details and tap “Send order on WhatsApp” to confirm it. Want something else? <a href="#menu" class="drawer__link" data-go-menu>Add more from the menu</a>.</p>
       <ul class="lines" data-lines></ul>
       <p class="drawer__empty" data-empty>Nothing here yet. <a href="#menu" class="drawer__link" data-go-menu>Add a dish from the menu</a> to start your order.</p>
       <div class="sent sent--ask" data-pending hidden>
@@ -261,6 +261,7 @@
       </div>
       <form class="checkout" data-checkout novalidate>
         <label>Your name<input name="name" autocomplete="name" required></label>
+        <label>Phone number<input name="phone" type="tel" inputmode="tel" autocomplete="tel" required placeholder="For the delivery rider"></label>
         <label>Delivery address<textarea name="address" rows="3" autocomplete="street-address" required></textarea></label>
         <fieldset class="where">
           <legend>Delivery</legend>

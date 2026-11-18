@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Order desk — Southery</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#132721">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/cabinet-800.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/styles.css">
+<style>
+  html { background: var(--green-deep); }
+  body { min-height: 100vh; background: radial-gradient(120% 80% at 10% 0%, var(--green-mid) 0%, var(--green) 55%, var(--green-deep) 100%) fixed; }
+  .k-wrap { max-width: 1320px; margin: 0 auto; padding: 0 var(--gutter) 120px; }
+  .k-top { display: flex; align-items: center; gap: 16px; padding: 20px 0; flex-wrap: wrap; }
+  .k-top img { height: 30px; width: auto; }
+  .k-top h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; margin-right: auto; }
+  .k-top small { color: var(--ivory-soft); font-size: 14px; }
+  .k-pin { max-width: 420px; margin: 12vh auto 0; padding: 36px 32px; text-align: center; }
+  .k-pin img { margin: 0 auto 20px; height: 40px; width: auto; }
+  .k-pin h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.03em; }
+  .k-pin p { color: var(--ivory-soft); margin: 8px 0 24px; }
+  .k-pin input { width: 100%; height: 56px; border-radius: 16px; border: 1px solid var(--glass-rim); background: rgba(12,26,21,0.5); color: var(--ivory); font: inherit; font-size: 24px; letter-spacing: 0.4em; text-align: center; margin-bottom: 14px; }
+  .k-err { color: var(--ivory); background: var(--chilli); border-radius: 12px; padding: 10px 14px; font-size: 15px; margin-bottom: 14px; }
+  .k-tabs { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 18px; scrollbar-width: none; }
+  .k-tabs button { flex: none; height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--ivory-faint); background: rgba(253,247,227,0.04); cursor: pointer; font-size: 15px; }
+  .k-tabs button[aria-pressed=true] { background: var(--ivory); color: var(--green); border-color: var(--ivory); font-weight: 700; }
+  .k-tabs b { font-weight: 700; margin-left: 6px; opacity: .8; }
+  .k-alert { position: sticky; top: 12px; z-index: 5; margin-bottom: 16px; padding: 14px 18px; border-radius: 16px; background: var(--gold); color: var(--green); font-weight: 700; display: flex; justify-content: space-between; align-items: center; gap: 12px; box-shadow: 0 12px 30px rgba(4,12,9,.4); }
+  .k-alert button { background: none; border: 0; font-weight: 700; text-decoration: underline; cursor: pointer; color: inherit; }
+  .k-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; align-items: start; }
+  .k-empty { color: var(--ivory-soft); padding: 40px 0; text-align: center; grid-column: 1 / -1; }
+  .k-card { border-radius: 24px; padding: 20px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; position: relative; min-width: 0; }
+  .k-card.is-new { box-shadow: 0 0 0 2px var(--gold), 0 30px 60px rgba(4,12,9,.4); }
+  .k-card.is-picked { box-shadow: 0 0 0 2px var(--ivory), 0 30px 60px rgba(4,12,9,.4); }
+  .k-head { display: flex; align-items: flex-start; gap: 12px; }
+  .k-head label { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; flex: none; cursor: pointer; }
+  .k-head input { width: 20px; height: 20px; accent-color: var(--gold); }
+  .k-code { font-weight: 800; font-size: 19px; letter-spacing: -0.01em; }
+  .k-when { color: var(--ivory-soft); font-size: 14px; }
+  .k-pill { margin-left: auto; flex: none; font-size: 13px; font-weight: 700; padding: 5px 12px; border-radius: 999px; background: var(--ivory-faint); }
+  .k-pill--new { background: var(--gold); color: var(--green); }
+  .k-pill--out { background: transparent; box-shadow: inset 0 0 0 1px var(--ivory); }
+  .k-pill--delivered { background: var(--wa-green); }
+  .k-pill--cancelled { background: var(--chilli); }
+  .k-flag { font-size: 14px; padding: 8px 12px; border-radius: 10px; background: rgba(253,247,227,0.06); color: var(--ivory-soft); }
+  .k-flag--no { background: rgba(196,52,12,0.18); border-left: 3px solid var(--chilli); color: var(--ivory); }
+  .k-who { display: grid; gap: 4px; font-size: 16px; }
+  .k-who b { font-weight: 700; }
+  .k-who p { color: var(--ivory-soft); }
+  .k-links { display: flex; gap: 8px; flex-wrap: wrap; }
+  .k-items { border-top: 1px solid var(--ivory-faint); border-bottom: 1px solid var(--ivory-faint); padding: 12px 0; display: grid; gap: 8px; }
+  .k-items li { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; font-size: 16px; }
+  .k-items .q { font-weight: 800; min-width: 28px; }
+  .k-items small { display: block; color: var(--ivory-soft); font-size: 14px; }
+  .k-note { background: rgba(247,227,156,0.12); border-left: 3px solid var(--gold); padding: 8px 12px; border-radius: 10px; font-size: 15px; }
+  .k-sum { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .k-sum strong { font-size: 22px; font-weight: 800; }
+  .k-sum span { color: var(--ivory-soft); font-size: 14px; }
+  .k-paid { height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--ivory-faint); background: transparent; cursor: pointer; font-size: 14px; font-weight: 700; }
+  .k-paid[aria-pressed=true] { background: var(--wa-green); border-color: var(--wa-green); }
+  .k-act { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 170px); gap: 8px; }
+  .k-act .btn { padding: 0 16px; }
+  .k-act select { width: 100%; min-width: 0; height: 52px; border-radius: 999px; border: 1px solid rgba(253,247,227,0.45); background: rgba(253,247,227,0.06); color: var(--ivory); font: inherit; font-size: 15px; padding: 0 14px; }
+  .k-act select option { color: #132721; }
+  .k-bulk { position: fixed; left: 50%; bottom: max(16px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 10; width: min(760px, calc(100% - 24px)); padding: 12px; border-radius: 24px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; background: var(--glass-solid); }
+  .k-bulk p { font-weight: 700; margin: 0 auto 0 8px; }
+  .k-bulk .btn { height: 44px; padding: 0 16px; font-size: 15px; }
+  @media (hover: hover) { .k-paid:hover { border-color: var(--ivory); } .k-tabs button:hover { border-color: var(--ivory); } }
+  @media (max-width: 560px) {
+    .k-list { grid-template-columns: minmax(0, 1fr); }
+    .k-top h1 { margin-right: 0; }
+    .k-top small { width: 100%; order: 3; }
+    .k-act { grid-template-columns: minmax(0, 1fr) minmax(0, 132px); }
+    .k-bulk p { width: 100%; margin: 0 0 4px 4px; }
+    .k-bulk .btn { flex: 1 1 auto; }
+  }
+</style>
+</head>
+<body>
+<main class="k-wrap">
+  <section class="k-pin pane" data-lock aria-labelledby="pin-title" hidden>
+    <img src="/assets/logo/southery-script-ivory.svg" alt="Southery" width="200" height="40">
+    <h1 id="pin-title">Order desk</h1>
+    <p>Enter the kitchen PIN to see today’s orders.</p>
+    <form data-pin-form>
+      <label class="skip" for="pin">Kitchen PIN</label>
+      <input id="pin" name="pin" type="password" inputmode="numeric" autocomplete="current-password" required>
+      <p class="k-err" data-pin-err role="alert" hidden></p>
+      <button class="btn btn--gold btn--block" type="submit">Open order desk</button>
+    </form>
+  </section>
+
+  <div data-desk hidden>
+    <header class="k-top">
+      <img src="/assets/logo/southery-script-ivory.svg" alt="Southery" width="150" height="30">
+      <h1>Order desk</h1>
+      <small data-updated aria-live="polite"></small>
+      <button class="btn btn--ghost btn--sm" type="button" data-sound aria-pressed="true">Sound on</button>
+      <button class="btn btn--ghost btn--sm" type="button" data-lock-btn>Lock</button>
+    </header>
+    <div class="k-alert" data-alert role="status" hidden><span data-alert-text></span><button type="button" data-alert-close>Got it</button></div>
+    <nav class="k-tabs" aria-label="Filter orders" data-tabs></nav>
+    <p class="k-err" data-load-err role="alert" hidden></p>
+    <div class="k-list" data-list aria-live="polite"></div>
+  </div>
+
+  <div class="k-bulk pane" data-bulk hidden>
+    <p data-bulk-count></p>
+    <button class="btn btn--ghost" type="button" data-bulk-status="preparing">Preparing</button>
+    <button class="btn btn--ghost" type="button" data-bulk-status="out">Out for delivery</button>
+    <button class="btn btn--ivory" type="button" data-bulk-status="delivered">Delivered</button>
+    <button class="btn btn--ghost" type="button" data-bulk-paid>Mark paid</button>
+    <button class="btn btn--ghost" type="button" data-bulk-clear>Clear</button>
+  </div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var STEPS = { 'new': 'New', preparing: 'Preparing', out: 'Out for delivery', delivered: 'Delivered', cancelled: 'Cancelled' };
+  var NEXT = { 'new': 'preparing', preparing: 'out', out: 'delivered' };
+  var NEXT_LABEL = { 'new': 'Start preparing', preparing: 'Send out for delivery', out: 'Mark delivered' };
+  var FILTERS = [
+    ['active', 'Active', function (o) { return o.sent !== false && ['new', 'preparing', 'out'].indexOf(o.status) >= 0; }],
+    ['new', 'New', function (o) { return o.sent !== false && o.status === 'new'; }],
+    ['preparing', 'Preparing', function (o) { return o.status === 'preparing'; }],
+    ['out', 'Out for delivery', function (o) { return o.status === 'out'; }],
+    ['delivered', 'Delivered', function (o) { return o.status === 'delivered'; }],
+    ['unpaid', 'Not paid', function (o) { return o.sent !== false && !o.paid && o.status !== 'cancelled'; }],
+    ['cancelled', 'Cancelled', function (o) { return o.status === 'cancelled'; }],
+    ['notsent', 'Not sent', function (o) { return o.sent === false && o.status === 'new'; }]
+  ];
+  var pin = null, orders = [], filter = 'active', picked = {}, seen = null, fresh = {}, timer = null, sound = true;
+  try { pin = localStorage.getItem('southery-kitchen-pin'); sound = localStorage.getItem('southery-kitchen-sound') !== 'off'; } catch (e) {}
+
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function rupee(n) { return n == null ? '' : '₹' + Math.round(n).toLocaleString('en-IN'); }
+  function clock(t) { return new Date(t).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' }); }
+  function ago(t) {
+    var m = Math.round((Date.now() - t) / 60000);
+    if (m < 1) return 'just now'; if (m < 60) return m + ' min ago';
+    var d = new Date(t), today = new Date();
+    return (d.toDateString() === today.toDateString() ? 'today ' : d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) + ', ') + clock(t);
+  }
+  function digits(p) { var d = String(p || '').replace(/\D/g, ''); return d.length === 10 ? '91' + d : d; }
+
+  function call(method, data) {
+    return fetch('/api/kitchen' + (method === 'GET' ? '?days=2' : ''), {
+      method: method, headers: { 'x-kitchen-pin': pin || '', 'Content-Type': 'application/json' },
+      body: method === 'GET' ? undefined : JSON.stringify(data)
+    }).then(function (r) {
+      if (r.status === 401) throw { kind: 'pin' };
+      if (r.status === 429) throw { kind: 'locked' };
+      if (r.status === 503) throw { kind: 'setup' };
+      if (!r.ok) throw { kind: 'server' };
+      return r.json();
+    });
+  }
+
+  /* ---------- PIN ---------- */
+  function showLock(msg) {
+    clearInterval(timer); $('[data-desk]').hidden = true; $('[data-bulk]').hidden = true; $('[data-lock]').hidden = false;
+    var e = $('[data-pin-err]'); e.hidden = !msg; e.textContent = msg || ''; $('#pin').value = ''; $('#pin').focus();
+  }
+  $('[data-pin-form]').addEventListener('submit', function (e) {
+    e.preventDefault(); pin = $('#pin').value.trim(); unlockAudio(); start();
+  });
+  $('[data-lock-btn]').addEventListener('click', function () {
+    pin = null; try { localStorage.removeItem('southery-kitchen-pin'); } catch (e) {} seen = null; showLock();
+  });
+  function fail(err) {
+    if (err && err.kind === 'pin') { try { localStorage.removeItem('southery-kitchen-pin'); } catch (e) {} return showLock('That PIN didn’t work. Try again.'); }
+    if (err && err.kind === 'locked') return showLock('Too many wrong tries. Wait 15 minutes, then try again.');
+    if (err && err.kind === 'setup') return showLock('The order desk isn’t switched on yet. Order storage and the kitchen PIN need to be added in Vercel.');
+    var le = $('[data-load-err]'); le.hidden = false; le.textContent = 'Couldn’t reach the order desk. Checking again shortly.';
+  }
+
+  function start() {
+    call('GET').then(function (j) {
+      try { localStorage.setItem('southery-kitchen-pin', pin); } catch (e) {}
+      $('[data-lock]').hidden = true; $('[data-desk]').hidden = false;
+      got(j); clearInterval(timer); timer = setInterval(poll, 10000);
+    }, fail);
+  }
+  function poll() { call('GET').then(got, fail); }
+
+  /* ---------- New-order alert ---------- */
+  var ctx = null;
+  function unlockAudio() { try { ctx = ctx || new (window.AudioContext || window.webkitAudioContext)(); if (ctx.state === 'suspended') ctx.resume(); } catch (e) {} }
+  function chime() {
+    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+    if (!sound || !ctx) return;
+    [0, 0.22].forEach(function (d, i) {
+      var o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime + d;
+      o.type = 'sine'; o.frequency.value = i ? 880 : 660;
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.4, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.5);
+      o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t + 0.55);
+    });
+  }
+  document.addEventListener('pointerdown', unlockAudio);
+  var sb = $('[data-sound]');
+  function paintSound() { sb.setAttribute('aria-pressed', sound ? 'true' : 'false'); sb.textContent = sound ? 'Sound on' : 'Sound off'; }
+  sb.addEventListener('click', function () { sound = !sound; try { localStorage.setItem('southery-kitchen-sound', sound ? 'on' : 'off'); } catch (e) {} paintSound(); });
+  paintSound();
+  $('[data-alert-close]').addEventListener('click', function () { $('[data-alert]').hidden = true; fresh = {}; render(); document.title = 'Order desk — Southery'; });
+
+  function got(j) {
+    $('[data-load-err]').hidden = true;
+    orders = j.orders;
+    var incoming = orders.filter(function (o) { return o.sent !== false && o.status === 'new'; });
+    if (seen) {
+      var added = incoming.filter(function (o) { return !seen[o.code]; });
+      if (added.length) {
+        added.forEach(function (o) { fresh[o.code] = 1; });
+        var n = Object.keys(fresh).length;
+        $('[data-alert-text]').textContent = n === 1 ? 'New order ' + added[0].code + ' from ' + (added[0].name || 'a customer') : n + ' new orders';
+        $('[data-alert]').hidden = false; document.title = '(' + n + ') Order desk — Southery'; chime();
+      }
+    }
+    seen = {}; orders.forEach(function (o) { seen[o.code] = 1; });
+    $('[data-updated]').textContent = 'Updated ' + clock(Date.now());
+    // don't redraw under someone's finger while they're choosing a status
+    var a = document.activeElement;
+    if (a && a.matches && a.matches('[data-set]')) return;
+    render();
+  }
+
+  /* ---------- Render ---------- */
+  function render() {
+    var tabs = $('[data-tabs]');
+    tabs.innerHTML = FILTERS.map(function (f) {
+      var n = orders.filter(f[2]).length;
+      return '<button type="button" data-filter="' + f[0] + '" aria-pressed="' + (f[0] === filter) + '">' + f[1] + '<b>' + n + '</b></button>';
+    }).join('');
+    var test = FILTERS.filter(function (f) { return f[0] === filter; })[0][2];
+    var list = orders.filter(test);
+    if (filter === 'active') list.sort(function (a, b) { return a.at - b.at; }); // oldest first: cook in order
+    $('[data-list]').innerHTML = list.length ? list.map(card).join('') : '<p class="k-empty">No orders here right now.</p>';
+    paintBulk();
+  }
+  function card(o) {
+    var flag = o.sent === false ? '<p class="k-flag k-flag--no">The customer said they didn’t send this on WhatsApp.</p>'
+      : o.sent === null && o.status === 'new' ? '<p class="k-flag">Not confirmed yet. Check WhatsApp for the message.</p>' : '';
+    var map = o.lat != null ? '<a class="btn btn--ghost btn--xs" href="https://maps.google.com/?q=' + o.lat + ',' + o.lng + '" target="_blank" rel="noopener">Map</a>' : '';
+    var dist = o.zone === 'free' ? 'Free delivery' : o.zone === 'porter' ? 'Porter' : 'Distance not sure';
+    if (o.km != null) dist += ' · ' + o.km.toFixed(1) + ' km';
+    var next = NEXT[o.status];
+    return '<article class="k-card pane' + (fresh[o.code] ? ' is-new' : '') + (picked[o.code] ? ' is-picked' : '') + '" data-code="' + esc(o.code) + '">' +
+      '<div class="k-head"><label><input type="checkbox" data-pick aria-label="Select ' + esc(o.code) + '"' + (picked[o.code] ? ' checked' : '') + '></label>' +
+        '<div><p class="k-code">' + esc(o.code) + '</p><p class="k-when">' + ago(o.at) + '</p></div>' +
+        '<span class="k-pill k-pill--' + o.status + '">' + STEPS[o.status] + '</span></div>' +
+      flag +
+      '<div class="k-who"><b>' + esc(o.name) + '</b><p>' + esc(o.address) + '</p><p>' + dist + '</p></div>' +
+      '<div class="k-links">' +
+        (o.phone ? '<a class="btn btn--ghost btn--xs" href="tel:' + esc(o.phone.replace(/\s/g, '')) + '">Call ' + esc(o.phone) + '</a>' +
+          '<a class="btn btn--ghost btn--xs" href="https://wa.me/' + digits(o.phone) + '" target="_blank" rel="noopener">WhatsApp</a>' : '') + map + '</div>' +
+      '<ul class="k-items">' + o.items.map(function (i) {
+        return '<li><span class="q">' + i.q + '×</span><span>' + esc(i.name) + (i.opts ? '<small>' + esc(i.opts) + '</small>' : '') + '</span><span>' + rupee(i.amount) + '</span></li>';
+      }).join('') + '</ul>' +
+      (o.note ? '<p class="k-note">' + esc(o.note) + '</p>' : '') +
+      '<div class="k-sum"><div><strong>' + rupee(o.total) + '</strong> <span>' + (o.zone === 'free' ? '' : '+ Porter fare') + '</span></div>' +
+        '<button type="button" class="k-paid" data-paid aria-pressed="' + !!o.paid + '">' + (o.paid ? 'Paid' : 'Not paid') + '</button></div>' +
+      '<div class="k-act">' +
+        (next ? '<button type="button" class="btn btn--ivory" data-next="' + next + '">' + NEXT_LABEL[o.status] + '</button>' : '<span></span>') +
+        '<select data-set aria-label="Change status of ' + esc(o.code) + '">' + Object.keys(STEPS).map(function (s) {
+          return '<option value="' + s + '"' + (s === o.status ? ' selected' : '') + '>' + STEPS[s] + '</option>';
+        }).join('') + '</select></div>' +
+    '</article>';
+  }
+
+  function update(codes, change) {
+    call('POST', { codes: codes, status: change.status, paid: change.paid }).then(function (j) {
+      j.orders.forEach(function (u) { orders = orders.map(function (o) { return o.code === u.code ? u : o; }); delete fresh[u.code]; });
+      render();
+    }, fail);
+  }
+
+  $('[data-tabs]').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-filter]'); if (!b) return; filter = b.dataset.filter; render();
+  });
+  $('[data-list]').addEventListener('click', function (e) {
+    var c = e.target.closest('[data-code]'); if (!c) return; var code = c.dataset.code;
+    var o = orders.filter(function (x) { return x.code === code; })[0];
+    if (e.target.closest('[data-next]')) update([code], { status: e.target.closest('[data-next]').dataset.next });
+    else if (e.target.closest('[data-paid]')) update([code], { paid: !o.paid });
+  });
+  $('[data-list]').addEventListener('change', function (e) {
+    var c = e.target.closest('[data-code]'); if (!c) return; var code = c.dataset.code;
+    if (e.target.matches('[data-set]')) update([code], { status: e.target.value });
+    if (e.target.matches('[data-pick]')) { if (e.target.checked) picked[code] = 1; else delete picked[code]; c.classList.toggle('is-picked', e.target.checked); paintBulk(); }
+  });
+
+  /* ---------- Several orders at once ---------- */
+  function paintBulk() {
+    Object.keys(picked).forEach(function (k) { if (!seen || !seen[k]) delete picked[k]; });
+    var n = Object.keys(picked).length;
+    $('[data-bulk]').hidden = n === 0;
+    $('[data-bulk-count]').textContent = n + (n === 1 ? ' order selected' : ' orders selected');
+  }
+  $('[data-bulk]').addEventListener('click', function (e) {
+    var codes = Object.keys(picked); if (!codes.length) return;
+    var s = e.target.closest('[data-bulk-status]');
+    if (s) { update(codes, { status: s.dataset.bulkStatus }); picked = {}; }
+    else if (e.target.closest('[data-bulk-paid]')) { update(codes, { paid: true }); picked = {}; }
+    else if (e.target.closest('[data-bulk-clear]')) { picked = {}; render(); }
+  });
+
+  // keep "4 min ago" fresh between polls
+  setInterval(function () { if (!$('[data-desk]').hidden) render(); }, 60000);
+
+  if (pin) start(); else showLock();
+})();
+</script>
+</body>
+</html>

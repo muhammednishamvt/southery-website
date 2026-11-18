@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Your order — Southery</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#132721">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/cabinet-800.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/styles.css">
+<style>
+  html { background: var(--green-deep); }
+  body { min-height: 100vh; background: radial-gradient(120% 80% at 20% 0%, var(--green-mid) 0%, var(--green) 55%, var(--green-deep) 100%) fixed; }
+  .t-wrap { max-width: 560px; margin: 0 auto; padding: 28px 16px 48px; }
+  .t-logo { display: block; margin: 0 auto 28px; width: 170px; height: auto; }
+  .t-card { padding: 32px 28px; display: grid; gap: 24px; }
+  .t-card h1 { font-size: clamp(30px, 8vw, 40px); font-weight: 800; letter-spacing: -0.035em; line-height: 1.05; }
+  .t-sub { color: var(--ivory-soft); margin-top: 8px; }
+  .t-steps { display: grid; gap: 0; }
+  .t-steps li { display: grid; grid-template-columns: 28px 1fr auto; gap: 14px; align-items: start; position: relative; padding-bottom: 22px; }
+  .t-steps li:last-child { padding-bottom: 0; }
+  .t-steps li::before { content: ""; position: absolute; left: 13px; top: 28px; bottom: 0; width: 2px; background: var(--ivory-faint); }
+  .t-steps li:last-child::before { display: none; }
+  .t-steps li.is-done::before { background: var(--ivory); }
+  .t-dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--ivory-faint); display: grid; place-items: center; font-size: 14px; font-weight: 800; position: relative; z-index: 1; background: var(--green); }
+  .is-done .t-dot { background: var(--ivory); border-color: var(--ivory); color: var(--green); }
+  .is-now .t-dot { border-color: var(--gold); box-shadow: 0 0 0 4px rgba(247,227,156,0.18); }
+  .t-steps b { font-weight: 700; display: block; }
+  .t-steps small { color: var(--ivory-soft); font-size: 14px; }
+  .t-steps time { color: var(--ivory-soft); font-size: 14px; }
+  li:not(.is-done):not(.is-now) b { color: var(--ivory-soft); font-weight: 500; }
+  .t-items { border-top: 1px solid var(--ivory-faint); padding-top: 18px; display: grid; gap: 8px; }
+  .t-items li { display: flex; justify-content: space-between; gap: 12px; }
+  .t-items small { display: block; color: var(--ivory-soft); font-size: 14px; }
+  .t-total { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--ivory-faint); padding-top: 14px; }
+  .t-total strong { font-size: 24px; font-weight: 800; }
+  .t-paid { font-size: 14px; color: var(--ivory-soft); }
+  .t-note { background: rgba(196,52,12,0.18); border-left: 3px solid var(--chilli); padding: 12px 14px; border-radius: 12px; }
+  .t-foot { display: grid; gap: 10px; }
+  .t-upd { text-align: center; color: var(--ivory-soft); font-size: 13px; margin-top: 18px; }
+  .t-wa img { width: 20px; height: 20px; margin-right: 8px; }
+</style>
+</head>
+<body>
+<main class="t-wrap">
+  <a href="/"><img class="t-logo" src="/assets/logo/southery-script-ivory.svg" alt="Southery" width="170" height="34"></a>
+  <section class="t-card pane" aria-labelledby="t-title" data-card>
+    <div>
+      <h1 id="t-title" data-title>Finding your order</h1>
+      <p class="t-sub" data-sub></p>
+    </div>
+    <ol class="t-steps" data-steps hidden></ol>
+    <p class="t-note" data-note hidden></p>
+    <ul class="t-items" data-items hidden></ul>
+    <div class="t-foot">
+      <a class="btn btn--ghost btn--block t-wa" data-wa href="https://wa.me/918610071212" target="_blank" rel="noopener"><img src="/assets/icons/whatsapp.svg" alt="" width="20" height="20">Message us on WhatsApp</a>
+      <a class="btn btn--ghost btn--block" href="/#menu">Back to the menu</a>
+    </div>
+  </section>
+  <p class="t-upd" data-upd aria-live="polite"></p>
+</main>
+<script>
+(function () {
+  'use strict';
+  var $ = function (s) { return document.querySelector(s); };
+  var q = {}; location.search.slice(1).split('&').forEach(function (p) { var kv = p.split('='); if (kv[0]) q[kv[0]] = decodeURIComponent(kv[1] || ''); });
+  var STEPS = [
+    ['new', 'Order placed', 'We have your order.'],
+    ['preparing', 'Preparing', 'It’s on the stove.'],
+    ['out', 'Out for delivery', 'On its way to you.'],
+    ['delivered', 'Delivered', 'Enjoy your meal.']
+  ];
+  var TITLES = { 'new': 'We have your order.', preparing: 'Your food is being cooked.', out: 'Your order is on its way.', delivered: 'Delivered. Enjoy your meal.', cancelled: 'This order was cancelled.' };
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function rupee(n) { return n == null ? '' : '₹' + Math.round(n).toLocaleString('en-IN'); }
+  function clock(t) { return new Date(t).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' }); }
+  var timer;
+
+  function show(o) {
+    document.title = 'Order ' + o.code + ' — Southery';
+    $('[data-title]').textContent = TITLES[o.status] || TITLES['new'];
+    $('[data-sub]').textContent = 'Order ' + o.code + ' · placed at ' + clock(o.at);
+    $('[data-wa]').href = 'https://wa.me/918610071212?text=' + encodeURIComponent('Hi Southery, about my order ' + o.code + '.');
+    var when = {}; (o.log || []).forEach(function (l) { when[l.s] = l.at; });
+    var at = STEPS.map(function (s) { return s[0]; }).indexOf(o.status);
+    var cancelled = o.status === 'cancelled';
+    $('[data-steps]').hidden = cancelled;
+    $('[data-steps]').innerHTML = STEPS.map(function (s, i) {
+      var done = i < at || (i === at && o.status === 'delivered'), now = i === at && !done;
+      return '<li class="' + (done ? 'is-done' : now ? 'is-now' : '') + '"' + (now ? ' aria-current="step"' : '') + '><span class="t-dot" aria-hidden="true">' + (done ? '✓' : i + 1) + '</span>' +
+        '<span><b>' + s[1] + '</b>' + (now || done ? '<small>' + s[2] + '</small>' : '') + '</span>' +
+        (when[s[0]] && (done || now) ? '<time>' + clock(when[s[0]]) + '</time>' : '<span></span>') + '</li>';
+    }).join('');
+    var note = cancelled ? 'Message us on WhatsApp if you have any questions about this order.'
+      : o.sent === false ? 'You told us this order wasn’t sent on WhatsApp. Send it from the cart so we can start cooking.' : '';
+    $('[data-note]').hidden = !note; $('[data-note]').textContent = note;
+    $('[data-items]').hidden = false;
+    $('[data-items]').innerHTML = o.items.map(function (i) {
+      return '<li><span>' + i.q + ' × ' + esc(i.name) + (i.opts ? '<small>' + esc(i.opts) + '</small>' : '') + '</span><span>' + rupee(i.amount) + '</span></li>';
+    }).join('') + '<li class="t-total"><span>' + (o.zone === 'free' ? 'Total' : 'Food total') + '<small class="t-paid">' + (o.paid ? 'Paid. Thank you.' : o.zone === 'free' ? 'Pay by UPI' : 'Porter fare confirmed on WhatsApp') + '</small></span><strong>' + rupee(o.total) + '</strong></li>';
+    $('[data-upd]').textContent = o.status === 'delivered' || cancelled ? '' : 'This page updates by itself. Last checked ' + clock(Date.now()) + '.';
+    if (o.status === 'delivered' || cancelled) clearInterval(timer);
+  }
+  function missing() {
+    clearInterval(timer);
+    $('[data-title]').textContent = 'We couldn’t find this order.';
+    $('[data-sub]').textContent = 'Check that you opened the full link from your WhatsApp message, or message us and we’ll help.';
+  }
+  function load() {
+    if (!q.o || !q.t) return missing();
+    fetch('/api/orders?o=' + encodeURIComponent(q.o) + '&t=' + encodeURIComponent(q.t))
+      .then(function (r) { if (r.status === 404) throw 404; if (!r.ok) throw 0; return r.json(); })
+      .then(show, function (e) { if (e === 404) missing(); else $('[data-upd]').textContent = 'Couldn’t check just now. Trying again shortly.'; });
+  }
+  load(); timer = setInterval(load, 20000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) load(); });
+})();
+</script>
+</body>
+</html>

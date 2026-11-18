@@ -44,7 +44,7 @@ var MENU = [
     desc: 'Tender beef and vegetables in a light coconut milk stew, peppery and gentle.' },
   { id: 'mutton-stew', cat: 'malabar', name: 'Mutton Stew', price: null, ask: 'Ask for price', photo: false,
     desc: 'Mutton simmered slowly in coconut milk with pepper, ginger and curry leaves.' },
-  { id: 'vegetable-stew', cat: 'malabar', name: 'Vegetable Stew', price: 149, tag: 'Vegetarian',
+  { id: 'vegetable-stew', cat: 'malabar', name: 'Vegetable Stew', price: 149, veg: true,
     desc: 'Potato, carrot and beans in coconut milk, scented with green chilli and ginger.' },
 
   { id: 'ghee-rice-chicken-combo', cat: 'boxes', name: 'Ghee Rice Chicken Combo', price: 269,
@@ -224,7 +224,8 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     return '<div class="dish__photo"><img src="' + photoSrc(d) + '" alt="' + esc(d.name) + '" loading="lazy" width="720" height="720">' + tag(d) + '</div>';
   }
   function tag(d) {
-    if (d.best) return '<span class="dish__tag dish__tag--best">Best seller</span>';
+    if (d.best) return '<span class="dish__tag dish__tag--best">Best Seller</span>';
+    if (d.veg) return '<span class="dish__tag dish__tag--best">Veg</span>';
     return d.tag ? '<span class="dish__tag">' + d.tag + '</span>' : '';
   }
 
@@ -441,6 +442,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
   var who = read('southery-customer', {});
   if (who.name) form.name.value = who.name;
   if (who.address) form.address.value = who.address;
+  if (who.phone) form.phone.value = who.phone;
 
   var drawer = $('[data-drawer]'), lastFocus = null;
   function openCart() {
@@ -453,13 +455,14 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     setTimeout(function () { drawer.hidden = true; }, 250);
     if (keepPlace !== true && lastFocus) lastFocus.focus();
   }
-  // Empty cart: "Add a dish from the menu" closes the cart and takes you to the menu
-  $('[data-go-menu]').addEventListener('click', function (e) {
+  // "Add a dish from the menu" (empty cart) and "Add more from the menu" (not-sent notice)
+  // close the cart and take you to the menu
+  $$('[data-go-menu]').forEach(function (a) { a.addEventListener('click', function (e) {
     e.preventDefault(); closeCart(true);
     var menu = $('#menu'), title = $('#menu-title');
     menu.scrollIntoView({ behavior: 'smooth', block: 'start' });
     title.setAttribute('tabindex', '-1'); title.focus({ preventScroll: true });
-  });
+  }); });
   $$('[data-open-cart]').forEach(function (b) { b.addEventListener('click', openCart); });
   $$('[data-close-cart]').forEach(function (b) { b.addEventListener('click', function () { closeCart(); }); });
 
@@ -477,9 +480,25 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
   });
 
   /* ---------- Send + pay ---------- */
+  function rand(n, abc) {
+    var out = '', a = new Uint32Array(n);
+    if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(a); else for (var i = 0; i < n; i++) a[i] = Math.random() * 4294967296;
+    for (var j = 0; j < n; j++) out += abc.charAt(a[j] % abc.length);
+    return out;
+  }
   function orderCode() {
     var d = new Date(), p = function (n) { return (n < 10 ? '0' : '') + n; };
-    return 'SO-' + p(d.getDate()) + p(d.getMonth() + 1) + '-' + Math.floor(1000 + Math.random() * 9000);
+    return 'SO-' + p(d.getDate()) + p(d.getMonth() + 1) + '-' + rand(5, 'ABCDEFGHJKMNPQRSTUVWXYZ23456789');
+  }
+  function trackUrl(p) { return location.origin + '/track?o=' + p.code + '&t=' + p.token; }
+
+  // Orders are also saved to our order desk (southery.cloud/kitchen) once storage is set up on Vercel.
+  // Until then this stays false and checkout works exactly as before (WhatsApp only).
+  var ordersOn = false;
+  if (window.fetch) fetch('/api/orders').then(function (r) { return r.json(); }).then(function (j) { ordersOn = !!j.on; }, function () {});
+  function api(data) {
+    if (!ordersOn) return;
+    try { fetch('/api/orders', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }); } catch (e) {}
   }
   function upiLink(amount, code) {
     var q = 'pa=' + UPI.id + '&pn=' + encodeURIComponent(UPI.name) + '&cu=INR';
@@ -494,15 +513,17 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
 
   $('[data-send]').addEventListener('click', function () {
     var err = $('[data-error]'), s = totals();
-    var name = form.name.value.trim(), addr = form.address.value.trim(), note = form.note.value.trim();
+    var name = form.name.value.trim(), phone = form.phone.value.trim(), addr = form.address.value.trim(), note = form.note.value.trim();
     var problem = !name ? ['Add your name so we know who the order is for.', form.name]
+      : phone.replace(/\D/g, '').length < 10 ? ['Add a phone number so our rider can reach you.', form.phone]
       : !addr ? ['Add a delivery address so we know where to bring it.', form.address]
       : !where.zone ? ['Tell us roughly where you are, so we can sort delivery.', $('[data-locate]')] : null;
     if (problem) { err.hidden = false; err.textContent = problem[0]; problem[1].focus(); return; }
     err.hidden = true;
-    write('southery-customer', { name: name, address: addr });
+    write('southery-customer', { name: name, phone: phone, address: addr });
 
-    var code = orderCode(), free = where.zone === 'free';
+    var code = orderCode(), free = where.zone === 'free', token = rand(20, 'abcdefghijkmnpqrstuvwxyz23456789');
+    var track = ordersOn ? trackUrl({ code: code, token: token }) : null;
     var msg = ['Hi Southery, I’d like to place an order.', 'Order ' + code, ''];
     s.ls.forEach(function (l) {
       msg.push(l.q + ' × ' + l.d.name + ' — ' + rupee(l.q * l.unit));
@@ -511,18 +532,22 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     msg.push('', (free ? 'Total: ' : 'Food total: ') + rupee(s.t));
     msg.push('Delivery: ' + (free ? 'Free (within 3 km)' : where.zone === 'porter' ? 'Porter, please confirm the fare' : 'Not sure of distance, please confirm'));
     msg.push('Payment: UPI' + (free ? ', paying now' : ', after you confirm the total'), '');
-    msg.push('Name: ' + name, 'Address: ' + addr);
+    msg.push('Name: ' + name, 'Phone: ' + phone, 'Address: ' + addr);
     if (where.lat != null) msg.push('Location: https://maps.google.com/?q=' + where.lat.toFixed(6) + ',' + where.lng.toFixed(6));
     if (note) msg.push('Note: ' + note);
+    if (track) msg.push('', 'Track this order: ' + track);
     window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(msg.join('\n')), '_blank', 'noopener');
 
     // We can't see whether they pressed send inside WhatsApp, so ask before showing the payment step.
-    write('southery-pending', { code: code, free: free });
+    write('southery-pending', { code: code, free: free, token: track ? token : null });
+    api({ code: code, token: token, name: name, phone: phone, address: addr, note: note, zone: where.zone,
+      km: where.km, lat: where.lat, lng: where.lng, total: s.t,
+      items: s.ls.map(function (l) { return { q: l.q, name: l.d.name, opts: describe(l), amount: l.q * l.unit }; }) });
     notice.hidden = true; pendEl.hidden = false; renderCart();
     $('.drawer__body').scrollTop = 0; $('[data-pending-title]').focus({ preventScroll: true });
   });
 
-  function showPaid(code, free) {
+  function showPaid(code, free, token) {
     var s = totals();
     var pay = $('[data-pay]');
     if (free) {
@@ -537,15 +562,19 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
       pay.innerHTML = '<div class="pay__qr"><div class="pay__code">' + qrSvg(upiLink()) + '</div><p>Keep this for later. Scan it once we confirm your total.</p></div>';
     }
     pay.insertAdjacentHTML('beforeend', '<p class="pay__id">UPI ID <b>' + UPI.id + '</b> <button type="button" class="btn btn--ghost btn--xs" data-copy-upi>Copy</button></p><p class="pay__ref">Order reference ' + code + '</p>');
+    if (token) pay.insertAdjacentHTML('beforeend', '<a class="btn btn--ghost btn--block pay__track" href="' + trackUrl({ code: code, token: token }) + '" target="_blank" rel="noopener">Follow your order</a>');
     pendEl.hidden = true; sentEl.hidden = false; renderCart(); $('.drawer__body').scrollTop = 0; $('[data-sent-title]').focus({ preventScroll: true });
   }
 
   $('[data-pending-yes]').addEventListener('click', function () {
     var p = read('southery-pending', null) || { code: orderCode(), free: where.zone === 'free' };
     p.sent = true; write('southery-pending', p);
-    showPaid(p.code, p.free);
+    if (p.token) api({ answer: true, code: p.code, token: p.token });
+    showPaid(p.code, p.free, p.token);
   });
   $('[data-pending-no]').addEventListener('click', function () {
+    var p = read('southery-pending', null);
+    if (p && p.token) api({ answer: false, code: p.code, token: p.token });
     try { localStorage.removeItem('southery-pending'); } catch (e) {}
     pendEl.hidden = true; notice.hidden = false; renderCart();
     $('.drawer__body').scrollTop = 0; notice.setAttribute('tabindex', '-1'); notice.focus({ preventScroll: true });
@@ -555,7 +584,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
   (function () {
     var p = read('southery-pending', null);
     if (!p || totals().n === 0) return;
-    if (p.sent) showPaid(p.code, p.free); else { pendEl.hidden = false; renderCart(); }
+    if (p.sent) showPaid(p.code, p.free, p.token); else { pendEl.hidden = false; renderCart(); }
   })();
 
   sentEl.addEventListener('click', function (e) {
