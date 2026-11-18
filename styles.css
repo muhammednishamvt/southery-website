@@ -518,3 +518,32 @@ html.greet:not(.greet-done) .hero__leaves, html.greet:not(.greet-done) .hero__pa
 /* "I've paid. Send the screenshot" on the payment step */
 .pay__proof { width: 100%; display: grid; gap: 8px; }
 .sent .pay__proof p { color: var(--ivory-soft); text-align: center; }
+
+/* Plain menu written into the page for search engines and no-JavaScript visitors (scripts/menu-snapshot.js).
+   app.js replaces it with the live tabs on load. */
+.menu-snapshot { display: grid; gap: 12px; grid-column: 1 / -1; }
+.menu-snapshot h3 { font-size: 20px; font-weight: 800; margin-top: 12px; }
+.menu-snapshot ul { display: grid; gap: 8px; padding: 0; list-style: none; }
+.menu-snapshot li { color: var(--ivory-soft); }
+.menu-snapshot b { color: var(--ivory); font-weight: 700; }
+
+/* Opening hours (visit section) and the closed note in the cart */
+.visit__hours { margin-top: 18px; color: var(--ivory-soft); line-height: 1.5; }
+.visit__hours b { color: var(--ivory); font-weight: 700; }
+.visit__now { display: block; margin-top: 4px; }
+.visit__now.is-open { color: var(--gold); }
+.drawer__closed { margin: 0 0 10px; padding: 10px 12px; border-radius: 12px; border-left: 3px solid var(--gold); background: rgba(247,227,156,0.10); font-size: 14px; color: var(--ivory); }
+
+/* Questions */
+.faq { padding: clamp(40px, 6vw, 80px) 0 0; }
+.faq__pane { padding: clamp(28px, 4vw, 48px); }
+.faq__list { margin-top: 20px; display: grid; }
+.faq details { border-top: 1px solid var(--ivory-faint); }
+.faq details:last-child { border-bottom: 1px solid var(--ivory-faint); }
+.faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px 0; font-weight: 700; font-size: 18px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; flex: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--ivory-faint); display: grid; place-items: center; font-weight: 400; font-size: 18px; line-height: 1; }
+.faq details[open] summary::after { content: "−"; }
+.faq details p { padding: 0 44px 18px 0; color: var(--ivory-soft); max-width: 60ch; }
+.faq summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 4px; border-radius: 6px; }
+@media (hover: hover) { .faq summary:hover::after { border-color: var(--ivory); } }

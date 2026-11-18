@@ -1,0 +1,71 @@
+# Southery
+
+> Southery is a Malabar cloud kitchen in Edappally, Kochi, Kerala. It cooks Malabar dum biriyani (chicken, beef, mutton, fish, prawns), Kerala roasts, curries and stews, and combo boxes with puttu, appam, porotta, chapathi, ghee rice and Neypathal, and delivers across Kochi.
+
+- Website and ordering: https://southery.cloud
+- Order directly: build the order on the website and send it on WhatsApp (+91 86100 71212), then pay by UPI.
+- Delivery: free within 3 km of the Edappally kitchen. Further away, Southery books Porter once the food payment comes through, and the customer pays the delivery fare to the rider.
+- Opening hours: Tuesday to Sunday, 11 am to 11 pm (India time). Closed on Mondays.
+- Mutton, fish and prawns biriyani are available only on direct orders.
+- Also on Swiggy and Zomato.
+- Address: SNRA 27, Ground Floor, Sahrdaya Nagar Road, Edappally, Kochi, Kerala 682024 (landmark: Girls Hostel).
+- Google Maps: https://maps.app.goo.gl/EXFihS84APFUDjeo8
+- Instagram: https://www.instagram.com/southerykitchen/
+- Founder: Vishnu DS. Southery Kitchen LLP.
+
+## Menu
+
+### Biriyani
+
+Mutton, fish and prawns biriyani are available only when you order directly from us. Message us on WhatsApp for sizes and prices.
+
+- Chicken Dum Biriyani (₹299): Chicken and Kaima rice, sealed and dum cooked in their own steam. Fried onions and cashew on top, raita and pickle on the side.
+- Beef Dum Biriyani (₹329): Slow-cooked beef layered with Kaima rice and left on dum until every grain carries the masala.
+- Mutton Dum Biriyani (Price on request): Tender mutton and Kaima rice, cooked low under a sealed lid. Deep, rich and worth the wait.
+- Fish Biriyani (Price on request): A masala-fried fish fillet laid over fragrant Kaima rice.
+- Prawns Biriyani (Price on request): Prawns cooked in a spiced masala and folded through Kaima rice.
+
+### Malabar dishes
+
+Mutton stew is made to order. Message us on WhatsApp for the price.
+
+- Chicken Fry (₹219): Chicken marinated in red chilli and spice, fried until crisp at the edges and juicy inside.
+- Beef Fry (₹249): Beef cooked tender, then fried dry with coconut slivers, shallots and curry leaves.
+- Chicken Naadan Roast (₹239): Chicken cooked down in a thick onion and tomato masala until it clings to every piece.
+- Beef Roast (₹259): Beef roasted down slowly until dark at the edges, with coconut slivers and curry leaves.
+- Chicken Varutharachathu (₹259): Coconut and spices roasted slowly, ground fine, and simmered with chicken into a deep, nutty gravy.
+- Beef Naadan Curry (₹289): Beef in a homestyle Kerala gravy. The one you order porotta for.
+- Chicken Stew (₹269): Chicken simmered gently in coconut milk with whole spices. Mild, fragrant, and made for appam.
+- Beef Stew (₹279): Tender beef and vegetables in a light coconut milk stew, peppery and gentle.
+- Mutton Stew (Ask for price): Mutton simmered slowly in coconut milk with pepper, ginger and curry leaves.
+- Vegetable Stew (₹149, vegetarian): Potato, carrot and beans in coconut milk, scented with green chilli and ginger.
+
+### Boxes
+
+- Ghee Rice Chicken Combo (₹269): Fragrant ghee rice with your choice of chicken curry. A full meal in one box.
+- Ghee Rice Beef Combo (₹289): Fragrant ghee rice with our beef curry. A full meal in one box.
+- Biriyani Rice Chicken Combo (₹279): Spiced biriyani rice paired with our chicken curry, for when you want both in one box.
+- Biriyani Rice Beef Combo (₹299): Spiced biriyani rice paired with our beef curry, for when you want both in one box.
+- Neypathal Chicken Combo (₹239): Soft, thin neypathal with Chicken Varutharachathu.
+- Neypathal Beef Combo (₹269): Soft, thin neypathal with our beef curry.
+- Appam Chicken Combo (₹229): Lacy appam, crisp at the edges and soft in the middle, with your choice of chicken curry.
+- Appam Beef Combo (₹259): Lacy appam, crisp at the edges and soft in the middle, with our beef curry.
+- Puttu Chicken Combo (₹209): Steamed rice and coconut puttu with your choice of chicken curry to pour over.
+- Puttu Beef Combo (₹239): Steamed rice and coconut puttu with our beef curry to pour over.
+- Porotta Chicken Combo (₹249): Layered, flaky Malabar porotta with your choice of chicken curry. Best pulled apart by hand.
+- Porotta Beef Combo (₹279): Layered, flaky Malabar porotta with our beef curry. The Kerala favourite.
+- Chapathi Chicken Combo (₹209): Soft chapathi with your choice of chicken curry. Lighter, and just as satisfying.
+- Chapathi Beef Combo (₹239): Soft chapathi with our beef curry. Lighter, and just as satisfying.
+
+### Extras
+
+- Ghee Rice (₹189): Kaima rice cooked in ghee with whole spices and fried onions.
+- Biriyani Rice (₹199): Our dum biriyani rice on its own, to pair with any roast or curry.
+
+### Drinks
+
+- Mint Lemon (₹60): Fresh lime and mint.
+- Pineapple Lemon (₹70): Pineapple with fresh lime.
+- Pineapple (₹179): Cold pressed. No sugar, no water.
+- Water Melon (₹159): Cold pressed. No sugar, no water.
+- Melon Magic (₹229): A detox smoothie.

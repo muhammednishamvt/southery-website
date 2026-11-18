@@ -37,7 +37,9 @@ track.html        /track?o=CODE&t=TOKEN: the customer's order tracking page (not
 api/              order API (see Stack)
 styles.css        all styles; design tokens on :root
 app.js            menu data, tabs, cart, options sheet, delivery check, WhatsApp checkout, UPI payment
-vendor/qrcode.js  QR generator
+vendor/qrcode.js  QR generator, loaded only when the cart opens or the payment step shows (not on every visit)
+scripts/          menu-snapshot.js (run after menu changes) and llms-head.md
+llms.txt          generated summary and menu for AI assistants
 favicon.svg       the Southery mark (also used as the placeholder when a dish has no photo)
 assets/
   fonts/          Cabinet Grotesk woff2 (400, 500, 700, 800)
@@ -57,8 +59,13 @@ assets/
   `desc`, optional `tag` (e.g. "Signature"), optional `photo: false`.
   `best: true` shows a green "Best Seller" tag (accent green, ivory text) in place of `tag`; `veg: true` shows a green "Veg" tag the same way.
   With `price: null`, optional `ask` replaces the default "Price on request / Direct orders only" label (e.g. `ask: 'Ask for price'`).
-- A dish's photo is found by its id: `/assets/photos/<id>.jpg` (720×720 shown). Adding a dish with a photo
-  means adding that file with the matching name. With no photo, set `photo: false`.
+- A dish's photo is found by its id: `/assets/photos/<id>.jpg` (720×720), plus WebP copies `<id>-480.webp` and
+  `<id>-720.webp` that the page actually loads (the JPG is the fallback). Adding a dish with a photo means adding
+  all three files. With no photo, set `photo: false`.
+- **After any menu change, run `node scripts/menu-snapshot.js`.** It writes a plain copy of the menu into
+  `index.html` (between the `menu-snapshot` markers, replaced by the live tabs when app.js runs), the menu's
+  structured data (`menu-ld` markers in the head) and `llms.txt` (summary for AI assistants; its top part is
+  `scripts/llms-head.md`). Search engines and AI assistants that don't run JavaScript read the menu from these.
 - `OPTION_SETS` and `DISH_OPTIONS`: customisation (curry choice, extras, sides), mirroring Swiggy/Zomato.
   `type: 'one'` picks exactly one (first is the default); `type: 'many'` are optional extras up to `max`.
 
@@ -66,17 +73,26 @@ assets/
 and `FREE_KM` (free-delivery radius, 3 km). Beyond that radius delivery is by Porter: every customer pays for the food by UPI
 first, the kitchen books Porter only after that payment is confirmed, and the customer pays the delivery fare to the
 Porter rider (UPI on delivery). The site never adds a delivery fare to the bill.
+Opening hours: `HOURS` in `app.js` (Tuesday to Sunday, 11 am to 11 pm IST, closed Mondays). The site shows "Open now" /
+"Closed now. We open …" under the address, and a note in the cart when closed (orders can still be sent). The same
+hours are written in the visit section, the FAQ (hidden for now), the JSON-LD (`openingHoursSpecification`) and `scripts/llms-head.md`.
 Treat these values as business details: change them only when Nisham asks.
 
 **Business details elsewhere** — address, phone, founder and links also appear in the JSON-LD block and the meta /
 Open Graph tags in `index.html`, and in the visit and footer sections. Keep them in step with `app.js`.
+
+**Questions (FAQ)** — currently hidden (commented out in `index.html`, section and its JSON-LD) until Nisham asks to
+show it. When shown, it's a short section between Our promise and Find the kitchen: four `<details>` questions (hours,
+delivery, payment, direct-only biriyanis), mirrored in a `FAQPage` JSON-LD block in the head. Change both together.
+Address stays as written: "Edappally, Cochin, Keralam" (Nisham's choice).
 
 **Ratings** — the Swiggy and Zomato rating chips (score and number of ratings) and the Google review count in
 `index.html` are typed in by hand. Update them from the apps when they change.
 
 **Greeting curtain** — shown on every page load (skipped for reduced motion; tap to skip): Introducing, logo over
 `curtain-logo` leaf photo, ക്ലൗഡ് കിച്ചൺ, WebApp over `curtain-webapp` leaf photo. The words are vector outlines in
-`index.html`; timings are `HOLD` in `app.js`.
+`index.html`; timings are `HOLD` in `app.js`. Plan: about a week after the WebApp launch, switch it to once per visit
+(Nisham's decision); until then it stays on every load.
 
 **Background music** — off by default. The header button (red with a muted speaker when off, green with moving
 bars when on) plays it at a fixed low volume set only in code (`VOL` in `app.js`, 0.11; visitors can't change it on the site); the choice is stored, and for visitors who turned it on it
@@ -153,4 +169,6 @@ dish names (Varutharachathu, Neypathal, Chiratta Puttu, Chammanthi). Spelling is
   Escape closes the cart and sheets, alt text on dish photos.
 - Respect `prefers-reduced-motion` for any new animation.
 - Check at phone width (breakpoints at 1024, 820 and 560px). Most customers order from their phones.
-- Lazy-load images below the fold and give every `<img>` width and height.
+- Lazy-load images below the fold and give every `<img>` width and height. The Google Map iframe gets its `src`
+  only when the visitor nears the Find us section (`data-map-src`).
+- An `aria-label` must start with the button's visible text ("Ask on WhatsApp about …"), so voice control works.
