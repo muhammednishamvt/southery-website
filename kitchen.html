@@ -133,7 +133,7 @@
     ['cancelled', 'Cancelled', function (o) { return o.status === 'cancelled'; }],
     ['notsent', 'Not sent', function (o) { return o.sent === false && o.status === 'new'; }]
   ];
-  var pin = null, orders = [], filter = 'active', picked = {}, seen = null, fresh = {}, timer = null, sound = true;
+  var pin = null, orders = [], filter = 'active', picked = {}, seen = null, fresh = {}, timer = null, sound = true, rev = null;
   try { pin = localStorage.getItem('southery-kitchen-pin'); sound = localStorage.getItem('southery-kitchen-sound') !== 'off'; } catch (e) {}
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -148,7 +148,7 @@
   function digits(p) { var d = String(p || '').replace(/\D/g, ''); return d.length === 10 ? '91' + d : d; }
 
   function call(method, data) {
-    return fetch('/api/kitchen' + (method === 'GET' ? '?days=2' : ''), {
+    return fetch('/api/kitchen' + (method === 'GET' ? '?days=2' + (rev === null ? '' : '&rev=' + rev) : ''), {
       method: method, headers: { 'x-kitchen-pin': pin || '', 'Content-Type': 'application/json' },
       body: method === 'GET' ? undefined : JSON.stringify(data)
     }).then(function (r) {
@@ -162,7 +162,7 @@
 
   /* ---------- PIN ---------- */
   function showLock(msg) {
-    clearInterval(timer); $('[data-desk]').hidden = true; $('[data-bulk]').hidden = true; $('[data-lock]').hidden = false;
+    clearTimeout(timer); rev = null; $('[data-desk]').hidden = true; $('[data-bulk]').hidden = true; $('[data-lock]').hidden = false;
     var e = $('[data-pin-err]'); e.hidden = !msg; e.textContent = msg || ''; $('#pin').value = ''; $('#pin').focus();
   }
   $('[data-pin-form]').addEventListener('submit', function (e) {
@@ -182,10 +182,14 @@
     call('GET').then(function (j) {
       try { localStorage.setItem('southery-kitchen-pin', pin); } catch (e) {}
       $('[data-lock]').hidden = true; $('[data-desk]').hidden = false;
-      got(j); clearInterval(timer); timer = setInterval(poll, 10000);
+      got(j); schedule();
     }, fail);
   }
-  function poll() { call('GET').then(got, fail); }
+  // Check every 10 s while the desk is on screen, every 30 s when it's in the background
+  // (a new order still chimes); one cheap read each time unless something changed.
+  function schedule() { clearTimeout(timer); timer = setTimeout(poll, document.hidden ? 30000 : 10000); }
+  function poll() { call('GET').then(function (j) { got(j); schedule(); }, function (e) { fail(e); if (!e || e.kind === 'server') schedule(); }); }
+  document.addEventListener('visibilitychange', function () { if (!document.hidden && pin && !$('[data-desk]').hidden) { clearTimeout(timer); poll(); } });
 
   /* ---------- New-order alert ---------- */
   var ctx = null;
@@ -209,6 +213,9 @@
 
   function got(j) {
     $('[data-load-err]').hidden = true;
+    $('[data-updated]').textContent = 'Updated ' + clock(Date.now());
+    if (j.same) return;
+    rev = j.rev;
     orders = j.orders;
     var incoming = orders.filter(function (o) { return o.sent !== false && o.status === 'new'; });
     if (seen) {
@@ -221,7 +228,6 @@
       }
     }
     seen = {}; orders.forEach(function (o) { seen[o.code] = 1; });
-    $('[data-updated]').textContent = 'Updated ' + clock(Date.now());
     // don't redraw under someone's finger while they're choosing a status
     var a = document.activeElement;
     if (a && a.matches && a.matches('[data-set]')) return;
@@ -273,6 +279,7 @@
 
   function update(codes, change) {
     call('POST', { codes: codes, status: change.status, paid: change.paid }).then(function (j) {
+      rev = null; // our own change bumped the counter; take the full list on the next check
       j.orders.forEach(function (u) { orders = orders.map(function (o) { return o.code === u.code ? u : o; }); delete fresh[u.code]; });
       render();
     }, fail);

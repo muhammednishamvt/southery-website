@@ -100,10 +100,10 @@
       return '<li><span>' + i.q + ' × ' + esc(i.name) + (i.opts ? '<small>' + esc(i.opts) + '</small>' : '') + '</span><span>' + rupee(i.amount) + '</span></li>';
     }).join('') + '<li class="t-total"><span>' + (o.zone === 'free' ? 'Total' : 'Food total') + '<small class="t-paid">' + (o.paid ? 'Paid. Thank you.' : o.zone === 'free' ? 'Pay by UPI' : 'Porter fare confirmed on WhatsApp') + '</small></span><strong>' + rupee(o.total) + '</strong></li>';
     $('[data-upd]').textContent = o.status === 'delivered' || cancelled ? '' : 'This page updates by itself. Last checked ' + clock(Date.now()) + '.';
-    if (o.status === 'delivered' || cancelled) clearInterval(timer);
+    if (o.status === 'delivered' || cancelled) { clearInterval(timer); timer = null; }
   }
   function missing() {
-    clearInterval(timer);
+    clearInterval(timer); timer = null;
     $('[data-title]').textContent = 'We couldn’t find this order.';
     $('[data-sub]').textContent = 'Check that you opened the full link from your WhatsApp message, or message us and we’ll help.';
   }
@@ -113,8 +113,10 @@
       .then(function (r) { if (r.status === 404) throw 404; if (!r.ok) throw 0; return r.json(); })
       .then(show, function (e) { if (e === 404) missing(); else $('[data-upd]').textContent = 'Couldn’t check just now. Trying again shortly.'; });
   }
-  load(); timer = setInterval(load, 20000);
-  document.addEventListener('visibilitychange', function () { if (!document.hidden) load(); });
+  // Check every 30 s while the page is on screen; pause in the background and catch up on return.
+  function run() { clearInterval(timer); timer = setInterval(function () { if (!document.hidden) load(); }, 30000); }
+  load(); run();
+  document.addEventListener('visibilitychange', function () { if (!document.hidden && timer) load(); });
 })();
 </script>
 </body>
