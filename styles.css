@@ -518,3 +518,11 @@ html.greet:not(.greet-done) .hero__leaves, html.greet:not(.greet-done) .hero__pa
 /* "I've paid. Send the screenshot" on the payment step */
 .pay__proof { width: 100%; display: grid; gap: 8px; }
 .sent .pay__proof p { color: var(--ivory-soft); text-align: center; }
+
+/* Plain menu written into the page for search engines and no-JavaScript visitors (scripts/menu-snapshot.js).
+   app.js replaces it with the live tabs on load. */
+.menu-snapshot { display: grid; gap: 12px; grid-column: 1 / -1; }
+.menu-snapshot h3 { font-size: 20px; font-weight: 800; margin-top: 12px; }
+.menu-snapshot ul { display: grid; gap: 8px; padding: 0; list-style: none; }
+.menu-snapshot li { color: var(--ivory-soft); }
+.menu-snapshot b { color: var(--ivory); font-weight: 700; }

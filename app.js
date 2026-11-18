@@ -221,7 +221,9 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
   function photoSrc(d) { return d.photo === false ? null : '/assets/photos/' + d.id + '.jpg'; }
   function photo(d) {
     if (!photoSrc(d)) return '<div class="dish__photo dish__photo--mark"><img src="/favicon.svg" alt="" width="120" height="120">' + tag(d) + '</div>';
-    return '<div class="dish__photo"><img src="' + photoSrc(d) + '" alt="' + esc(d.name) + '" loading="lazy" width="720" height="720">' + tag(d) + '</div>';
+    // WebP at 480 and 720 wide (made from the JPG of the same name); the JPG stays as the fallback
+    var base = '/assets/photos/' + d.id;
+    return '<div class="dish__photo"><img src="' + photoSrc(d) + '" srcset="' + base + '-480.webp 480w, ' + base + '-720.webp 720w" sizes="(max-width: 560px) 150px, 440px" alt="' + esc(d.name) + '" loading="lazy" decoding="async" width="720" height="720">' + tag(d) + '</div>';
   }
   function tag(d) {
     if (d.best) return '<span class="dish__tag dish__tag--best">Best Seller</span>';
@@ -268,7 +270,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     $$('[data-ctl]').forEach(function (slot) {
       var d = byId[slot.dataset.ctl], n = countOf(d.id);
       if (d.price == null) {
-        slot.innerHTML = '<a class="btn btn--ghost btn--sm" href="https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent('Hi Southery, I’d like to order ' + d.name + '. What sizes and prices do you have today?') + '" target="_blank" rel="noopener" aria-label="Ask about ' + esc(d.name) + ' on WhatsApp">Ask on WhatsApp</a>';
+        slot.innerHTML = '<a class="btn btn--ghost btn--sm" href="https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent('Hi Southery, I’d like to order ' + d.name + '. What sizes and prices do you have today?') + '" target="_blank" rel="noopener" aria-label="Ask on WhatsApp about ' + esc(d.name) + '">Ask on WhatsApp</a>';
         return;
       }
       if (d.options) {
@@ -446,6 +448,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
 
   var drawer = $('[data-drawer]'), lastFocus = null;
   function openCart() {
+    if (totals().n > 0) loadQR(); // warm the QR library while they fill in their details
     lastFocus = document.activeElement; drawer.hidden = false;
     requestAnimationFrame(function () { drawer.classList.add('is-open'); });
     document.body.style.overflow = 'hidden'; $('.drawer__head .icon-btn').focus();
@@ -505,6 +508,19 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     if (amount) q += '&am=' + amount.toFixed(2) + '&tn=' + encodeURIComponent('Southery ' + code);
     return 'upi://pay?' + q;
   }
+  // The QR library (56 KB) loads only when a payment step is about to show, not on every visit
+  var qrWait = null;
+  function loadQR(cb) {
+    if (typeof qrcode === 'function') { if (cb) cb(); return; }
+    if (!qrWait) {
+      qrWait = [];
+      var sc = document.createElement('script'); sc.src = '/vendor/qrcode.js'; sc.async = true;
+      sc.onload = function () { var w = qrWait; qrWait = null; w.forEach(function (f) { f(); }); };
+      sc.onerror = function () { qrWait = null; };
+      document.head.appendChild(sc);
+    }
+    if (cb && qrWait) qrWait.push(cb);
+  }
   function qrSvg(text) {
     if (typeof qrcode !== 'function') return '';
     var qr = qrcode(0, 'M'); qr.addData(text); qr.make();
@@ -558,7 +574,8 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
       ? 'Press send in WhatsApp, then pay by UPI. We start cooking once it comes through.'
       : 'Press send in WhatsApp, then pay for your food by UPI. We start cooking and book Porter once it comes through. Pay the delivery fare to the rider.';
     pay.innerHTML = '<a class="btn btn--gold btn--block pay__app" href="' + link + '">Pay ' + rupee(s.t) + ' with a UPI app</a>' +
-      '<div class="pay__qr"><div class="pay__code">' + qrSvg(link) + '</div><p>Or scan with GPay, PhonePe, Paytm or any UPI app.</p></div>';
+      '<div class="pay__qr"><div class="pay__code" data-qr>' + qrSvg(link) + '</div><p>Or scan with GPay, PhonePe, Paytm or any UPI app.</p></div>';
+    loadQR(function () { var q = $('[data-qr]'); if (q && !q.firstChild) q.innerHTML = qrSvg(link); });
     pay.insertAdjacentHTML('beforeend', '<p class="pay__id">UPI ID <b>' + UPI.id + '</b> <button type="button" class="btn btn--ghost btn--xs" data-copy-upi>Copy</button></p><p class="pay__ref">Order reference ' + code + '</p>');
     var claimed = (read('southery-pending', null) || {}).claimed;
     pay.insertAdjacentHTML('beforeend', '<div class="pay__proof"><button type="button" class="btn btn--ghost btn--block" data-paid-proof data-code="' + code + '" data-amount="' + s.t + '"' + (claimed ? ' hidden' : '') + '>I’ve paid. Send the screenshot</button>' +
@@ -711,6 +728,15 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
       es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-near'); io.unobserve(e.target); } });
     }, { rootMargin: '800px 0px' });
     for (var k = 0; k < secs.length; k++) io.observe(secs[k]);
+  })();
+
+  /* Google Map (about 180 KB and many requests): load it only when the visitor nears the Find us section */
+  (function () {
+    var f = $('[data-map-src]'); if (!f) return;
+    function go() { if (!f.src) f.src = f.getAttribute('data-map-src'); }
+    if (!('IntersectionObserver' in window)) { go(); return; }
+    var mo = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { go(); mo.disconnect(); } }, { rootMargin: '600px 0px' });
+    mo.observe(f);
   })();
 
   /* Greeting curtain on every page load: Introducing, logo (mango leaf), ക്ലൗഡ് കിച്ചൺ, WebApp (green leaf), then lift. Tap to skip.

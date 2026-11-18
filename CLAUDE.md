@@ -37,7 +37,9 @@ track.html        /track?o=CODE&t=TOKEN: the customer's order tracking page (not
 api/              order API (see Stack)
 styles.css        all styles; design tokens on :root
 app.js            menu data, tabs, cart, options sheet, delivery check, WhatsApp checkout, UPI payment
-vendor/qrcode.js  QR generator
+vendor/qrcode.js  QR generator, loaded only when the cart opens or the payment step shows (not on every visit)
+scripts/          menu-snapshot.js (run after menu changes) and llms-head.md
+llms.txt          generated summary and menu for AI assistants
 favicon.svg       the Southery mark (also used as the placeholder when a dish has no photo)
 assets/
   fonts/          Cabinet Grotesk woff2 (400, 500, 700, 800)
@@ -57,8 +59,13 @@ assets/
   `desc`, optional `tag` (e.g. "Signature"), optional `photo: false`.
   `best: true` shows a green "Best Seller" tag (accent green, ivory text) in place of `tag`; `veg: true` shows a green "Veg" tag the same way.
   With `price: null`, optional `ask` replaces the default "Price on request / Direct orders only" label (e.g. `ask: 'Ask for price'`).
-- A dish's photo is found by its id: `/assets/photos/<id>.jpg` (720×720 shown). Adding a dish with a photo
-  means adding that file with the matching name. With no photo, set `photo: false`.
+- A dish's photo is found by its id: `/assets/photos/<id>.jpg` (720×720), plus WebP copies `<id>-480.webp` and
+  `<id>-720.webp` that the page actually loads (the JPG is the fallback). Adding a dish with a photo means adding
+  all three files. With no photo, set `photo: false`.
+- **After any menu change, run `node scripts/menu-snapshot.js`.** It writes a plain copy of the menu into
+  `index.html` (between the `menu-snapshot` markers, replaced by the live tabs when app.js runs), the menu's
+  structured data (`menu-ld` markers in the head) and `llms.txt` (summary for AI assistants; its top part is
+  `scripts/llms-head.md`). Search engines and AI assistants that don't run JavaScript read the menu from these.
 - `OPTION_SETS` and `DISH_OPTIONS`: customisation (curry choice, extras, sides), mirroring Swiggy/Zomato.
   `type: 'one'` picks exactly one (first is the default); `type: 'many'` are optional extras up to `max`.
 
@@ -153,4 +160,6 @@ dish names (Varutharachathu, Neypathal, Chiratta Puttu, Chammanthi). Spelling is
   Escape closes the cart and sheets, alt text on dish photos.
 - Respect `prefers-reduced-motion` for any new animation.
 - Check at phone width (breakpoints at 1024, 820 and 560px). Most customers order from their phones.
-- Lazy-load images below the fold and give every `<img>` width and height.
+- Lazy-load images below the fold and give every `<img>` width and height. The Google Map iframe gets its `src`
+  only when the visitor nears the Find us section (`data-map-src`).
+- An `aria-label` must start with the button's visible text ("Ask on WhatsApp about …"), so voice control works.
