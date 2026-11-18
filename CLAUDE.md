@@ -75,13 +75,14 @@ first, the kitchen books Porter only after that payment is confirmed, and the cu
 Porter rider (UPI on delivery). The site never adds a delivery fare to the bill.
 Opening hours: `HOURS` in `app.js` (Tuesday to Sunday, 11 am to 11 pm IST, closed Mondays). The site shows "Open now" /
 "Closed now. We open …" under the address, and a note in the cart when closed (orders can still be sent). The same
-hours are written in the visit section, the FAQ, the JSON-LD (`openingHoursSpecification`) and `scripts/llms-head.md`.
+hours are written in the visit section, the FAQ (hidden for now), the JSON-LD (`openingHoursSpecification`) and `scripts/llms-head.md`.
 Treat these values as business details: change them only when Nisham asks.
 
 **Business details elsewhere** — address, phone, founder and links also appear in the JSON-LD block and the meta /
 Open Graph tags in `index.html`, and in the visit and footer sections. Keep them in step with `app.js`.
 
-**Questions (FAQ)** — a short section between Our promise and Find the kitchen: four `<details>` questions (hours,
+**Questions (FAQ)** — currently hidden (commented out in `index.html`, section and its JSON-LD) until Nisham asks to
+show it. When shown, it's a short section between Our promise and Find the kitchen: four `<details>` questions (hours,
 delivery, payment, direct-only biriyanis), mirrored in a `FAQPage` JSON-LD block in the head. Change both together.
 Address stays as written: "Edappally, Cochin, Keralam" (Nisham's choice).
 
