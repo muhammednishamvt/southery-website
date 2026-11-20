@@ -667,7 +667,21 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
   } else if (rating) rating.classList.add('is-in');
 
   renderWhere();
-  renderDishes();
+  // Links like southery.cloud/#menu-biriyani (from the dish pages) open that tab and go straight to the menu.
+  // The greeting curtain is skipped for these links (see the inline script in index.html).
+  function openFromHash(scroll) {
+    var m = /^#menu-([a-z]+)$/.exec(location.hash);
+    if (!m || !catById[m[1]]) return false;
+    active = m[1]; renderDishes();
+    if (scroll) {
+      var go = function () { document.getElementById('menu').scrollIntoView(); };
+      setTimeout(go, 0);
+      if (document.readyState !== 'complete') window.addEventListener('load', go, { once: true }); // again once photos and fonts settle
+    }
+    return true;
+  }
+  if (!openFromHash(true)) renderDishes();
+  window.addEventListener('hashchange', function () { if (openFromHash(true)) $('#tab-' + active).focus({ preventScroll: true }); });
 
   /* Background music: "Spice Garden Morning" (forest edition), an original 120 s loop: breeze, leaves, a distant stream, songbirds, a far koel, celesta, soft pads at low volume. Off by default; the header button turns it on.
      Browsers only allow sound after the visitor's first tap or key press, so it starts then.
