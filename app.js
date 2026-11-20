@@ -690,7 +690,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
   (function () {
     var btn = $('[data-music]'), AC = window.AudioContext || window.webkitAudioContext;
     if (!btn || !AC) { if (btn) btn.hidden = true; return; }
-    var SRC = '/assets/audio/southery-spice-garden-v2.mp3', LOOP_START = 3, LOOP_END = 123, VOL = 0.11;   /* fixed volume, set here only (half the launch level) */
+    var SRC = '/assets/audio/southery-spice-garden-v2.mp3', LOOP_START = 3, LOOP_END = 123, VOL = 0.055; /* fixed volume, set here only (halved again on 20 Nov 2026, from 0.11) */
     var ctx, gain, buffer, source, loading = false, playing = false, armed = true;
     var on = false; try { on = localStorage.getItem('southery-music') === 'on'; } catch (e) {}
     function show() { btn.setAttribute('aria-pressed', on ? 'true' : 'false'); btn.classList.toggle('is-playing', playing); btn.title = on ? 'Turn music off' : 'Play music'; }
