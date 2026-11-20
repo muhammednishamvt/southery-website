@@ -3,6 +3,7 @@
 > Southery is a Malabar cloud kitchen in Edappally, Kochi, Kerala. It cooks Malabar dum biriyani (chicken, beef, mutton, fish, prawns), Kerala roasts, curries and stews, and combo boxes with puttu, appam, porotta, chapathi, ghee rice and Neypathal, and delivers across Kochi.
 
 - Website and ordering: https://southery.cloud
+- Dish pages: https://southery.cloud/biriyani, https://southery.cloud/malabar-dishes, https://southery.cloud/combo-boxes
 - Order directly: build the order on the website and send it on WhatsApp (+91 86100 71212), then pay by UPI.
 - Delivery: free within 3 km of the Edappally kitchen. Further away, Southery books Porter once the food payment comes through, and the customer pays the delivery fare to the rider.
 - Opening hours: Tuesday to Sunday, 11 am to 11 pm (India time). Closed on Mondays.
