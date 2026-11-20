@@ -189,7 +189,7 @@ section[id] { scroll-margin-top: 24px; }
 .footer__inner { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px 48px; }
 .footer__inner img { height: 34px; width: auto; }
 .footer__line { color: var(--ivory-soft); }
-.footer__links { display: flex; gap: 28px; }
+.footer__links { display: flex; flex-wrap: wrap; gap: 12px 28px; }
 .footer__links a { text-decoration: none; font-weight: 500; }
 .footer__links a:hover { color: var(--gold); }
 .footer__legal { grid-column: 1 / -1; font-size: 13px; color: var(--ivory-soft); }
