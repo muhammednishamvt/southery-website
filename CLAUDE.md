@@ -97,8 +97,8 @@ Address stays as written: "Edappally, Cochin, Keralam" (Nisham's choice).
 
 **Menu download** — the footer link "Menu" opens a small dialog (preview, "Download menu") that saves the menu as one tall JPEG, all four pages stacked (Nisham's choice over a PDF); without JavaScript the link downloads the image directly. For a new edition, render the pages about 1240 px wide, stack them into one JPEG under `assets/menu/` with a new name (cache), remake the preview, and update the paths in `index.html`. Keep dish names and prices in the menu in step with `MENU`.
 
-**Add to Home Screen** — a dialog shown after the greeting curtain on every page load, refreshes included (Nisham's
-choice), never when Southery is already open as an installed app, and never in Firefox on desktop or in-app browsers
+**Add to Home Screen** — a dialog shown once per visit after the greeting curtain: on every new visit, but not again
+on a refresh (Nisham's choice; `southery-install-seen` in sessionStorage, which clears when the tab or browser closes), never when Southery is already open as an installed app, and never in Firefox on desktop or in-app browsers
 (Instagram, Facebook). One gold "Install now" button and "Not now". Where the browser offers its install prompt (Chrome, Edge, Brave once
 they allow it) the button opens the browser's own "Install app" box. Chrome and Brave send that prompt a little after load (on a first
 visit, only after some use of the page), so a tap before it arrives shows "Getting ready…" for up to 4 seconds and
@@ -136,8 +136,8 @@ Payment proof: the payment step has "I’ve paid. Send the screenshot", which op
 The button is pressed once: afterwards it gives way to a thank-you note (no "send again"). Once Paid, the card offers "Send payment confirmation on WhatsApp" (prefilled message with the tracking link to the
 customer's number); the time it was sent is shown, and `/track` says "Payment received".
 
-Browser storage keys: `southery-cart`, `southery-customer` (name, phone and address, remembered for next time), `southery-music`
-and `southery-pending`; on the kitchen page `southery-kitchen-pin` and `southery-kitchen-sound`.
+Browser storage keys: `southery-cart`, `southery-customer` (name, phone and address, remembered for next time), `southery-music`,
+`southery-pending` (and `southery-install-seen` in sessionStorage); on the kitchen page `southery-kitchen-pin` and `southery-kitchen-sound`.
 
 ## Brand rules
 
