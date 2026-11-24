@@ -842,6 +842,12 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     var macSafari = /Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome|Chromium|Edg\//.test(ua) && !ios;
     var desktopFirefox = /Firefox/.test(ua) && !android;
     var deferred = null, shown = false, from = null;
+    // Installed once = never asked again on this device. We know because the browser said so (appinstalled, or the
+    // install box was accepted), because Southery was opened from the home screen, or because Chrome lists it
+    // (getInstalledRelatedApps, using related_applications in the manifest). iPhone tells us only the second way.
+    function installedBefore() { return !!read('southery-installed', null); }
+    function markInstalled() { write('southery-installed', { at: Date.now() }); }
+    if (standalone) markInstalled();
     function seenThisVisit() { try { return sessionStorage.getItem('southery-install-seen') === '1'; } catch (e) { return false; } }
     var go = $('[data-install-go]'), how = $('[data-install-how]');
     var SHARE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12M7.5 7.5 12 3l4.5 4.5M5 11v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"/></svg>';
@@ -865,7 +871,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     }
     function busy() { return (drawer && !drawer.hidden) || !sheet.hidden || (menuDl && !menuDl.hidden) || /(^| )greet( |$)/.test(document.documentElement.className); }
     function open() {
-      if (shown || standalone) return;
+      if (shown || standalone || installedBefore()) return;
       if (busy()) { setTimeout(open, 1500); return; }
       shown = true; from = document.activeElement; render();
       try { sessionStorage.setItem('southery-install-seen', '1'); } catch (e) {}   // once per visit: not again on refresh
@@ -890,7 +896,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
       try { r = p.prompt(); } catch (e) { r = Promise.reject(e); }
       // If the browser refuses (too long after the tap), keep the prompt so the next tap on "Install now" works.
       if (r && r.then) r.then(null, function () { deferred = p; showSteps = false; render(); go.focus(); });
-      if (p.userChoice) p.userChoice.then(close, function () {});
+      if (p.userChoice) p.userChoice.then(function (c) { if (c && c.outcome === 'accepted') markInstalled(); close(); }, function () {});
     }
     function stopWaiting() { clearTimeout(waiting); waiting = null; go.disabled = false; go.textContent = 'Install now'; }
     go.addEventListener('click', function () {
@@ -911,9 +917,12 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
       if (!box.hidden) { render(); go.focus(); return; }
       if (wanted) { shown = false; open(); }               // they asked to install earlier; offer it again now it works
     });
-    window.addEventListener('appinstalled', function () { deferred = null; close(); });
+    window.addEventListener('appinstalled', function () { deferred = null; markInstalled(); close(); });
 
-    if (standalone || inApp || desktopFirefox || seenThisVisit()) return;
+    if (standalone || inApp || desktopFirefox || seenThisVisit() || installedBefore()) return;
+    if (navigator.getInstalledRelatedApps) {
+      navigator.getInstalledRelatedApps().then(function (apps) { if (apps && apps.length) { markInstalled(); shown = true; close(); } }, function () {});
+    }
     // Wait for the curtain to lift, then a short pause so the page settles first.
     window.addEventListener('load', function () { setTimeout(open, 1200); });
   })();
