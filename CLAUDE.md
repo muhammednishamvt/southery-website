@@ -50,7 +50,7 @@ assets/
   photos/         dish photos, named <dish-id>.jpg; og-southery.jpg for link previews
   photos/bg/      large background photography (AVIF + JPG)
   nature/         foliage photos behind the glass panels, in pairs (-a / -b), AVIF + JPG
-  menu/           the printable menu PDF (web copy, about 0.7 MB) and its two-page preview (480/960 WebP); new file names for each edition
+  menu/           the printable menu PDF (web copy, about 0.6 MB) and its two-page preview (480/960 WebP); new file names for each edition
   audio/          background music loop "Spice Garden Morning", forest edition (original composition; one 120 s cycle between 3 s and 123 s)
 ```
 
