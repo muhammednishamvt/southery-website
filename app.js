@@ -131,7 +131,8 @@ var DISH_OPTIONS = {
   'pathal-chicken-combo': ['extra-pathal'],
   'pathal-beef-combo': ['extra-pathal'],
   'chicken-dum-biriyani': ['sides'],
-  'beef-dum-biriyani': ['sides']
+  'beef-dum-biriyani': ['sides'],
+  'mutton-dum-biriyani': ['sides']
 };
 MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.id]; });
 
