@@ -593,3 +593,13 @@ body.dp { min-height: 100vh; background: radial-gradient(120% 70% at 15% 0%, var
 .menu-dl__preview { background: var(--green-deep); padding: 20px 20px 0; }
 .menu-dl__preview img { display: block; width: 100%; height: auto; border-radius: 10px; box-shadow: 0 12px 30px rgba(0,0,0,0.35); }
 .menu-dl .sheet__foot .btn { flex: 1; }
+
+/* ---------- Add to Home Screen dialog (reuses the sheet) ---------- */
+.install .sheet__panel { width: min(440px, 100%); }
+.install__body { padding: 32px 24px 8px; display: grid; justify-items: start; gap: 10px; }
+.install__icon { width: 72px; height: 72px; border-radius: 18px; box-shadow: 0 10px 24px rgba(0,0,0,0.35); margin-bottom: 6px; }
+.install__body h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; padding-right: 40px; }
+.install__body p { font-size: 15px; line-height: 1.55; color: var(--ivory-soft); }
+.install__how { color: var(--ivory) !important; background: var(--green-deep); border-radius: 14px; padding: 12px 14px; width: 100%; }
+.install__how svg { width: 18px; height: 18px; vertical-align: -3px; margin: 0 2px; }
+.install .sheet__foot { flex-direction: column; align-items: stretch; gap: 10px; }

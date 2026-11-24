@@ -238,6 +238,24 @@
   </div>
 </footer>
 
+<!-- Add to Home Screen: shown after the greeting curtain on every load, unless Southery is already opened as an installed app (see app.js) -->
+<div class="sheet install" data-install hidden>
+  <div class="sheet__scrim" data-install-close></div>
+  <div class="sheet__panel" role="dialog" aria-modal="true" aria-labelledby="install-title">
+    <button class="icon-btn sheet__x" type="button" data-install-close aria-label="Close">×</button>
+    <div class="install__body">
+      <img class="install__icon" src="/assets/icons/app-icon-192.png" alt="" width="72" height="72">
+      <h2 id="install-title">Add Southery to your home screen</h2>
+      <p>Order in two taps next time. It opens like an app, straight to our menu, and takes almost no space on your phone.</p>
+      <p class="install__how" data-install-how hidden></p>
+    </div>
+    <footer class="sheet__foot">
+      <button class="btn btn--gold btn--block" type="button" data-install-go hidden>Add to Home Screen</button>
+      <button class="btn btn--ghost btn--block" type="button" data-install-close data-install-later>Not now</button>
+    </footer>
+  </div>
+</div>
+
 <!-- Menu download: the footer link opens this; without JavaScript the link downloads the image directly -->
 <div class="sheet menu-dl" data-menu-dl hidden>
   <div class="sheet__scrim" data-menu-dl-close></div>

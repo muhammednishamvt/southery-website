@@ -824,4 +824,75 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     if (logo.complete) start(); else { logo.addEventListener('load', start); logo.addEventListener('error', start); setTimeout(start, 500); }
     c.addEventListener('click', lift);
   })();
+
+  /* ---------- Add to Home Screen ----------
+     Shown after the greeting curtain on every page load (Nisham's choice), except when Southery is already
+     running as an installed app. Chrome and Edge hand us a native install prompt (beforeinstallprompt); there the gold
+     button installs. iPhone Safari has no prompt, so the dialog shows the Share > Add to Home Screen steps instead,
+     and other browsers get their menu steps. Browsers that can't install at all (Firefox on desktop, in-app browsers)
+     never see it. */
+  (function () {
+    var box = $('[data-install]');
+    if (!box) return;
+    var ua = navigator.userAgent || '';
+    var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+    var inApp = /FBAN|FBAV|Instagram|Line\/|; wv\)/i.test(ua);
+    var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+    var android = /Android/i.test(ua);
+    var macSafari = /Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome|Chromium|Edg\//.test(ua) && !ios;
+    var desktopFirefox = /Firefox/.test(ua) && !android;
+    var deferred = null, shown = false, from = null;
+    var go = $('[data-install-go]'), how = $('[data-install-how]');
+    var SHARE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12M7.5 7.5 12 3l4.5 4.5M5 11v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"/></svg>';
+    var DOTS = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="12" cy="19" r="1.8" fill="currentColor"/></svg>';
+
+    function steps() {
+      if (ios) return 'Tap the Share button ' + SHARE + ' at the bottom of Safari, then choose <b>Add to Home Screen</b>.';
+      if (android) return 'Tap the menu ' + DOTS + ' in your browser, then choose <b>Add to Home screen</b> or <b>Install app</b>.';
+      if (macSafari) return 'In the Safari menu bar, choose <b>File</b>, then <b>Add to Dock</b>.';
+      return 'Click the install icon at the right of the address bar, or open the browser menu and choose <b>Install Southery</b>.';
+    }
+    function render() {
+      go.hidden = !deferred;
+      how.hidden = !!deferred;
+      if (!deferred) how.innerHTML = steps();
+      $('[data-install-later]').textContent = deferred ? 'Not now' : 'Got it';
+    }
+    function busy() { return (drawer && !drawer.hidden) || !sheet.hidden || (menuDl && !menuDl.hidden) || /(^| )greet( |$)/.test(document.documentElement.className); }
+    function open() {
+      if (shown || standalone) return;
+      if (busy()) { setTimeout(open, 1500); return; }
+      shown = true; from = document.activeElement; render();
+      box.hidden = false; requestAnimationFrame(function () { box.classList.add('is-open'); });
+      document.body.style.overflow = 'hidden';
+      (deferred ? go : $('[data-install-later]')).focus();
+    }
+    function close() {
+      if (box.hidden) return;
+      box.classList.remove('is-open'); document.body.style.overflow = '';
+      setTimeout(function () { box.hidden = true; }, 250);
+      if (from && from.focus && document.body.contains(from)) from.focus();
+    }
+    $$('[data-install-close]', box).forEach(function (b) { b.addEventListener('click', close); });
+    go.addEventListener('click', function () {
+      if (!deferred) return;
+      var p = deferred; deferred = null;
+      p.prompt();
+      (p.userChoice || Promise.resolve()).then(close, close);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (box.hidden) return;
+      if (e.key === 'Escape') close();
+      if (e.key === 'Tab') trap(e, $('.sheet__panel', box));
+    });
+    window.addEventListener('beforeinstallprompt', function (e) {
+      e.preventDefault(); deferred = e;
+      if (!box.hidden) render();
+    });
+    window.addEventListener('appinstalled', function () { deferred = null; close(); });
+
+    if (standalone || inApp || desktopFirefox) return;
+    // Wait for the curtain to lift, then a short pause so the page settles first.
+    window.addEventListener('load', function () { setTimeout(open, 1200); });
+  })();
 })();
