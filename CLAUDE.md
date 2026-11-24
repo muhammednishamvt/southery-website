@@ -100,8 +100,10 @@ Address stays as written: "Edappally, Cochin, Keralam" (Nisham's choice).
 **Add to Home Screen** — a dialog shown after the greeting curtain on every page load, refreshes included (Nisham's
 choice), never when Southery is already open as an installed app, and never in Firefox on desktop or in-app browsers
 (Instagram, Facebook). One gold "Install now" button and "Not now". Where the browser offers its install prompt (Chrome, Edge, Brave once
-they allow it) the button installs in one tap; where it can't (iPhone, or a first visit before Chrome allows it) the tap
-shows the Share > Add to Home Screen or browser-menu steps instead, with "Got it".
+they allow it) the button opens the browser's own "Install app" box. Chrome and Brave send that prompt a little after load (on a first
+visit, only after some use of the page), so a tap before it arrives shows "Getting ready…" for up to 4 seconds and
+installs the moment it comes; if it doesn't, the steps show (Share > Add to Home Screen on iPhone, the browser menu
+elsewhere) with "Got it", and if the prompt arrives later the pop-up comes back with a working "Install now".
 It waits while the cart, a sheet or the menu dialog is open. Uses `manifest.webmanifest` and the app icons in
 `assets/icons/`. Code: the "Add to Home Screen" block at the end of `app.js`.
 
