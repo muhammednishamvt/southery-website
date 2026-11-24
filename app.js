@@ -852,11 +852,15 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
       if (macSafari) return 'In the Safari menu bar, choose <b>File</b>, then <b>Add to Dock</b>.';
       return 'Click the install icon at the right of the address bar, or open the browser menu and choose <b>Install Southery</b>.';
     }
+    // One gold "Install now" button everywhere. With the browser's install prompt it installs in one tap;
+    // without one (iPhone, or before Chrome/Brave allow it) the tap shows the two steps instead.
+    var showSteps = false;
     function render() {
-      go.hidden = !deferred;
-      how.hidden = !!deferred;
-      if (!deferred) how.innerHTML = steps();
-      $('[data-install-later]').textContent = deferred ? 'Not now' : 'Got it';
+      var steps_ = showSteps && !deferred;
+      go.hidden = steps_;
+      how.hidden = !steps_;
+      if (steps_) how.innerHTML = steps();
+      $('[data-install-later]').textContent = steps_ ? 'Got it' : 'Not now';
     }
     function busy() { return (drawer && !drawer.hidden) || !sheet.hidden || (menuDl && !menuDl.hidden) || /(^| )greet( |$)/.test(document.documentElement.className); }
     function open() {
@@ -865,7 +869,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
       shown = true; from = document.activeElement; render();
       box.hidden = false; requestAnimationFrame(function () { box.classList.add('is-open'); });
       document.body.style.overflow = 'hidden';
-      (deferred ? go : $('[data-install-later]')).focus();
+      go.focus();
     }
     function close() {
       if (box.hidden) return;
@@ -875,7 +879,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     }
     $$('[data-install-close]', box).forEach(function (b) { b.addEventListener('click', close); });
     go.addEventListener('click', function () {
-      if (!deferred) return;
+      if (!deferred) { showSteps = true; render(); $('[data-install-later]').focus(); return; }
       var p = deferred; deferred = null;
       p.prompt();
       (p.userChoice || Promise.resolve()).then(close, close);
