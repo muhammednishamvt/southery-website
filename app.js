@@ -826,8 +826,8 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
   })();
 
   /* ---------- Add to Home Screen ----------
-     Shown after the greeting curtain on every page load (Nisham's choice), except when Southery is already
-     running as an installed app. Chrome and Edge hand us a native install prompt (beforeinstallprompt); there the gold
+     Shown once per device, on the first visit, after the greeting curtain (Nisham's choice), and never when Southery
+     is already running as an installed app. Chrome and Edge hand us a native install prompt (beforeinstallprompt); there the gold
      button installs. iPhone Safari has no prompt, so the dialog shows the Share > Add to Home Screen steps instead,
      and other browsers get their menu steps. Browsers that can't install at all (Firefox on desktop, in-app browsers)
      never see it. */
@@ -867,6 +867,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
       if (shown || standalone) return;
       if (busy()) { setTimeout(open, 1500); return; }
       shown = true; from = document.activeElement; render();
+      write('southery-install-seen', { at: Date.now() });   // first visit only; never shown again on this device
       box.hidden = false; requestAnimationFrame(function () { box.classList.add('is-open'); });
       document.body.style.overflow = 'hidden';
       go.focus();
@@ -911,7 +912,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     });
     window.addEventListener('appinstalled', function () { deferred = null; close(); });
 
-    if (standalone || inApp || desktopFirefox) return;
+    if (standalone || inApp || desktopFirefox || read('southery-install-seen', null)) return;
     // Wait for the curtain to lift, then a short pause so the page settles first.
     window.addEventListener('load', function () { setTimeout(open, 1200); });
   })();
