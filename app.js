@@ -7,7 +7,7 @@ var WHATSAPP = '918610071212';
 
 var CATEGORIES = [
   { id: 'biriyani', name: 'Biriyani',
-    note: 'Mutton, fish and prawns biriyani are available only when you order directly from us. Message us on WhatsApp for sizes and prices.' },
+    note: 'Mutton, fish and prawns biriyani are available only when you order directly from us. Message us on WhatsApp for fish and prawns sizes and prices.' },
   { id: 'malabar', name: 'Malabar dishes', note: 'Mutton stew is made to order. Message us on WhatsApp for the price.' },
   { id: 'boxes', name: 'Boxes' },
   { id: 'rice', name: 'Extras', list: true },
@@ -19,14 +19,14 @@ var MENU = [
     desc: 'Chicken and Kaima rice, sealed and dum cooked in their own steam. Fried onions and cashew on top, raita and pickle on the side.' },
   { id: 'beef-dum-biriyani', cat: 'biriyani', name: 'Beef Dum Biriyani', price: 329, best: true,
     desc: 'Slow-cooked beef layered with Kaima rice and left on dum until every grain carries the masala.' },
-  { id: 'mutton-dum-biriyani', cat: 'biriyani', name: 'Mutton Dum Biriyani', price: null,
+  { id: 'mutton-dum-biriyani', cat: 'biriyani', name: 'Mutton Dum Biriyani', price: 469,
     desc: 'Tender mutton and Kaima rice, cooked low under a sealed lid. Deep, rich and worth the wait.' },
   { id: 'fish-biriyani', cat: 'biriyani', name: 'Fish Biriyani', price: null,
     desc: 'A masala-fried fish fillet laid over fragrant Kaima rice.' },
   { id: 'prawns-biriyani', cat: 'biriyani', name: 'Prawns Biriyani', price: null,
     desc: 'Prawns cooked in a spiced masala and folded through Kaima rice.' },
 
-  { id: 'chicken-naadan-fry', cat: 'malabar', name: 'Chicken Naadan Fry', price: 219, best: true,
+  { id: 'chicken-naadan-fry', cat: 'malabar', name: 'Chicken Fry', price: 219, best: true,
     desc: 'Chicken marinated in red chilli and spice, fried until crisp at the edges and juicy inside.' },
   { id: 'beef-naadan-fry', cat: 'malabar', name: 'Beef Naadan Fry', price: 249,
     desc: 'Beef cooked tender, then fried dry with coconut slivers, shallots and curry leaves.' },
@@ -481,7 +481,30 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
     else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
   }
+  /* ---------- Menu download dialog (footer link) ---------- */
+  var menuDl = $('[data-menu-dl]'), menuDlFrom = null;
+  function openMenuDl(from) {
+    menuDlFrom = from; menuDl.hidden = false;
+    requestAnimationFrame(function () { menuDl.classList.add('is-open'); });
+    document.body.style.overflow = 'hidden';
+    $('[data-menu-dl-go]').focus();
+  }
+  function closeMenuDl() {
+    menuDl.classList.remove('is-open'); document.body.style.overflow = '';
+    setTimeout(function () { menuDl.hidden = true; }, 250);
+    if (menuDlFrom) menuDlFrom.focus();
+  }
+  if (menuDl) {
+    $$('[data-menu-open]').forEach(function (a) {
+      a.addEventListener('click', function (e) { e.preventDefault(); openMenuDl(a); });
+    });
+    $$('[data-menu-dl-close]', menuDl).forEach(function (b) { b.addEventListener('click', closeMenuDl); });
+    // The download starts from the link itself; close the dialog just after.
+    $('[data-menu-dl-go]').addEventListener('click', function () { setTimeout(closeMenuDl, 300); });
+  }
+
   document.addEventListener('keydown', function (e) {
+    if (menuDl && !menuDl.hidden) { if (e.key === 'Escape') closeMenuDl(); if (e.key === 'Tab') trap(e, $('.sheet__panel', menuDl)); return; }
     if (!sheet.hidden) { if (e.key === 'Escape') closeSheet(); if (e.key === 'Tab') trap(e, $('.sheet__panel')); return; }
     if (drawer.hidden) return;
     if (e.key === 'Escape') closeCart();

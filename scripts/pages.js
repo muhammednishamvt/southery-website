@@ -10,7 +10,7 @@ module.exports = [
     h1: 'Malabar dum biriyani, cooked in Edappally',
     intro: [
       'Our biriyani is made the Malabar way: short-grain Kaima rice layered with the masala and the meat, sealed, and left on dum until every grain carries it.',
-      'Chicken and beef biriyani are always on the menu. Mutton, fish and prawns biriyani are cooked for direct orders only, so message us on WhatsApp for sizes and prices.'
+      'Chicken and beef biriyani are always on the menu. Mutton, fish and prawns biriyani are cooked for direct orders only. Mutton biriyani is priced below; for fish and prawns, message us on WhatsApp for sizes and prices.'
     ],
     cta: 'Order biriyani'
   },
