@@ -97,6 +97,13 @@ Address stays as written: "Edappally, Cochin, Keralam" (Nisham's choice).
 
 **Menu download** — the footer link "Menu" opens a small dialog (preview, "Download menu") that saves the menu as one tall JPEG, all four pages stacked (Nisham's choice over a PDF); without JavaScript the link downloads the image directly. For a new edition, render the pages about 1240 px wide, stack them into one JPEG under `assets/menu/` with a new name (cache), remake the preview, and update the paths in `index.html`. Keep dish names and prices in the menu in step with `MENU`.
 
+**Add to Home Screen** — a dialog shown after the greeting curtain on every page load, refreshes included (Nisham's
+choice), never when Southery is already open as an installed app, and never in Firefox on desktop or in-app browsers
+(Instagram, Facebook). Where the browser offers a native install prompt (Chrome, Edge) the gold "Add to Home Screen"
+button installs; on iPhone it shows the Share > Add to Home Screen steps, elsewhere the browser-menu steps, with "Got it".
+It waits while the cart, a sheet or the menu dialog is open. Uses `manifest.webmanifest` and the app icons in
+`assets/icons/`. Code: the "Add to Home Screen" block at the end of `app.js`.
+
 **Greeting curtain** — shown on every page load (skipped for reduced motion; tap to skip): Introducing, logo over
 `curtain-logo` leaf photo, ക്ലൗഡ് കിച്ചൺ, WebApp over `curtain-webapp` leaf photo. The words are vector outlines in
 `index.html`; timings are `HOLD` in `app.js`. Plan: about a week after the WebApp launch, switch it to once per visit
