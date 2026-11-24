@@ -481,7 +481,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
     else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
   }
-  /* ---------- Menu PDF dialog (footer link) ---------- */
+  /* ---------- Menu download dialog (footer link) ---------- */
   var menuDl = $('[data-menu-dl]'), menuDlFrom = null;
   function openMenuDl(from) {
     menuDlFrom = from; menuDl.hidden = false;
@@ -495,7 +495,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     if (menuDlFrom) menuDlFrom.focus();
   }
   if (menuDl) {
-    $$('[data-menu-pdf]').forEach(function (a) {
+    $$('[data-menu-open]').forEach(function (a) {
       a.addEventListener('click', function (e) { e.preventDefault(); openMenuDl(a); });
     });
     $$('[data-menu-dl-close]', menuDl).forEach(function (b) { b.addEventListener('click', closeMenuDl); });

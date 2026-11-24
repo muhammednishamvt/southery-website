@@ -50,7 +50,7 @@ assets/
   photos/         dish photos, named <dish-id>.jpg; og-southery.jpg for link previews
   photos/bg/      large background photography (AVIF + JPG)
   nature/         foliage photos behind the glass panels, in pairs (-a / -b), AVIF + JPG
-  menu/           the printable menu PDF (web copy, about 0.6 MB) and its two-page preview (480/960 WebP); new file names for each edition
+  menu/           the downloadable menu: one tall JPEG of all four pages (about 0.7 MB) and a two-page preview (480/960 WebP); new file names for each edition
   audio/          background music loop "Spice Garden Morning", forest edition (original composition; one 120 s cycle between 3 s and 123 s)
 ```
 
@@ -95,7 +95,7 @@ Address stays as written: "Edappally, Cochin, Keralam" (Nisham's choice).
 **Ratings** — the Swiggy and Zomato rating chips (score and number of ratings) and the Google review count in
 `index.html` are typed in by hand. Update them from the apps when they change.
 
-**Menu PDF** — the footer link "Menu PDF" opens a small dialog (preview, "Download menu PDF"); without JavaScript it downloads the file directly. For a new edition, add the PDF under `assets/menu/` with a new name (cache), shrink its photos for the web (the print file is about 6 MB), and update the three paths in `index.html`. Keep dish names and prices in the PDF in step with `MENU`.
+**Menu download** — the footer link "Menu" opens a small dialog (preview, "Download menu") that saves the menu as one tall JPEG, all four pages stacked (Nisham's choice over a PDF); without JavaScript the link downloads the image directly. For a new edition, render the pages about 1240 px wide, stack them into one JPEG under `assets/menu/` with a new name (cache), remake the preview, and update the paths in `index.html`. Keep dish names and prices in the menu in step with `MENU`.
 
 **Greeting curtain** — shown on every page load (skipped for reduced motion; tap to skip): Introducing, logo over
 `curtain-logo` leaf photo, ക്ലൗഡ് കിച്ചൺ, WebApp over `curtain-webapp` leaf photo. The words are vector outlines in
