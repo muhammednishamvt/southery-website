@@ -878,11 +878,25 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
       if (from && from.focus && document.body.contains(from)) from.focus();
     }
     $$('[data-install-close]', box).forEach(function (b) { b.addEventListener('click', close); });
+    // Chrome and Brave send their install prompt a little after the page loads (on a first visit, only once the
+    // visitor has used the page for a short while). If "Install now" is tapped before it arrives, wait a few seconds
+    // for it ("Getting ready…") and install the moment it comes. Only if it doesn't come do the steps show; if it
+    // arrives later, the pop-up comes back with a working "Install now". iPhone never sends one, so it goes straight to the steps.
+    var waiting = null, wanted = false;
+    function install() {
+      var p = deferred, r; deferred = null;
+      try { r = p.prompt(); } catch (e) { r = Promise.reject(e); }
+      // If the browser refuses (too long after the tap), keep the prompt so the next tap on "Install now" works.
+      if (r && r.then) r.then(null, function () { deferred = p; showSteps = false; render(); go.focus(); });
+      if (p.userChoice) p.userChoice.then(close, function () {});
+    }
+    function stopWaiting() { clearTimeout(waiting); waiting = null; go.disabled = false; go.textContent = 'Install now'; }
     go.addEventListener('click', function () {
-      if (!deferred) { showSteps = true; render(); $('[data-install-later]').focus(); return; }
-      var p = deferred; deferred = null;
-      p.prompt();
-      (p.userChoice || Promise.resolve()).then(close, close);
+      wanted = true;
+      if (deferred) { install(); return; }
+      if (ios || waiting) { if (!waiting) { showSteps = true; render(); $('[data-install-later]').focus(); } return; }
+      go.disabled = true; go.textContent = 'Getting ready…';
+      waiting = setTimeout(function () { stopWaiting(); showSteps = true; render(); $('[data-install-later]').focus(); }, 4000);
     });
     document.addEventListener('keydown', function (e) {
       if (box.hidden) return;
@@ -891,7 +905,9 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     });
     window.addEventListener('beforeinstallprompt', function (e) {
       e.preventDefault(); deferred = e;
-      if (!box.hidden) render();
+      if (waiting) { stopWaiting(); install(); return; }   // still within the tap, so the browser allows it
+      if (!box.hidden) { render(); go.focus(); return; }
+      if (wanted) { shown = false; open(); }               // they asked to install earlier; offer it again now it works
     });
     window.addEventListener('appinstalled', function () { deferred = null; close(); });
 

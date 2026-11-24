@@ -603,3 +603,4 @@ body.dp { min-height: 100vh; background: radial-gradient(120% 70% at 15% 0%, var
 .install__how { color: var(--ivory) !important; background: var(--green-deep); border-radius: 14px; padding: 12px 14px; width: 100%; }
 .install__how svg { width: 18px; height: 18px; vertical-align: -3px; margin: 0 2px; }
 .install .sheet__foot { flex-direction: column; align-items: stretch; gap: 10px; }
+.install [data-install-go]:disabled { opacity: 0.75; cursor: progress; }
