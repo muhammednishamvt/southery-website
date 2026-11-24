@@ -26,9 +26,9 @@ var MENU = [
   { id: 'prawns-biriyani', cat: 'biriyani', name: 'Prawns Biriyani', price: null,
     desc: 'Prawns cooked in a spiced masala and folded through Kaima rice.' },
 
-  { id: 'chicken-fry', cat: 'malabar', name: 'Chicken Fry', price: 219, best: true,
+  { id: 'chicken-naadan-fry', cat: 'malabar', name: 'Chicken Naadan Fry', price: 219, best: true,
     desc: 'Chicken marinated in red chilli and spice, fried until crisp at the edges and juicy inside.' },
-  { id: 'beef-fry', cat: 'malabar', name: 'Beef Fry', price: 249, photo: false,
+  { id: 'beef-naadan-fry', cat: 'malabar', name: 'Beef Naadan Fry', price: 249,
     desc: 'Beef cooked tender, then fried dry with coconut slivers, shallots and curry leaves.' },
   { id: 'chicken-naadan-roast', cat: 'malabar', name: 'Chicken Naadan Roast', price: 239,
     desc: 'Chicken cooked down in a thick onion and tomato masala until it clings to every piece.' },
@@ -42,7 +42,7 @@ var MENU = [
     desc: 'Chicken simmered gently in coconut milk with whole spices. Mild, fragrant, and made for appam.' },
   { id: 'beef-stew', cat: 'malabar', name: 'Beef Stew', price: 279,
     desc: 'Tender beef and vegetables in a light coconut milk stew, peppery and gentle.' },
-  { id: 'mutton-stew', cat: 'malabar', name: 'Mutton Stew', price: null, ask: 'Ask for price', photo: false,
+  { id: 'mutton-stew', cat: 'malabar', name: 'Mutton Stew', price: null, ask: 'Ask for price',
     desc: 'Mutton simmered slowly in coconut milk with pepper, ginger and curry leaves.' },
   { id: 'vegetable-stew', cat: 'malabar', name: 'Vegetable Stew', price: 149, veg: true,
     desc: 'Potato, carrot and beans in coconut milk, scented with green chilli and ginger.' },
@@ -153,11 +153,13 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
      cart = { key: { id, q, sel } }  where sel = { setId: { choiceId: qty } }
      key = dish id plus its selections, so different customisations are separate lines. */
   var cart = {};
+  var RENAMED = { 'chicken-fry': 'chicken-naadan-fry', 'beef-fry': 'beef-naadan-fry' }; // carts saved before the rename
   (function load() {
     var raw = read('southery-cart', {});
     Object.keys(raw).forEach(function (k) {
       var v = raw[k];
-      if (typeof v === 'number') v = { id: k, q: v, sel: defaults(byId[k]) }; // older saved carts
+      if (typeof v === 'number') v = { id: k, q: v, sel: defaults(byId[RENAMED[k] || k]) }; // older saved carts
+      if (v && RENAMED[v.id]) v.id = RENAMED[v.id];
       if (v && byId[v.id] && byId[v.id].price != null && v.q > 0) cart[keyOf(v.id, v.sel)] = { id: v.id, q: v.q, sel: v.sel || {} };
     });
   })();
