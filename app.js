@@ -826,8 +826,8 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
   })();
 
   /* ---------- Add to Home Screen ----------
-     Shown once per device, on the first visit, after the greeting curtain (Nisham's choice), and never when Southery
-     is already running as an installed app. Chrome and Edge hand us a native install prompt (beforeinstallprompt); there the gold
+     Shown once per visit after the greeting curtain (Nisham's choice): every new visit, but not again on a refresh
+     (sessionStorage). Never when Southery is already running as an installed app. Chrome and Edge hand us a native install prompt (beforeinstallprompt); there the gold
      button installs. iPhone Safari has no prompt, so the dialog shows the Share > Add to Home Screen steps instead,
      and other browsers get their menu steps. Browsers that can't install at all (Firefox on desktop, in-app browsers)
      never see it. */
@@ -842,6 +842,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     var macSafari = /Macintosh/.test(ua) && /Safari/.test(ua) && !/Chrome|Chromium|Edg\//.test(ua) && !ios;
     var desktopFirefox = /Firefox/.test(ua) && !android;
     var deferred = null, shown = false, from = null;
+    function seenThisVisit() { try { return sessionStorage.getItem('southery-install-seen') === '1'; } catch (e) { return false; } }
     var go = $('[data-install-go]'), how = $('[data-install-how]');
     var SHARE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 3v12M7.5 7.5 12 3l4.5 4.5M5 11v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8"/></svg>';
     var DOTS = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/><circle cx="12" cy="19" r="1.8" fill="currentColor"/></svg>';
@@ -867,7 +868,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
       if (shown || standalone) return;
       if (busy()) { setTimeout(open, 1500); return; }
       shown = true; from = document.activeElement; render();
-      write('southery-install-seen', { at: Date.now() });   // first visit only; never shown again on this device
+      try { sessionStorage.setItem('southery-install-seen', '1'); } catch (e) {}   // once per visit: not again on refresh
       box.hidden = false; requestAnimationFrame(function () { box.classList.add('is-open'); });
       document.body.style.overflow = 'hidden';
       go.focus();
@@ -912,7 +913,7 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     });
     window.addEventListener('appinstalled', function () { deferred = null; close(); });
 
-    if (standalone || inApp || desktopFirefox || read('southery-install-seen', null)) return;
+    if (standalone || inApp || desktopFirefox || seenThisVisit()) return;
     // Wait for the curtain to lift, then a short pause so the page settles first.
     window.addEventListener('load', function () { setTimeout(open, 1200); });
   })();
