@@ -7,6 +7,8 @@ var app = fs.readFileSync(path.join(root, 'app.js'), 'utf8');
 var data = app.slice(0, app.indexOf('(function () {'));          // the menu data above the main IIFE
 var box = {}; vm.runInNewContext(data + ';this.C=CATEGORIES;this.M=MENU;', box);
 
+// A dish's photo goes into the structured data only when the file exists (list tabs such as Extras have none).
+function hasPhoto(d) { return d.photo !== false && fs.existsSync(path.join(root, 'assets/photos', d.id + '.jpg')); }
 function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function price(d) { return d.price == null ? (d.ask || 'Price on request') : '₹' + d.price; }
 
@@ -28,7 +30,7 @@ var ld = {
       var it = { '@type': 'MenuItem', name: d.name, description: d.desc };
       if (d.price != null) it.offers = { '@type': 'Offer', price: String(d.price), priceCurrency: 'INR' };
       if (d.veg) it.suitableForDiet = 'https://schema.org/VegetarianDiet';
-      if (d.photo !== false) it.image = 'https://southery.cloud/assets/photos/' + d.id + '.jpg';
+      if (hasPhoto(d)) it.image = 'https://southery.cloud/assets/photos/' + d.id + '.jpg';
       return it;
     }) };
   })
@@ -74,7 +76,7 @@ PAGES.forEach(function (pg) {
         var it = { '@type': 'MenuItem', name: d.name, description: d.desc, url: url + '#' + d.id };
         if (d.price != null) it.offers = { '@type': 'Offer', price: String(d.price), priceCurrency: 'INR' };
         if (d.veg) it.suitableForDiet = 'https://schema.org/VegetarianDiet';
-        if (d.photo !== false) it.image = SITE + '/assets/photos/' + d.id + '.jpg';
+        if (hasPhoto(d)) it.image = SITE + '/assets/photos/' + d.id + '.jpg';
         return it;
       }) }
   ];
