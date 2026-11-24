@@ -588,3 +588,8 @@ body.dp { min-height: 100vh; background: radial-gradient(120% 70% at 15% 0%, var
   .dp-dish__body p:last-child { font-size: 15px; }
 }
 .menu-snapshot h3 a { color: inherit; }
+
+/* ---------- Menu PDF dialog (reuses the sheet) ---------- */
+.menu-dl__preview { background: var(--green-deep); padding: 20px 20px 0; }
+.menu-dl__preview img { display: block; width: 100%; height: auto; border-radius: 10px; box-shadow: 0 12px 30px rgba(0,0,0,0.35); }
+.menu-dl .sheet__foot .btn { flex: 1; }

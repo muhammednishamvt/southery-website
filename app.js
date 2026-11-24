@@ -481,7 +481,30 @@ MENU.forEach(function (d) { if (DISH_OPTIONS[d.id]) d.options = DISH_OPTIONS[d.i
     if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
     else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
   }
+  /* ---------- Menu PDF dialog (footer link) ---------- */
+  var menuDl = $('[data-menu-dl]'), menuDlFrom = null;
+  function openMenuDl(from) {
+    menuDlFrom = from; menuDl.hidden = false;
+    requestAnimationFrame(function () { menuDl.classList.add('is-open'); });
+    document.body.style.overflow = 'hidden';
+    $('[data-menu-dl-go]').focus();
+  }
+  function closeMenuDl() {
+    menuDl.classList.remove('is-open'); document.body.style.overflow = '';
+    setTimeout(function () { menuDl.hidden = true; }, 250);
+    if (menuDlFrom) menuDlFrom.focus();
+  }
+  if (menuDl) {
+    $$('[data-menu-pdf]').forEach(function (a) {
+      a.addEventListener('click', function (e) { e.preventDefault(); openMenuDl(a); });
+    });
+    $$('[data-menu-dl-close]', menuDl).forEach(function (b) { b.addEventListener('click', closeMenuDl); });
+    // The download starts from the link itself; close the dialog just after.
+    $('[data-menu-dl-go]').addEventListener('click', function () { setTimeout(closeMenuDl, 300); });
+  }
+
   document.addEventListener('keydown', function (e) {
+    if (menuDl && !menuDl.hidden) { if (e.key === 'Escape') closeMenuDl(); if (e.key === 'Tab') trap(e, $('.sheet__panel', menuDl)); return; }
     if (!sheet.hidden) { if (e.key === 'Escape') closeSheet(); if (e.key === 'Tab') trap(e, $('.sheet__panel')); return; }
     if (drawer.hidden) return;
     if (e.key === 'Escape') closeCart();
