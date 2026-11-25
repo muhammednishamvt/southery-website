@@ -5,9 +5,9 @@
 module.exports = [
   {
     slug: 'biriyani', cat: 'biriyani', label: 'Biriyani',
-    title: 'Malabar dum biriyani in Edappally, Kochi — Southery',
+    title: 'Malabar dum biriyani in Kochi — Southery, Edappally',
     description: 'Chicken and beef dum biriyani on Kaima rice, with mutton, fish and prawns biriyani on direct orders. Cooked in our Edappally kitchen and delivered across Kochi.',
-    h1: 'Malabar dum biriyani, cooked in Edappally',
+    h1: 'Malabar dum biriyani in Kochi, cooked in Edappally',
     intro: [
       'Our biriyani is made the Malabar way: short-grain Kaima rice layered with the masala and the meat, sealed, and left on dum until every grain carries it.',
       'Chicken and beef biriyani are always on the menu. Mutton, fish and prawns biriyani are cooked for direct orders only. Mutton biriyani is priced below; for fish and prawns, message us on WhatsApp for sizes and prices.'
