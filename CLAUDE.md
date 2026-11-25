@@ -136,6 +136,10 @@ Payment proof: the payment step has "I’ve paid. Send the screenshot", which op
 The button is pressed once: afterwards it gives way to a thank-you note (no "send again"). Once Paid, the card offers "Send payment confirmation on WhatsApp" (prefilled message with the tracking link to the
 customer's number); the time it was sent is shown, and `/track` says "Payment received".
 
+Google reviews: the review link (`https://g.page/r/CR9RprPaHJTSEBM/review`, from the Business Profile's "Ask for reviews") is
+in `kitchen.html` (`REVIEW`) and `track.html`. Once an order is Delivered, `/track` shows "Review us on Google", and its desk card
+offers "Ask for a Google review on WhatsApp" (prefilled message to the customer). Only ask real customers; never offer anything for a review.
+
 Browser storage keys: `southery-cart`, `southery-customer` (name, phone and address, remembered for next time), `southery-music`,
 `southery-pending`, `southery-installed` (and `southery-install-seen` in sessionStorage); on the kitchen page `southery-kitchen-pin` and `southery-kitchen-sound`.
 
