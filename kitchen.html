@@ -259,6 +259,16 @@
     paintBulk();
   }
   // Payment: the customer's "I've paid" note, and once marked Paid, the confirmation to send them
+  // Google review link from the Business Profile (Ask for reviews). Also used on track.html.
+  var REVIEW = 'https://g.page/r/CR9RprPaHJTSEBM/review';
+  function reviewText(o) {
+    var first = String(o.name || '').split(' ')[0];
+    return 'Hi' + (first ? ' ' + first : '') + ', thank you for ordering from Southery. If you enjoyed it, a short Google review helps other people in Kochi find us: ' + REVIEW + '\n\nSouthery';
+  }
+  function reviewBlock(o) {
+    if (o.status !== 'delivered' || !o.phone) return '';
+    return '<a class="btn btn--ghost btn--block" href="https://wa.me/' + digits(o.phone) + '?text=' + encodeURIComponent(reviewText(o)) + '" target="_blank" rel="noopener">Ask for a Google review on WhatsApp</a>';
+  }
   function confirmText(o) {
     var first = String(o.name || '').split(' ')[0];
     var next = o.status === 'out' ? 'It’s on its way to you.' : o.status === 'delivered' ? 'Thank you for ordering with us.' : 'Your food is being prepared.';
@@ -303,7 +313,7 @@
       (o.note ? '<p class="k-note">' + esc(o.note) + '</p>' : '') +
       '<div class="k-sum"><div><strong>' + rupee(o.total) + '</strong> <span>' + (o.zone === 'free' ? '' : 'food only; delivery paid to the rider') + '</span></div>' +
         '<button type="button" class="k-paid" data-paid aria-pressed="' + !!o.paid + '">' + (o.paid ? 'Paid' : 'Not paid') + '</button></div>' +
-      payBlock(o) +
+      payBlock(o) + reviewBlock(o) +
       '<div class="k-act">' +
         (next ? '<button type="button" class="btn btn--ivory" data-next="' + next + '">' + NEXT_LABEL[o.status] + '</button>' : '<span></span>') +
         '<select data-set aria-label="Change status of ' + esc(o.code) + '">' + Object.keys(STEPS).map(function (s) {

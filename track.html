@@ -39,6 +39,8 @@
   .t-note { background: rgba(196,52,12,0.18); border-left: 3px solid var(--chilli); padding: 12px 14px; border-radius: 12px; }
   .t-foot { display: grid; gap: 10px; }
   .t-upd { text-align: center; color: var(--ivory-soft); font-size: 13px; margin-top: 18px; }
+  .t-review { display: grid; gap: 12px; border-top: 1px solid var(--ivory-faint); padding-top: 18px; }
+  .t-review p { color: var(--ivory-soft); }
   .t-wa img { width: 20px; height: 20px; margin-right: 8px; }
 </style>
 </head>
@@ -53,6 +55,10 @@
     <ol class="t-steps" data-steps hidden></ol>
     <p class="t-note" data-note hidden></p>
     <ul class="t-items" data-items hidden></ul>
+    <div class="t-review" data-review hidden>
+      <p>Enjoyed your meal? A short Google review helps other people in Kochi find us.</p>
+      <a class="btn btn--gold btn--block" href="https://g.page/r/CR9RprPaHJTSEBM/review" target="_blank" rel="noopener">Review us on Google</a>
+    </div>
     <div class="t-foot">
       <a class="btn btn--ghost btn--block t-wa" data-wa href="https://wa.me/918610071212" target="_blank" rel="noopener"><img src="/assets/icons/whatsapp.svg" alt="" width="20" height="20">Message us on WhatsApp</a>
       <a class="btn btn--ghost btn--block" href="/#menu">Back to the menu</a>
@@ -100,6 +106,7 @@
       return '<li><span>' + i.q + ' × ' + esc(i.name) + (i.opts ? '<small>' + esc(i.opts) + '</small>' : '') + '</span><span>' + rupee(i.amount) + '</span></li>';
     }).join('') + '<li class="t-total"><span>' + (o.zone === 'free' ? 'Total' : 'Food total') + '<small class="t-paid">' + (o.paid ? 'Payment received. Thank you.' : o.payClaim ? 'We’re checking your payment.' : 'Pay by UPI') + '</small></span><strong>' + rupee(o.total) + '</strong></li>' +
       (o.zone === 'free' ? '' : '<li class="t-del"><span>Delivery<small class="t-paid">' + (o.zone === 'porter' ? 'By Porter, booked once your payment comes through. Pay the fare to the rider by UPI.' : 'Free within 3 km. Further away, by Porter: pay the fare to the rider by UPI.') + '</small></span><span></span></li>');
+    $('[data-review]').hidden = o.status !== 'delivered';
     $('[data-upd]').textContent = o.status === 'delivered' || cancelled ? '' : 'This page updates by itself. Last checked ' + clock(Date.now()) + '.';
     if (o.status === 'delivered' || cancelled) { clearInterval(timer); timer = null; }
   }
