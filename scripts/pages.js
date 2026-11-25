@@ -27,7 +27,7 @@ module.exports = [
   },
   {
     slug: 'combo-boxes', cat: 'boxes', label: 'Combo boxes',
-    title: 'Kerala combo boxes: appam, puttu, porotta and ghee rice — Southery, Kochi',
+    title: 'Kerala combo boxes in Kochi: appam, puttu, porotta — Southery',
     description: 'Appam, puttu, porotta, chapathi, neypathal, ghee rice or biriyani rice with chicken or beef curry, in one box. From {min}, delivered across Kochi from Edappally.',
     h1: 'Combo boxes: a Kerala meal in one box',
     intro: [
